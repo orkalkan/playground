@@ -1,0 +1,159 @@
+<mvc:View
+  controllerName="ui5.fira.demos.controller.Launchpad"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:core="sap.ui.core"
+  xmlns:f="sap.f"
+  displayBlock="true">
+
+  <Page showHeader="false" enableScrolling="true" class="fira-launchpad-page">
+    <content>
+      <f:ShellBar title="Fira" secondTitle="Demo Portal — ORKLABS.IO" showNavButton="false">
+        <f:additionalContent>
+          <OverflowToolbarButton text="Sign Out" icon="sap-icon://log" type="Transparent" press=".onLogout"/>
+        </f:additionalContent>
+        <f:profile>
+          <Avatar initials="OR" backgroundColor="Accent6" displayShape="Circle" displaySize="XS"/>
+        </f:profile>
+      </f:ShellBar>
+
+      <VBox class="fira-launchpad-container">
+
+        <HBox class="fira-launchpad-header" alignItems="Center">
+          <core:Icon src="sap-icon://simulate" size="2.25rem" color="#0070F2" class="sapUiMediumMarginEnd"/>
+          <VBox>
+            <Title text="Fira Demo Portal" level="H2"/>
+            <Text text="10 real-world UI5 application scenarios · Full E2E flows with mock data" class="sapUiSmallMarginTop"/>
+            <Text text="ORKLABS.IO" class="fira-portal-brand sapUiTinyMarginTop"/>
+          </VBox>
+        </HBox>
+
+        <Text text="PROCUREMENT &amp; FINANCE" class="fira-section-title"/>
+        <FlexBox wrap="Wrap" class="fira-tile-grid sapUiSmallMarginBottom">
+
+          <GenericTile header="Purchase Orders" subheader="MM · Procurement" press=".onTilePress" class="fira-tile">
+            <customData><core:CustomData key="route" value="po"/></customData>
+            <tileContent>
+              <TileContent footer="14 open · 3 pending approval">
+                <content><NumericContent value="14" indicator="Up" valueColor="Critical" withMargin="false"/></content>
+              </TileContent>
+            </tileContent>
+          </GenericTile>
+
+          <GenericTile header="Travel &amp; Expenses" subheader="FI · Employee Expenses" press=".onTilePress" class="fira-tile">
+            <customData><core:CustomData key="route" value="travel"/></customData>
+            <tileContent>
+              <TileContent footer="€ 12,450 pending reimbursement">
+                <content><NumericContent value="7" indicator="Up" valueColor="Critical" withMargin="false"/></content>
+              </TileContent>
+            </tileContent>
+          </GenericTile>
+
+          <GenericTile header="Budget Planning" subheader="CO · Controlling" press=".onTilePress" class="fira-tile">
+            <customData><core:CustomData key="route" value="budget"/></customData>
+            <tileContent>
+              <TileContent footer="Q1 2025 · 3 cost centers over budget" unit="%">
+                <content><NumericContent value="85" indicator="Down" valueColor="Good" withMargin="false"/></content>
+              </TileContent>
+            </tileContent>
+          </GenericTile>
+
+        </FlexBox>
+
+        <Text text="SALES &amp; DISTRIBUTION" class="fira-section-title"/>
+        <FlexBox wrap="Wrap" class="fira-tile-grid sapUiSmallMarginBottom">
+
+          <GenericTile header="Sales Orders" subheader="SD · Order Management" press=".onTilePress" class="fira-tile">
+            <customData><core:CustomData key="route" value="sales"/></customData>
+            <tileContent>
+              <TileContent footer="23 new today · 4 on hold">
+                <content><NumericContent value="23" indicator="Up" valueColor="Good" withMargin="false"/></content>
+              </TileContent>
+            </tileContent>
+          </GenericTile>
+
+          <GenericTile header="Warehouse Ops" subheader="WM · Logistics" press=".onTilePress" class="fira-tile">
+            <customData><core:CustomData key="route" value="warehouse"/></customData>
+            <tileContent>
+              <TileContent footer="6 active picks · 2 delayed">
+                <content><NumericContent value="6" indicator="None" valueColor="None" withMargin="false"/></content>
+              </TileContent>
+            </tileContent>
+          </GenericTile>
+
+          <GenericTile header="Quality Inspection" subheader="QM · Quality Management" press=".onTilePress" class="fira-tile">
+            <customData><core:CustomData key="route" value="quality"/></customData>
+            <tileContent>
+              <TileContent footer="12 open inspections · 3 defects">
+                <content><NumericContent value="3" indicator="Up" valueColor="Critical" withMargin="false"/></content>
+              </TileContent>
+            </tileContent>
+          </GenericTile>
+
+        </FlexBox>
+
+        <Text text="HUMAN RESOURCES" class="fira-section-title"/>
+        <FlexBox wrap="Wrap" class="fira-tile-grid sapUiSmallMarginBottom">
+
+          <GenericTile header="Leave Management" subheader="HCM · HR Services" press=".onTilePress" class="fira-tile">
+            <customData><core:CustomData key="route" value="leave"/></customData>
+            <tileContent>
+              <TileContent footer="5 pending approval · 2 in review">
+                <content><NumericContent value="5" indicator="None" valueColor="Critical" withMargin="false"/></content>
+              </TileContent>
+            </tileContent>
+          </GenericTile>
+
+          <GenericTile header="Employee Onboarding" subheader="HCM · New Hire Process" press=".onTilePress" class="fira-tile">
+            <customData><core:CustomData key="route" value="onboarding"/></customData>
+            <tileContent>
+              <TileContent footer="2 new hires this week">
+                <content><NumericContent value="2" indicator="Up" valueColor="Good" withMargin="false"/></content>
+              </TileContent>
+            </tileContent>
+          </GenericTile>
+
+        </FlexBox>
+
+        <Text text="IT &amp; ASSETS" class="fira-section-title"/>
+        <FlexBox wrap="Wrap" class="fira-tile-grid sapUiSmallMarginBottom">
+
+          <GenericTile header="IT Helpdesk" subheader="ITSM · Incident Management" press=".onTilePress" class="fira-tile">
+            <customData><core:CustomData key="route" value="helpdesk"/></customData>
+            <tileContent>
+              <TileContent footer="8 open · 2 critical priority">
+                <content><NumericContent value="8" indicator="Up" valueColor="Critical" withMargin="false"/></content>
+              </TileContent>
+            </tileContent>
+          </GenericTile>
+
+          <GenericTile header="Asset Management" subheader="AM · Fixed Assets" press=".onTilePress" class="fira-tile">
+            <customData><core:CustomData key="route" value="assets"/></customData>
+            <tileContent>
+              <TileContent footer="847 assets · 12 in maintenance">
+                <content><NumericContent value="847" indicator="None" valueColor="None" withMargin="false"/></content>
+              </TileContent>
+            </tileContent>
+          </GenericTile>
+
+        </FlexBox>
+
+        <Text text="DEVELOPER TOOLS" class="fira-section-title"/>
+        <FlexBox wrap="Wrap" class="fira-tile-grid">
+
+          <GenericTile header="Fira Playground" subheader="UI5 Component Library" press=".onTilePress" class="fira-tile">
+            <customData><core:CustomData key="route" value="playground"/></customData>
+            <tileContent>
+              <TileContent footer="857 scenarios · 16 categories">
+                <content><NumericContent value="857" indicator="None" valueColor="Neutral" withMargin="false"/></content>
+              </TileContent>
+            </tileContent>
+          </GenericTile>
+
+        </FlexBox>
+
+      </VBox>
+    </content>
+  </Page>
+
+</mvc:View>

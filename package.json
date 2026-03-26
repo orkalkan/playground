@@ -1,0 +1,13 @@
+{
+  "name": "ui5-fira-demos",
+  "version": "1.0.0",
+  "description": "Fira Demo Portal — Real-world UI5 application scenarios by ORKLABS.IO",
+  "scripts": {
+    "start": "ui5 serve -o index.html",
+    "build": "ui5 build"
+  },
+  "devDependencies": {
+    "@ui5/cli": "^3.11.0",
+    "@sap/ux-ui5-tooling": "^1.14.0"
+  }
+}

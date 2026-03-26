@@ -1,0 +1,7 @@
+<mvc:View
+  controllerName="ui5.fira.demos.controller.App"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  displayBlock="true">
+  <NavContainer id="appNavContainer" height="100%"/>
+</mvc:View>

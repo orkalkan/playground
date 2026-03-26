@@ -1,0 +1,381 @@
+<mvc:View
+  controllerName="ui5.fira.demos.controller.apps.travel.TravelApp"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:core="sap.ui.core"
+  xmlns:f="sap.ui.layout.form"
+  displayBlock="true">
+
+  <Page showHeader="false" enableScrolling="false" class="sapUiNoContentPadding">
+    <content>
+      <NavContainer id="travelNav" height="100%">
+
+        <!-- ── Page 1: My Trips ──────────────────────────── -->
+        <Page id="travelListPage" title="Travel &amp; Expenses" class="fira-app-page"
+          showNavButton="true" navButtonPress=".onNavBackToLaunchpad">
+          <headerContent>
+            <Button text="New Trip Request" type="Emphasized" icon="sap-icon://add" press=".onNewTripPress"/>
+          </headerContent>
+          <subHeader>
+            <Bar>
+              <contentLeft>
+                <HBox alignItems="Center">
+                  <ObjectNumber number="18,275" unit="EUR" state="Warning" class="sapUiSmallMarginEnd"/>
+                  <Text text="pending reimbursement"/>
+                </HBox>
+              </contentLeft>
+            </Bar>
+          </subHeader>
+          <content>
+            <Table id="tripTable" items="{travel>/trips}" noDataText="No trips found">
+              <columns>
+                <Column><Text text="Trip"/></Column>
+                <Column><Text text="Destination"/></Column>
+                <Column><Text text="Period"/></Column>
+                <Column hAlign="End"><Text text="Estimated Cost"/></Column>
+                <Column hAlign="End"><Text text="Actual Cost"/></Column>
+                <Column><Text text="Status"/></Column>
+                <Column><Text text="Actions"/></Column>
+              </columns>
+              <items>
+                <ColumnListItem press=".onTripPress" type="Navigation">
+                  <cells>
+                    <ObjectIdentifier title="{travel>id}" text="{travel>purpose}"/>
+                    <VBox>
+                      <Text text="{travel>destination}"/>
+                      <Text text="{travel>country}" class="sapUiTinyMarginTop"/>
+                    </VBox>
+                    <VBox>
+                      <Text text="{path:'travel>departureDate', formatter:'.formatDate'}"/>
+                      <Text text="{path:'travel>returnDate', formatter:'.formatDate'}" class="sapUiTinyMarginTop"/>
+                    </VBox>
+                    <ObjectNumber number="{travel>estimatedCost}" unit="{travel>currency}"/>
+                    <ObjectNumber number="{travel>actualCost}" unit="{travel>currency}" state="{path:'travel>overspend', formatter:'.formatOverspend'}"/>
+                    <ObjectStatus text="{travel>status}" state="{path:'travel>status', formatter:'.formatStatusState'}"/>
+                    <HBox>
+                      <Button icon="sap-icon://edit" tooltip="Edit" type="Transparent" press=".onEditTripPress"/>
+                      <Button icon="sap-icon://delete" tooltip="Delete" type="Transparent" press=".onDeleteTripPress"/>
+                    </HBox>
+                  </cells>
+                </ColumnListItem>
+              </items>
+            </Table>
+          </content>
+        </Page>
+
+        <!-- ── Page 2: New Trip Request ─────────────────── -->
+        <Page id="travelRequestPage" title="New Trip Request" class="fira-app-page"
+          showNavButton="true" navButtonPress=".onNavBack">
+          <footer>
+            <Bar>
+              <contentRight>
+                <Button text="Cancel" press=".onNavBack"/>
+                <Button text="Submit Request" type="Emphasized" press=".onSubmitTripRequest" icon="sap-icon://paper-plane"/>
+              </contentRight>
+            </Bar>
+          </footer>
+          <content>
+            <VBox class="sapUiMediumMargin">
+              <Panel headerText="Trip Details" expandable="false">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Trip Purpose" required="true"/>
+                      <Input id="newTripPurpose" placeholder="e.g. Customer meeting, Trade fair, Training..."/>
+                      <Label text="Destination City" required="true"/>
+                      <Input id="newTripCity" placeholder="e.g. Frankfurt, Amsterdam, London..."/>
+                      <Label text="Country" required="true"/>
+                      <Select id="newTripCountry" selectedKey="DE">
+                        <core:ListItem key="DE" text="Germany"/>
+                        <core:ListItem key="AT" text="Austria"/>
+                        <core:ListItem key="CH" text="Switzerland"/>
+                        <core:ListItem key="NL" text="Netherlands"/>
+                        <core:ListItem key="GB" text="United Kingdom"/>
+                        <core:ListItem key="US" text="United States"/>
+                        <core:ListItem key="ES" text="Spain"/>
+                        <core:ListItem key="JP" text="Japan"/>
+                      </Select>
+                      <Label text="Departure Date" required="true"/>
+                      <DatePicker id="newTripDepartureDate" valueFormat="yyyy-MM-dd" displayFormat="dd.MM.yyyy"/>
+                      <Label text="Return Date" required="true"/>
+                      <DatePicker id="newTripReturnDate" valueFormat="yyyy-MM-dd" displayFormat="dd.MM.yyyy"/>
+                      <Label text="Cost Center"/>
+                      <Select id="newTripCostCenter" selectedKey="CC-1001">
+                        <core:ListItem key="CC-1001" text="CC-1001 — Sales Germany"/>
+                        <core:ListItem key="CC-1002" text="CC-1002 — IT Department"/>
+                        <core:ListItem key="CC-1003" text="CC-1003 — R&amp;D"/>
+                        <core:ListItem key="CC-1004" text="CC-1004 — Management"/>
+                      </Select>
+                      <Label text="Estimated Total Cost"/>
+                      <Input id="newTripEstimatedCost" type="Number" placeholder="EUR" textAlign="End"/>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+              <Panel headerText="Scheduling &amp; Transport" class="sapUiSmallMarginTop" expandable="true" expanded="true">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Departure Time"/>
+                      <TimePicker valueFormat="HH:mm" displayFormat="HH:mm" placeholder="HH:mm"/>
+                      <Label text="Number of Travelers"/>
+                      <StepInput value="1" min="1" max="20" step="1" width="8rem"/>
+                      <Label text="Preferred Airline"/>
+                      <ComboBox placeholder="Select or type preferred airline...">
+                        <core:Item key="LH" text="Lufthansa"/>
+                        <core:Item key="BA" text="British Airways"/>
+                        <core:Item key="AF" text="Air France"/>
+                        <core:Item key="KL" text="KLM"/>
+                        <core:Item key="TK" text="Turkish Airlines"/>
+                        <core:Item key="EK" text="Emirates"/>
+                      </ComboBox>
+                      <Label text="Travel Class"/>
+                      <RadioButtonGroup columns="3">
+                        <RadioButton text="Economy"/>
+                        <RadioButton text="Business"/>
+                        <RadioButton text="First Class"/>
+                      </RadioButtonGroup>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+              <Panel headerText="Options" class="sapUiSmallMarginTop" expandable="true" expanded="true">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Business Trip"/>
+                      <Switch customTextOn="Yes" customTextOff="No" state="true"/>
+                      <Label text="Hotel Required"/>
+                      <CheckBox text="Include hotel booking in request"/>
+                      <Label text="Car Rental Required"/>
+                      <CheckBox text="Include car rental in request"/>
+                      <Label text="Flight Required"/>
+                      <CheckBox text="Include flight booking in request"/>
+                      <Label text="Expense Categories to Pre-Approve"/>
+                      <MultiComboBox placeholder="Select expense categories...">
+                        <core:Item key="flight" text="Flights"/>
+                        <core:Item key="hotel" text="Hotel"/>
+                        <core:Item key="meals" text="Meals &amp; Entertainment"/>
+                        <core:Item key="transport" text="Local Transport"/>
+                        <core:Item key="visa" text="Visa &amp; Travel Documents"/>
+                        <core:Item key="other" text="Other"/>
+                      </MultiComboBox>
+                      <Label text="Booking References"/>
+                      <MultiInput showValueHelp="false" placeholder="Add booking confirmation numbers as tags..."/>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+              <Panel headerText="Assessment" class="sapUiSmallMarginTop" expandable="true" expanded="true">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Per Diem Budget (%)"/>
+                      <Slider min="0" max="100" step="5" showAdvancedTooltip="true" enableTickmarks="true" value="75"/>
+                      <Label text="Preferred Hotel Rating"/>
+                      <RatingIndicator maxValue="5" value="3"/>
+                      <Label text="Trip Notes"/>
+                      <TextArea rows="3" width="100%" placeholder="Additional notes, visa requirements, or special arrangements..."/>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+            </VBox>
+          </content>
+        </Page>
+
+        <!-- ── Page 3: Trip Detail / Expense Report ──────── -->
+        <Page id="travelExpensePage" title="Expense Report" class="fira-app-page"
+          showNavButton="true" navButtonPress=".onNavBack">
+          <footer>
+            <Bar>
+              <contentLeft>
+                <ObjectNumber id="expenseTotalNumber" number="0" unit="EUR" emphasized="true"/>
+              </contentLeft>
+              <contentRight>
+                <Button text="Save Draft" press=".onSaveDraft"/>
+                <Button text="Submit for Approval" type="Emphasized" press=".onSubmitExpenses" icon="sap-icon://paper-plane"/>
+              </contentRight>
+            </Bar>
+          </footer>
+          <content>
+            <VBox class="sapUiMediumMargin">
+              <Panel expandable="false">
+                <content>
+                  <f:SimpleForm layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Trip"/>         <Text text="{travel>/selectedTrip/purpose}"/>
+                      <Label text="Destination"/>  <Text text="{travel>/selectedTrip/destination}, {travel>/selectedTrip/country}"/>
+                      <Label text="Period"/>        <Text text="{path:'travel>/selectedTrip/departureDate', formatter:'.formatDate'} — {path:'travel>/selectedTrip/returnDate', formatter:'.formatDate'}"/>
+                      <Label text="Status"/>        <ObjectStatus text="{travel>/selectedTrip/status}" state="{path:'travel>/selectedTrip/status', formatter:'.formatStatusState'}"/>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+              <Panel headerText="Expense Items" class="sapUiSmallMarginTop" expandable="false">
+                <headerToolbar>
+                  <Toolbar>
+                    <Title text="Expense Items" level="H5"/>
+                    <ToolbarSpacer/>
+                    <Button icon="sap-icon://add" text="Add Expense" press=".onAddExpense"/>
+                  </Toolbar>
+                </headerToolbar>
+                <content>
+                  <Table id="expenseTable" items="{travel>/currentExpenses}" noDataText="No expenses added">
+                    <columns>
+                      <Column><Text text="Date"/></Column>
+                      <Column><Text text="Category"/></Column>
+                      <Column><Text text="Description"/></Column>
+                      <Column hAlign="End"><Text text="Amount"/></Column>
+                      <Column><Text text="Receipt"/></Column>
+                    </columns>
+                    <items>
+                      <ColumnListItem>
+                        <cells>
+                          <Text text="{path:'travel>date', formatter:'.formatDate'}"/>
+                          <Select selectedKey="{travel>category}">
+                            <core:ListItem key="flight"    text="Flight"/>
+                            <core:ListItem key="hotel"     text="Hotel"/>
+                            <core:ListItem key="meals"     text="Meals"/>
+                            <core:ListItem key="transport" text="Local Transport"/>
+                            <core:ListItem key="other"     text="Other"/>
+                          </Select>
+                          <Input value="{travel>description}" placeholder="Description"/>
+                          <Input value="{travel>amount}" type="Number" width="6rem" textAlign="End"/>
+                          <ObjectStatus text="{travel>receipt}" state="{path:'travel>receipt', formatter:'.formatReceiptState'}"/>
+                        </cells>
+                      </ColumnListItem>
+                    </items>
+                  </Table>
+                </content>
+              </Panel>
+            </VBox>
+          </content>
+        </Page>
+
+        <!-- ── Page 4: Edit Trip ─────────────────────────── -->
+        <Page id="travelEditPage" title="Edit Trip Request" class="fira-app-page"
+          showNavButton="true" navButtonPress=".onNavBack">
+          <footer>
+            <Bar>
+              <contentRight>
+                <Button text="Cancel" press=".onNavBack"/>
+                <Button text="Save Changes" type="Emphasized" press=".onSaveTrip" icon="sap-icon://accept"/>
+              </contentRight>
+            </Bar>
+          </footer>
+          <content>
+            <VBox class="sapUiMediumMargin">
+              <Panel headerText="Edit Trip Details" expandable="false">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Trip Purpose" required="true"/>
+                      <Input id="editTripPurpose" value="{travel>/editTrip/purpose}"/>
+                      <Label text="Destination City" required="true"/>
+                      <Input id="editTripCity" value="{travel>/editTrip/destination}"/>
+                      <Label text="Country" required="true"/>
+                      <Select id="editTripCountry" selectedKey="{travel>/editTrip/countryKey}">
+                        <core:ListItem key="DE" text="Germany"/>
+                        <core:ListItem key="AT" text="Austria"/>
+                        <core:ListItem key="CH" text="Switzerland"/>
+                        <core:ListItem key="NL" text="Netherlands"/>
+                        <core:ListItem key="GB" text="United Kingdom"/>
+                        <core:ListItem key="US" text="United States"/>
+                        <core:ListItem key="ES" text="Spain"/>
+                        <core:ListItem key="JP" text="Japan"/>
+                      </Select>
+                      <Label text="Departure Date" required="true"/>
+                      <DatePicker id="editTripDepartureDate" value="{travel>/editTrip/departureDate}" valueFormat="yyyy-MM-dd" displayFormat="dd.MM.yyyy"/>
+                      <Label text="Return Date" required="true"/>
+                      <DatePicker id="editTripReturnDate" value="{travel>/editTrip/returnDate}" valueFormat="yyyy-MM-dd" displayFormat="dd.MM.yyyy"/>
+                      <Label text="Cost Center"/>
+                      <Select id="editTripCostCenter" selectedKey="{travel>/editTrip/costCenter}">
+                        <core:ListItem key="CC-1001" text="CC-1001 — Sales Germany"/>
+                        <core:ListItem key="CC-1002" text="CC-1002 — IT Department"/>
+                        <core:ListItem key="CC-1003" text="CC-1003 — R&amp;D"/>
+                        <core:ListItem key="CC-1004" text="CC-1004 — Management"/>
+                      </Select>
+                      <Label text="Estimated Total Cost"/>
+                      <Input id="editTripEstimatedCost" value="{travel>/editTrip/estimatedCost}" type="Number" textAlign="End"/>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+              <Panel headerText="Scheduling &amp; Transport" class="sapUiSmallMarginTop" expandable="true" expanded="true">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Departure Time"/>
+                      <TimePicker valueFormat="HH:mm" displayFormat="HH:mm" placeholder="HH:mm"/>
+                      <Label text="Number of Travelers"/>
+                      <StepInput value="1" min="1" max="20" step="1" width="8rem"/>
+                      <Label text="Preferred Airline"/>
+                      <ComboBox placeholder="Select or type preferred airline...">
+                        <core:Item key="LH" text="Lufthansa"/>
+                        <core:Item key="BA" text="British Airways"/>
+                        <core:Item key="AF" text="Air France"/>
+                        <core:Item key="KL" text="KLM"/>
+                        <core:Item key="TK" text="Turkish Airlines"/>
+                        <core:Item key="EK" text="Emirates"/>
+                      </ComboBox>
+                      <Label text="Travel Class"/>
+                      <RadioButtonGroup columns="3">
+                        <RadioButton text="Economy"/>
+                        <RadioButton text="Business"/>
+                        <RadioButton text="First Class"/>
+                      </RadioButtonGroup>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+              <Panel headerText="Options" class="sapUiSmallMarginTop" expandable="true" expanded="true">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Business Trip"/>
+                      <Switch customTextOn="Yes" customTextOff="No" state="true"/>
+                      <Label text="Hotel Required"/>
+                      <CheckBox text="Include hotel booking in request"/>
+                      <Label text="Car Rental Required"/>
+                      <CheckBox text="Include car rental in request"/>
+                      <Label text="Flight Required"/>
+                      <CheckBox text="Include flight booking in request"/>
+                      <Label text="Expense Categories to Pre-Approve"/>
+                      <MultiComboBox placeholder="Select expense categories...">
+                        <core:Item key="flight" text="Flights"/>
+                        <core:Item key="hotel" text="Hotel"/>
+                        <core:Item key="meals" text="Meals &amp; Entertainment"/>
+                        <core:Item key="transport" text="Local Transport"/>
+                        <core:Item key="visa" text="Visa &amp; Travel Documents"/>
+                        <core:Item key="other" text="Other"/>
+                      </MultiComboBox>
+                      <Label text="Booking References"/>
+                      <MultiInput showValueHelp="false" placeholder="Add booking confirmation numbers as tags..."/>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+              <Panel headerText="Assessment" class="sapUiSmallMarginTop" expandable="true" expanded="true">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Per Diem Budget (%)"/>
+                      <Slider min="0" max="100" step="5" showAdvancedTooltip="true" enableTickmarks="true" value="75"/>
+                      <Label text="Preferred Hotel Rating"/>
+                      <RatingIndicator maxValue="5" value="3"/>
+                      <Label text="Trip Notes"/>
+                      <TextArea rows="3" width="100%" placeholder="Additional notes, visa requirements, or special arrangements..."/>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+            </VBox>
+          </content>
+        </Page>
+
+      </NavContainer>
+    </content>
+  </Page>
+
+</mvc:View>

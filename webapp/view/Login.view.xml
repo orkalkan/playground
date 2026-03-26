@@ -1,0 +1,65 @@
+<mvc:View
+  controllerName="ui5.fira.demos.controller.Login"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:core="sap.ui.core"
+  displayBlock="true">
+
+  <Page showHeader="false" enableScrolling="false">
+    <content>
+      <VBox height="100%" alignItems="Center" justifyContent="Center" class="fira-login-page">
+
+        <VBox class="fira-login-card" alignItems="Center">
+
+          <!-- Logo + Brand -->
+          <core:Icon src="sap-icon://lab" size="3rem" color="#0070f3" class="sapUiSmallMarginBottom"/>
+          <Title text="Fira Demo Portal" level="H1" textAlign="Center"/>
+          <Text text="ORKLABS.IO · UI5 Showcase" textAlign="Center" class="sapUiSmallMarginTop sapUiSmallMarginBottom"/>
+
+          <!-- Error strip -->
+          <MessageStrip id="loginError"
+            text="Invalid email or password. Please try again."
+            type="Error"
+            showIcon="true"
+            visible="false"
+            class="sapUiSmallMarginBottom fira-login-error"/>
+
+          <!-- Form -->
+          <VBox width="100%" class="sapUiSmallMarginTop">
+            <Label text="Email" required="true" class="sapUiTinyMarginBottom"/>
+            <Input id="loginEmail"
+              type="Email"
+              placeholder="admin@demo.com"
+              value=""
+              width="100%"
+              class="sapUiSmallMarginBottom"
+              submit=".onLogin"/>
+
+            <Label text="Password" required="true" class="sapUiTinyMarginBottom"/>
+            <Input id="loginPassword"
+              type="Password"
+              placeholder="••••••••"
+              value=""
+              width="100%"
+              class="sapUiSmallMarginBottom"
+              submit=".onLogin"/>
+          </VBox>
+
+          <Button
+            text="Sign In"
+            type="Emphasized"
+            width="100%"
+            icon="sap-icon://log"
+            press=".onLogin"
+            class="sapUiSmallMarginTop fira-login-btn"/>
+
+          <Text text="Demo credentials: admin@demo.com · password123"
+            textAlign="Center"
+            class="sapUiSmallMarginTop fira-login-hint"/>
+
+        </VBox>
+      </VBox>
+    </content>
+  </Page>
+
+</mvc:View>

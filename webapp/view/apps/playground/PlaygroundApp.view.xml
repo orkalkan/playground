@@ -1,0 +1,240 @@
+<mvc:View
+  controllerName="ui5.fira.demos.controller.apps.playground.PlaygroundApp"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:core="sap.ui.core"
+  xmlns:f="sap.f"
+  displayBlock="true">
+
+  <Page showHeader="false" enableScrolling="false" class="sapUiNoContentPadding">
+    <content>
+      <NavContainer id="playgroundNav" height="100%">
+
+        <!-- PAGE 1: Category Grid -->
+        <Page id="playgroundHome" title="Fira Playground" showNavButton="true" navButtonPress=".onNavBack">
+          <subHeader>
+            <Bar>
+              <contentLeft>
+                <SearchField placeholder="Search components..." width="20rem" search=".onSearchComponents" liveChange=".onSearchLive"/>
+              </contentLeft>
+              <contentRight>
+                <Button text="Favorites" icon="sap-icon://favorite" type="Transparent" press=".onNavToFavorites"/>
+              </contentRight>
+            </Bar>
+          </subHeader>
+          <content>
+            <VBox class="sapUiMediumMargin sapUiSmallMarginBottom">
+              <Title text="UI5 Component Library" level="H2" class="sapUiSmallMarginBottom"/>
+              <Text text="16 categories · 857 interactive scenarios · Controls from sap.m, sap.f, sap.ui.layout, sap.uxap"/>
+            </VBox>
+            <FlexBox id="categoryGrid" wrap="Wrap" items="{playground>/categories}" class="fira-playground-grid">
+              <GenericTile
+                header="{playground>name}"
+                subheader="{playground>description}"
+                press=".onCategoryPress"
+                class="fira-tile">
+                <customData>
+                  <core:CustomData key="categoryIndex" value="{playground>index}"/>
+                </customData>
+                <tileContent>
+                  <TileContent footer="{playground>footer}">
+                    <content>
+                      <NumericContent value="{playground>count}" withMargin="false"/>
+                    </content>
+                  </TileContent>
+                </tileContent>
+              </GenericTile>
+            </FlexBox>
+          </content>
+        </Page>
+
+        <!-- PAGE 2: Component List -->
+        <Page id="categoryPage" title="{playground>/selectedCategory/name}" showNavButton="true" navButtonPress=".onNavToHome">
+          <content>
+            <List items="{playground>/selectedCategory/components}" mode="None">
+              <StandardListItem
+                title="{playground>name}"
+                description="{playground>description}"
+                icon="{playground>icon}"
+                info="{playground>tag}"
+                infoState="None"
+                type="Navigation"
+                press=".onComponentPress">
+                <customData>
+                  <core:CustomData key="componentKey" value="{playground>key}"/>
+                </customData>
+              </StandardListItem>
+            </List>
+          </content>
+        </Page>
+
+        <!-- PAGE 3: Component Demo -->
+        <Page id="componentDetail" title="{playground>/selectedComponent/name}" showNavButton="true" navButtonPress=".onNavToCategory">
+          <headerContent>
+            <Button icon="sap-icon://favorite" tooltip="Add to Favorites" type="Transparent" press=".onAddFavorite"/>
+          </headerContent>
+          <content>
+            <VBox class="sapUiMediumMargin">
+
+              <MessageStrip
+                text="{playground>/selectedComponent/description}"
+                type="Information"
+                showIcon="true"
+                showCloseButton="false"
+                class="sapUiSmallMarginBottom"/>
+
+              <!-- Form Controls Demo -->
+              <Panel headerText="Input Controls" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                <content>
+                  <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginBottom">
+                    <HBox wrap="Wrap" class="sapUiSmallMarginTop">
+                      <VBox class="sapUiSmallMarginEnd" width="15rem">
+                        <Label text="Text Input" class="sapUiTinyMarginBottom"/>
+                        <Input placeholder="Type something..." value="{playground>/demo/inputValue}"/>
+                      </VBox>
+                      <VBox class="sapUiSmallMarginEnd" width="15rem">
+                        <Label text="StepInput" class="sapUiTinyMarginBottom"/>
+                        <StepInput value="{playground>/demo/stepValue}" min="0" max="100" step="5"/>
+                      </VBox>
+                      <VBox class="sapUiSmallMarginEnd" width="15rem">
+                        <Label text="ComboBox" class="sapUiTinyMarginBottom"/>
+                        <ComboBox selectedKey="{playground>/demo/comboKey}" items="{playground>/demo/comboItems}">
+                          <core:Item key="{key}" text="{text}"/>
+                        </ComboBox>
+                      </VBox>
+                    </HBox>
+                    <HBox wrap="Wrap" class="sapUiSmallMarginTop">
+                      <VBox class="sapUiSmallMarginEnd" width="15rem">
+                        <Label text="DatePicker" class="sapUiTinyMarginBottom"/>
+                        <DatePicker value="{playground>/demo/dateValue}" valueFormat="yyyy-MM-dd" displayFormat="dd.MM.yyyy"/>
+                      </VBox>
+                      <VBox class="sapUiSmallMarginEnd" width="15rem">
+                        <Label text="TimePicker" class="sapUiTinyMarginBottom"/>
+                        <TimePicker value="{playground>/demo/timeValue}" valueFormat="HH:mm" displayFormat="HH:mm"/>
+                      </VBox>
+                      <VBox class="sapUiSmallMarginEnd" width="15rem">
+                        <Label text="MultiComboBox" class="sapUiTinyMarginBottom"/>
+                        <MultiComboBox selectedKeys="{playground>/demo/multiKeys}" items="{playground>/demo/comboItems}">
+                          <core:Item key="{key}" text="{text}"/>
+                        </MultiComboBox>
+                      </VBox>
+                    </HBox>
+                    <HBox wrap="Wrap" class="sapUiSmallMarginTop">
+                      <VBox class="sapUiSmallMarginEnd" width="15rem">
+                        <Label text="Slider (0–100)" class="sapUiTinyMarginBottom"/>
+                        <Slider value="{playground>/demo/sliderValue}" min="0" max="100" step="1" enableTickmarks="true"/>
+                        <Text text="Value: {playground>/demo/sliderValue}" class="sapUiTinyMarginTop"/>
+                      </VBox>
+                      <VBox class="sapUiSmallMarginEnd" width="15rem">
+                        <Label text="Rating" class="sapUiTinyMarginBottom"/>
+                        <RatingIndicator value="{playground>/demo/ratingValue}" maxValue="5"/>
+                      </VBox>
+                      <VBox class="sapUiSmallMarginEnd" width="15rem">
+                        <Label text="Switch" class="sapUiTinyMarginBottom"/>
+                        <Switch state="{playground>/demo/switchState}" customTextOn="ON" customTextOff="OFF"/>
+                      </VBox>
+                    </HBox>
+                    <HBox wrap="Wrap" class="sapUiSmallMarginTop">
+                      <VBox class="sapUiSmallMarginEnd" width="15rem">
+                        <Label text="CheckBox" class="sapUiTinyMarginBottom"/>
+                        <CheckBox text="Option Alpha" selected="{playground>/demo/check1}"/>
+                        <CheckBox text="Option Beta" selected="{playground>/demo/check2}"/>
+                        <CheckBox text="Option Gamma" selected="{playground>/demo/check3}"/>
+                      </VBox>
+                      <VBox class="sapUiSmallMarginEnd" width="15rem">
+                        <Label text="RadioButtonGroup" class="sapUiTinyMarginBottom"/>
+                        <RadioButtonGroup selectedIndex="{playground>/demo/radioIndex}">
+                          <RadioButton text="Choice A"/>
+                          <RadioButton text="Choice B"/>
+                          <RadioButton text="Choice C"/>
+                        </RadioButtonGroup>
+                      </VBox>
+                      <VBox class="sapUiSmallMarginEnd" width="15rem">
+                        <Label text="TextArea" class="sapUiTinyMarginBottom"/>
+                        <TextArea value="{playground>/demo/textArea}" rows="3" growing="true" placeholder="Enter notes..."/>
+                      </VBox>
+                    </HBox>
+                  </VBox>
+                </content>
+              </Panel>
+
+              <!-- Button Types -->
+              <Panel headerText="Button Types" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                <content>
+                  <HBox wrap="Wrap" class="sapUiSmallMargin">
+                    <Button text="Default"     type="Default"     class="sapUiTinyMarginEnd sapUiTinyMarginBottom"/>
+                    <Button text="Emphasized"  type="Emphasized"  class="sapUiTinyMarginEnd sapUiTinyMarginBottom"/>
+                    <Button text="Accept"      type="Accept"      class="sapUiTinyMarginEnd sapUiTinyMarginBottom"/>
+                    <Button text="Reject"      type="Reject"      class="sapUiTinyMarginEnd sapUiTinyMarginBottom"/>
+                    <Button text="Attention"   type="Attention"   class="sapUiTinyMarginEnd sapUiTinyMarginBottom"/>
+                    <Button text="Transparent" type="Transparent" class="sapUiTinyMarginEnd sapUiTinyMarginBottom"/>
+                    <Button text="Ghost"       type="Ghost"       class="sapUiTinyMarginEnd sapUiTinyMarginBottom"/>
+                    <Button text="Neutral"     type="Neutral"     class="sapUiTinyMarginEnd sapUiTinyMarginBottom"/>
+                    <Button icon="sap-icon://add"  tooltip="Add"  class="sapUiTinyMarginEnd sapUiTinyMarginBottom"/>
+                    <Button text="With Icon" icon="sap-icon://edit" class="sapUiTinyMarginEnd sapUiTinyMarginBottom"/>
+                  </HBox>
+                </content>
+              </Panel>
+
+              <!-- Status Indicators -->
+              <Panel headerText="Status Indicators" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                <content>
+                  <HBox wrap="Wrap" alignItems="Center" class="sapUiSmallMargin">
+                    <ObjectStatus text="None"        state="None"        class="sapUiSmallMarginEnd"/>
+                    <ObjectStatus text="Success"     state="Success"     icon="sap-icon://accept"      class="sapUiSmallMarginEnd"/>
+                    <ObjectStatus text="Warning"     state="Warning"     icon="sap-icon://alert"       class="sapUiSmallMarginEnd"/>
+                    <ObjectStatus text="Error"       state="Error"       icon="sap-icon://error"       class="sapUiSmallMarginEnd"/>
+                    <ObjectStatus text="Information" state="Information" icon="sap-icon://information" class="sapUiSmallMarginEnd"/>
+                  </HBox>
+                  <HBox wrap="Wrap" class="sapUiSmallMarginBegin sapUiSmallMarginBottom">
+                    <MessageStrip text="Success"     type="Success"     showIcon="true" class="sapUiSmallMarginEnd sapUiTinyMarginBottom" width="12rem"/>
+                    <MessageStrip text="Warning"     type="Warning"     showIcon="true" class="sapUiSmallMarginEnd sapUiTinyMarginBottom" width="12rem"/>
+                    <MessageStrip text="Error"       type="Error"       showIcon="true" class="sapUiSmallMarginEnd sapUiTinyMarginBottom" width="12rem"/>
+                    <MessageStrip text="Information" type="Information" showIcon="true" class="sapUiTinyMarginBottom"                     width="12rem"/>
+                  </HBox>
+                </content>
+              </Panel>
+
+              <!-- Avatar Showcase -->
+              <Panel headerText="Avatar" expandable="true" expanded="false">
+                <content>
+                  <HBox wrap="Wrap" alignItems="Center" class="sapUiSmallMargin">
+                    <Avatar initials="AB" displaySize="XS" backgroundColor="Accent1" class="sapUiSmallMarginEnd"/>
+                    <Avatar initials="CD" displaySize="S"  backgroundColor="Accent2" class="sapUiSmallMarginEnd"/>
+                    <Avatar initials="EF" displaySize="M"  backgroundColor="Accent3" class="sapUiSmallMarginEnd"/>
+                    <Avatar initials="GH" displaySize="L"  backgroundColor="Accent4" class="sapUiSmallMarginEnd"/>
+                    <Avatar initials="IJ" displaySize="XL" backgroundColor="Accent5" class="sapUiSmallMarginEnd"/>
+                    <Avatar initials="KL" displayShape="Square" displaySize="M" backgroundColor="Accent6" class="sapUiSmallMarginEnd"/>
+                    <Avatar initials="MN" displayShape="Square" displaySize="M" backgroundColor="Accent7"/>
+                  </HBox>
+                </content>
+              </Panel>
+
+            </VBox>
+          </content>
+        </Page>
+
+        <!-- PAGE 4: Favorites -->
+        <Page id="favoritesPage" title="Favorites" showNavButton="true" navButtonPress=".onNavToHome">
+          <content>
+            <List
+              id="favoritesList"
+              items="{playground>/favorites}"
+              noDataText="No favorites yet — click the star icon on any component."
+              mode="Delete"
+              delete=".onDeleteFavorite">
+              <StandardListItem
+                title="{playground>name}"
+                description="{playground>description}"
+                icon="{playground>icon}"
+                type="Navigation"
+                press=".onFavoritePress"/>
+            </List>
+          </content>
+        </Page>
+
+      </NavContainer>
+    </content>
+  </Page>
+
+</mvc:View>

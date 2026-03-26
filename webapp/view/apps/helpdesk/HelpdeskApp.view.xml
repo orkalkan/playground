@@ -1,0 +1,355 @@
+<mvc:View
+  controllerName="ui5.fira.demos.controller.apps.helpdesk.HelpdeskApp"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:core="sap.ui.core"
+  xmlns:f="sap.ui.layout.form"
+  displayBlock="true">
+
+  <Page showHeader="false" enableScrolling="false" class="sapUiNoContentPadding">
+    <content>
+      <NavContainer id="helpdeskNav" height="100%">
+
+        <!-- ── Page 1: Ticket List ───────────────────────── -->
+        <Page id="ticketListPage" title="IT Helpdesk" class="fira-app-page"
+          showNavButton="true" navButtonPress=".onNavBackToLaunchpad">
+          <headerContent>
+            <Button text="New Ticket" type="Emphasized" icon="sap-icon://add" press=".onNewTicketPress"/>
+          </headerContent>
+          <subHeader>
+            <Bar>
+              <contentLeft>
+                <SearchField width="18rem" placeholder="Search tickets..." search=".onSearch"/>
+              </contentLeft>
+              <contentRight>
+                <Select id="ticketPriorityFilter" change=".onPriorityFilter">
+                  <core:ListItem key="all"      text="All Priorities"/>
+                  <core:ListItem key="Critical" text="Critical"/>
+                  <core:ListItem key="High"     text="High"/>
+                  <core:ListItem key="Medium"   text="Medium"/>
+                  <core:ListItem key="Low"      text="Low"/>
+                </Select>
+              </contentRight>
+            </Bar>
+          </subHeader>
+          <content>
+            <List id="ticketList" items="{helpdesk>/tickets}" noDataText="No tickets found" mode="None">
+              <CustomListItem press=".onTicketPress" type="Navigation">
+                <content>
+                  <HBox alignItems="Center" class="sapUiSmallMarginBeginEnd sapUiSmallMarginTopBottom">
+                    <core:Icon src="{path:'helpdesk>priority', formatter:'.formatPriorityIcon'}"
+                      size="1.25rem" color="{path:'helpdesk>priority', formatter:'.formatPriorityColor'}"
+                      class="sapUiSmallMarginEnd"/>
+                    <VBox width="14rem" class="sapUiSmallMarginEnd">
+                      <Text text="{helpdesk>id} — {helpdesk>subject}" renderWhitespace="false" wrapping="false"/>
+                      <Text text="{helpdesk>category} · {helpdesk>assignee}" class="sapUiTinyMarginTop"/>
+                    </VBox>
+                    <VBox width="6rem" class="sapUiSmallMarginEnd">
+                      <ObjectStatus text="{helpdesk>priority}" state="{path:'helpdesk>priority', formatter:'.formatPriorityState'}"/>
+                      <Text text="{path:'helpdesk>createdAt', formatter:'.formatDate'}" class="sapUiTinyMarginTop"/>
+                    </VBox>
+                    <ObjectStatus text="{helpdesk>status}" state="{path:'helpdesk>status', formatter:'.formatStatusState'}" class="sapUiSmallMarginEnd"/>
+                    <Button icon="sap-icon://delete" tooltip="Delete ticket" type="Transparent" press=".onDeleteTicketPress"/>
+                  </HBox>
+                </content>
+              </CustomListItem>
+            </List>
+          </content>
+        </Page>
+
+        <!-- ── Page 2: Create Ticket ────────────────────── -->
+        <Page id="ticketCreatePage" title="New Support Ticket" class="fira-app-page"
+          showNavButton="true" navButtonPress=".onNavBack">
+          <footer>
+            <Bar>
+              <contentRight>
+                <Button text="Cancel" press=".onNavBack"/>
+                <Button text="Submit Ticket" type="Emphasized" press=".onSubmitTicket" icon="sap-icon://paper-plane"/>
+              </contentRight>
+            </Bar>
+          </footer>
+          <content>
+            <VBox class="sapUiMediumMargin">
+              <Panel headerText="Ticket Information" expandable="false">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Category" required="true"/>
+                      <Select id="newTicketCategory" selectedKey="hardware">
+                        <core:ListItem key="hardware"   text="Hardware Issue"/>
+                        <core:ListItem key="software"   text="Software / Application"/>
+                        <core:ListItem key="network"    text="Network / Connectivity"/>
+                        <core:ListItem key="access"     text="Access &amp; Permissions"/>
+                        <core:ListItem key="email"      text="Email / Collaboration"/>
+                        <core:ListItem key="security"   text="Security Incident"/>
+                        <core:ListItem key="other"      text="Other"/>
+                      </Select>
+                      <Label text="Priority" required="true"/>
+                      <Select id="newTicketPriority" selectedKey="Medium">
+                        <core:ListItem key="Critical" text="Critical — Business stopped"/>
+                        <core:ListItem key="High"     text="High — Major impact"/>
+                        <core:ListItem key="Medium"   text="Medium — Limited impact"/>
+                        <core:ListItem key="Low"      text="Low — Minor issue"/>
+                      </Select>
+                      <Label text="Subject" required="true"/>
+                      <Input id="newTicketSubject" placeholder="Brief description of the issue" maxLength="120"/>
+                      <Label text="Description" required="true"/>
+                      <TextArea id="newTicketDescription" rows="5" width="100%" placeholder="Describe the issue in detail..."/>
+                      <Label text="Affected System"/>
+                      <Input id="newTicketSystem" placeholder="e.g. SAP ERP, Outlook, VPN, Laptop Model..."/>
+                      <Label text="Urgency Note"/>
+                      <TextArea id="newTicketUrgency" rows="2" width="100%" placeholder="Optional: business impact, deadline, affected users..."/>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+              <Panel headerText="Incident Details" class="sapUiSmallMarginTop" expandable="true" expanded="true">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Incident Time (when it started)"/>
+                      <TimePicker valueFormat="HH:mm" displayFormat="HH:mm" placeholder="HH:mm"/>
+                      <Label text="Number of Users Affected"/>
+                      <StepInput value="1" min="1" max="500" step="1" width="8rem"/>
+                      <Label text="Location / Building"/>
+                      <ComboBox placeholder="Select or type location...">
+                        <core:Item key="HQ-F1" text="HQ · Floor 1"/>
+                        <core:Item key="HQ-F2" text="HQ · Floor 2"/>
+                        <core:Item key="WH" text="Warehouse"/>
+                        <core:Item key="PROD" text="Production Floor"/>
+                        <core:Item key="REMOTE" text="Remote / Home Office"/>
+                      </ComboBox>
+                      <Label text="Contact Preference"/>
+                      <RadioButtonGroup columns="3">
+                        <RadioButton text="Email"/>
+                        <RadioButton text="Phone"/>
+                        <RadioButton text="Remote Session"/>
+                      </RadioButtonGroup>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+              <Panel headerText="Options" class="sapUiSmallMarginTop" expandable="true" expanded="true">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="VIP User"/>
+                      <Switch customTextOn="Yes" customTextOff="No"/>
+                      <Label text="Data Loss Involved"/>
+                      <CheckBox text="Incident involves data loss or corruption"/>
+                      <Label text="Security Incident"/>
+                      <CheckBox text="Incident has security implications"/>
+                      <Label text="Recurring Issue"/>
+                      <CheckBox text="This issue has occurred before"/>
+                      <Label text="Affected Services"/>
+                      <MultiComboBox placeholder="Select affected services...">
+                        <core:Item key="sap" text="SAP ERP"/>
+                        <core:Item key="email" text="Email / Exchange"/>
+                        <core:Item key="vpn" text="VPN"/>
+                        <core:Item key="sharepoint" text="SharePoint"/>
+                        <core:Item key="teams" text="Microsoft Teams"/>
+                        <core:Item key="printing" text="Printing"/>
+                      </MultiComboBox>
+                      <Label text="Related Ticket Numbers"/>
+                      <MultiInput showValueHelp="false" placeholder="Add related ticket IDs as tags..."/>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+              <Panel headerText="Assessment" class="sapUiSmallMarginTop" expandable="true" expanded="true">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Business Impact Score (0–10)"/>
+                      <Slider min="0" max="10" step="1" showAdvancedTooltip="true" enableTickmarks="true" value="5"/>
+                      <Label text="Current Customer Satisfaction"/>
+                      <RatingIndicator maxValue="5" value="3"/>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+            </VBox>
+          </content>
+        </Page>
+
+        <!-- ── Page 3: Ticket Detail ─────────────────────── -->
+        <Page id="ticketDetailPage" title="Ticket Detail" class="fira-app-page"
+          showNavButton="true" navButtonPress=".onNavBack">
+          <headerContent>
+            <Button text="Edit" icon="sap-icon://edit" press=".onEditTicketPress"/>
+            <Button text="Close Ticket" type="Accept" icon="sap-icon://accept" press=".onCloseTicket"/>
+          </headerContent>
+          <content>
+            <VBox class="sapUiMediumMargin">
+              <Panel expandable="false">
+                <content>
+                  <f:SimpleForm layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Ticket ID"/>    <Text text="{helpdesk>/selectedTicket/id}"/>
+                      <Label text="Subject"/>      <Text text="{helpdesk>/selectedTicket/subject}"/>
+                      <Label text="Category"/>     <Text text="{helpdesk>/selectedTicket/category}"/>
+                      <Label text="Priority"/>
+                      <ObjectStatus text="{helpdesk>/selectedTicket/priority}" state="{path:'helpdesk>/selectedTicket/priority', formatter:'.formatPriorityState'}"/>
+                      <Label text="Status"/>
+                      <ObjectStatus text="{helpdesk>/selectedTicket/status}" state="{path:'helpdesk>/selectedTicket/status', formatter:'.formatStatusState'}"/>
+                      <Label text="Assignee"/>     <Text text="{helpdesk>/selectedTicket/assignee}"/>
+                      <Label text="Created"/>      <Text text="{path:'helpdesk>/selectedTicket/createdAt', formatter:'.formatDate'}"/>
+                      <Label text="SLA Target"/>   <Text text="{helpdesk>/selectedTicket/slaTarget}"/>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+              <Panel headerText="Activity Log" class="sapUiSmallMarginTop" expandable="true" expanded="true">
+                <content>
+                  <List items="{helpdesk>/selectedTicket/activity}" noDataText="No activity yet">
+                    <StandardListItem
+                      title="{helpdesk>author} — {helpdesk>action}"
+                      description="{helpdesk>note}"
+                      info="{path:'helpdesk>timestamp', formatter:'.formatDate'}"
+                      icon="{helpdesk>icon}"/>
+                  </List>
+                </content>
+              </Panel>
+              <Panel headerText="Add Work Note" class="sapUiSmallMarginTop" expandable="true">
+                <content>
+                  <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginTopBottom">
+                    <TextArea id="workNoteText" rows="3" width="100%" placeholder="Add an update or note..."/>
+                    <Button text="Post Note" type="Emphasized" press=".onPostNote" class="sapUiSmallMarginTop" icon="sap-icon://comment"/>
+                  </VBox>
+                </content>
+              </Panel>
+            </VBox>
+          </content>
+        </Page>
+
+        <!-- ── Page 4: Edit Ticket ───────────────────────── -->
+        <Page id="ticketEditPage" title="Edit Ticket" class="fira-app-page"
+          showNavButton="true" navButtonPress=".onNavBack">
+          <footer>
+            <Bar>
+              <contentRight>
+                <Button text="Cancel" press=".onNavBack"/>
+                <Button text="Save Changes" type="Emphasized" press=".onSaveTicket" icon="sap-icon://accept"/>
+              </contentRight>
+            </Bar>
+          </footer>
+          <content>
+            <VBox class="sapUiMediumMargin">
+              <Panel headerText="Edit Ticket" expandable="false">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Category" required="true"/>
+                      <Select id="editTicketCategory" selectedKey="{helpdesk>/editTicket/categoryKey}">
+                        <core:ListItem key="hardware"   text="Hardware Issue"/>
+                        <core:ListItem key="software"   text="Software / Application"/>
+                        <core:ListItem key="network"    text="Network / Connectivity"/>
+                        <core:ListItem key="access"     text="Access &amp; Permissions"/>
+                        <core:ListItem key="email"      text="Email / Collaboration"/>
+                        <core:ListItem key="security"   text="Security Incident"/>
+                        <core:ListItem key="other"      text="Other"/>
+                      </Select>
+                      <Label text="Priority" required="true"/>
+                      <Select id="editTicketPriority" selectedKey="{helpdesk>/editTicket/priority}">
+                        <core:ListItem key="Critical" text="Critical — Business stopped"/>
+                        <core:ListItem key="High"     text="High — Major impact"/>
+                        <core:ListItem key="Medium"   text="Medium — Limited impact"/>
+                        <core:ListItem key="Low"      text="Low — Minor issue"/>
+                      </Select>
+                      <Label text="Subject" required="true"/>
+                      <Input id="editTicketSubject" value="{helpdesk>/editTicket/subject}" maxLength="120"/>
+                      <Label text="Status"/>
+                      <Select id="editTicketStatus" selectedKey="{helpdesk>/editTicket/status}">
+                        <core:ListItem key="Open"        text="Open"/>
+                        <core:ListItem key="In Progress" text="In Progress"/>
+                        <core:ListItem key="Resolved"    text="Resolved"/>
+                        <core:ListItem key="Closed"      text="Closed"/>
+                      </Select>
+                      <Label text="Assignee"/>
+                      <Select id="editTicketAssignee" selectedKey="{helpdesk>/editTicket/assigneeKey}">
+                        <core:ListItem key="l1-vogel"   text="Level 1 — M. Vogel"/>
+                        <core:ListItem key="l1-maier"   text="Level 1 — S. Maier"/>
+                        <core:ListItem key="l1-lange"   text="Level 1 — T. Lange"/>
+                        <core:ListItem key="l2-braun"   text="Level 2 — K. Braun"/>
+                        <core:ListItem key="facilities" text="Facilities"/>
+                      </Select>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+              <Panel headerText="Incident Details" class="sapUiSmallMarginTop" expandable="true" expanded="true">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Incident Time (when it started)"/>
+                      <TimePicker valueFormat="HH:mm" displayFormat="HH:mm" placeholder="HH:mm"/>
+                      <Label text="Number of Users Affected"/>
+                      <StepInput value="1" min="1" max="500" step="1" width="8rem"/>
+                      <Label text="Location / Building"/>
+                      <ComboBox placeholder="Select or type location...">
+                        <core:Item key="HQ-F1" text="HQ · Floor 1"/>
+                        <core:Item key="HQ-F2" text="HQ · Floor 2"/>
+                        <core:Item key="WH" text="Warehouse"/>
+                        <core:Item key="PROD" text="Production Floor"/>
+                        <core:Item key="REMOTE" text="Remote / Home Office"/>
+                      </ComboBox>
+                      <Label text="Contact Preference"/>
+                      <RadioButtonGroup columns="3">
+                        <RadioButton text="Email"/>
+                        <RadioButton text="Phone"/>
+                        <RadioButton text="Remote Session"/>
+                      </RadioButtonGroup>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+              <Panel headerText="Options" class="sapUiSmallMarginTop" expandable="true" expanded="true">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="VIP User"/>
+                      <Switch customTextOn="Yes" customTextOff="No"/>
+                      <Label text="Data Loss Involved"/>
+                      <CheckBox text="Incident involves data loss or corruption"/>
+                      <Label text="Security Incident"/>
+                      <CheckBox text="Incident has security implications"/>
+                      <Label text="Recurring Issue"/>
+                      <CheckBox text="This issue has occurred before"/>
+                      <Label text="Affected Services"/>
+                      <MultiComboBox placeholder="Select affected services...">
+                        <core:Item key="sap" text="SAP ERP"/>
+                        <core:Item key="email" text="Email / Exchange"/>
+                        <core:Item key="vpn" text="VPN"/>
+                        <core:Item key="sharepoint" text="SharePoint"/>
+                        <core:Item key="teams" text="Microsoft Teams"/>
+                        <core:Item key="printing" text="Printing"/>
+                      </MultiComboBox>
+                      <Label text="Related Ticket Numbers"/>
+                      <MultiInput showValueHelp="false" placeholder="Add related ticket IDs as tags..."/>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+              <Panel headerText="Assessment" class="sapUiSmallMarginTop" expandable="true" expanded="true">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Business Impact Score (0–10)"/>
+                      <Slider min="0" max="10" step="1" showAdvancedTooltip="true" enableTickmarks="true" value="5"/>
+                      <Label text="Current Customer Satisfaction"/>
+                      <RatingIndicator maxValue="5" value="3"/>
+                      <Label text="Resolution Notes"/>
+                      <TextArea rows="3" width="100%" placeholder="Add resolution steps, workarounds, or notes for the user..."/>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+            </VBox>
+          </content>
+        </Page>
+
+      </NavContainer>
+    </content>
+  </Page>
+
+</mvc:View>

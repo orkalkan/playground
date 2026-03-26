@@ -1,0 +1,401 @@
+<mvc:View
+  controllerName="ui5.fira.demos.controller.apps.onboarding.OnboardingApp"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:core="sap.ui.core"
+  xmlns:f="sap.ui.layout.form"
+  displayBlock="true">
+
+  <Page showHeader="false" enableScrolling="false" class="sapUiNoContentPadding">
+    <content>
+      <NavContainer id="onboardingNav" height="100%">
+
+        <!-- ── Page 1: New Hires List (HR View) ─────────── -->
+        <Page id="onboardingListPage" title="Employee Onboarding" class="fira-app-page"
+          showNavButton="true" navButtonPress=".onNavBackToLaunchpad">
+          <headerContent>
+            <Button text="Add New Hire" type="Emphasized" icon="sap-icon://add" press=".onAddNewHirePress"/>
+          </headerContent>
+          <content>
+            <VBox class="sapUiMediumMargin">
+              <Text text="NEW HIRES IN PROGRESS" class="fira-section-title sapUiNoMarginBegin sapUiSmallMarginBottom"/>
+              <Table id="newHiresTable" items="{onboarding>/newHires}" noDataText="No onboarding cases">
+                <columns>
+                  <Column><Text text="Employee"/></Column>
+                  <Column><Text text="Department"/></Column>
+                  <Column><Text text="Start Date"/></Column>
+                  <Column><Text text="Progress"/></Column>
+                  <Column><Text text="Status"/></Column>
+                  <Column><Text text="Actions"/></Column>
+                </columns>
+                <items>
+                  <ColumnListItem press=".onNewHirePress" type="Navigation">
+                    <cells>
+                      <HBox alignItems="Center">
+                        <Avatar initials="{onboarding>initials}" backgroundColor="{onboarding>avatarColor}" displaySize="S" displayShape="Circle" class="sapUiSmallMarginEnd"/>
+                        <VBox>
+                          <Text text="{onboarding>name}"/>
+                          <Text text="{onboarding>role}" class="sapUiTinyMarginTop"/>
+                        </VBox>
+                      </HBox>
+                      <Text text="{onboarding>department}"/>
+                      <Text text="{path:'onboarding>startDate', formatter:'.formatDate'}"/>
+                      <HBox alignItems="Center">
+                        <ProgressIndicator percentValue="{onboarding>progress}" state="Success" showValue="false" width="6rem" height="0.5rem"/>
+                        <Text text="{onboarding>progress}%" class="sapUiSmallMarginBegin"/>
+                      </HBox>
+                      <ObjectStatus text="{onboarding>status}" state="{path:'onboarding>status', formatter:'.formatHireState'}"/>
+                      <HBox>
+                        <Button icon="sap-icon://edit" tooltip="Edit" type="Transparent" press=".onEditHirePress"/>
+                        <Button icon="sap-icon://delete" tooltip="Cancel onboarding" type="Transparent" press=".onDeleteHirePress"/>
+                      </HBox>
+                    </cells>
+                  </ColumnListItem>
+                </items>
+              </Table>
+            </VBox>
+          </content>
+        </Page>
+
+        <!-- ── Page 2: Onboarding Checklist ─────────────── -->
+        <Page id="onboardingWelcomePage" title="Onboarding Checklist" class="fira-app-page"
+          showNavButton="true" navButtonPress=".onNavBack">
+          <content>
+            <VBox class="sapUiMediumMargin">
+              <Panel expandable="false" class="fira-onboarding-card">
+                <content>
+                  <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginTopBottom">
+                    <HBox alignItems="Center">
+                      <Avatar initials="{onboarding>/selectedHire/initials}" backgroundColor="{onboarding>/selectedHire/avatarColor}" displaySize="L" displayShape="Circle" class="sapUiSmallMarginEnd"/>
+                      <VBox>
+                        <Title text="Welcome, {onboarding>/selectedHire/name}!" level="H3"/>
+                        <Text text="{onboarding>/selectedHire/role} · {onboarding>/selectedHire/department}" class="sapUiTinyMarginTop"/>
+                        <Text text="Start date: {path:'onboarding>/selectedHire/startDate', formatter:'.formatDate'}" class="sapUiTinyMarginTop"/>
+                      </VBox>
+                    </HBox>
+                    <VBox class="sapUiSmallMarginTop">
+                      <HBox justifyContent="SpaceBetween">
+                        <Text text="Onboarding progress"/>
+                        <Text text="{onboarding>/selectedHire/progress}% complete"/>
+                      </HBox>
+                      <ProgressIndicator
+                        class="sapUiSmallMarginTop"
+                        percentValue="{onboarding>/selectedHire/progress}"
+                        state="Success"
+                        showValue="false"
+                        height="0.5rem"/>
+                    </VBox>
+                  </VBox>
+                </content>
+              </Panel>
+
+              <Text text="ONBOARDING CHECKLIST" class="fira-section-title sapUiNoMarginBegin sapUiSmallMarginTop"/>
+              <List id="checklistItems" items="{onboarding>/checklist}" class="sapUiSmallMarginTop" noDataText="All done!">
+                <CustomListItem press=".onChecklistItemPress" type="Navigation">
+                  <content>
+                    <HBox alignItems="Center" class="sapUiSmallMarginBeginEnd sapUiSmallMarginTopBottom" justifyContent="SpaceBetween">
+                      <HBox alignItems="Center">
+                        <core:Icon src="{path:'onboarding>status', formatter:'.formatCheckIcon'}"
+                          color="{path:'onboarding>status', formatter:'.formatCheckColor'}"
+                          size="1.25rem" class="sapUiSmallMarginEnd"/>
+                        <VBox>
+                          <Text text="{onboarding>title}" renderWhitespace="false"/>
+                          <Text text="{onboarding>description}" class="sapUiTinyMarginTop"/>
+                        </VBox>
+                      </HBox>
+                      <ObjectStatus text="{onboarding>status}" state="{path:'onboarding>status', formatter:'.formatStepState'}"/>
+                    </HBox>
+                  </content>
+                </CustomListItem>
+              </List>
+            </VBox>
+          </content>
+        </Page>
+
+        <!-- ── Page 3: Personal Information / Edit ───────── -->
+        <Page id="onboardingPersonalPage" title="Personal Information" class="fira-app-page"
+          showNavButton="true" navButtonPress=".onNavBack">
+          <footer>
+            <Bar>
+              <contentRight>
+                <Button text="Save &amp; Continue" type="Emphasized" press=".onSavePersonalData" icon="sap-icon://accept"/>
+              </contentRight>
+            </Bar>
+          </footer>
+          <content>
+            <VBox class="sapUiMediumMargin">
+              <Panel headerText="Employee Data" expandable="false">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Employee ID"/>    <Input value="{onboarding>/selectedHire/empId}" enabled="false"/>
+                      <Label text="First Name" required="true"/>  <Input value="{onboarding>/selectedHire/firstName}"/>
+                      <Label text="Last Name" required="true"/>   <Input value="{onboarding>/selectedHire/lastName}"/>
+                      <Label text="Date of Birth" required="true"/>
+                      <DatePicker value="{onboarding>/selectedHire/dob}" valueFormat="yyyy-MM-dd" displayFormat="dd.MM.yyyy"/>
+                      <Label text="Nationality"/>
+                      <Select selectedKey="{onboarding>/selectedHire/nationality}">
+                        <core:ListItem key="DE" text="German"/>
+                        <core:ListItem key="AT" text="Austrian"/>
+                        <core:ListItem key="CH" text="Swiss"/>
+                        <core:ListItem key="OTHER" text="Other"/>
+                      </Select>
+                      <Label text="Personal Email" required="true"/>
+                      <Input value="{onboarding>/selectedHire/personalEmail}" type="Email"/>
+                      <Label text="Mobile Phone"/>
+                      <Input value="{onboarding>/selectedHire/phone}" type="Tel"/>
+                      <Label text="Emergency Contact"/>
+                      <Input value="{onboarding>/selectedHire/emergencyContact}"/>
+                      <Label text="Home Address" required="true"/>
+                      <TextArea value="{onboarding>/selectedHire/address}" rows="2" width="100%"/>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+              <Panel headerText="Employment Details" class="sapUiSmallMarginTop" expandable="true" expanded="true">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Start Time on First Day"/>
+                      <TimePicker valueFormat="HH:mm" displayFormat="HH:mm" placeholder="HH:mm"/>
+                      <Label text="Years of Experience"/>
+                      <StepInput value="0" min="0" max="50" step="1" width="8rem"/>
+                      <Label text="Office Location"/>
+                      <ComboBox placeholder="Select or type office location...">
+                        <core:Item key="HQ-MUC" text="HQ Munich"/>
+                        <core:Item key="HQ-BER" text="HQ Berlin"/>
+                        <core:Item key="HQ-HAM" text="Hamburg Office"/>
+                        <core:Item key="HQ-FFM" text="Frankfurt Office"/>
+                        <core:Item key="REMOTE" text="Fully Remote"/>
+                      </ComboBox>
+                      <Label text="Employment Type"/>
+                      <RadioButtonGroup columns="4">
+                        <RadioButton text="Full-Time"/>
+                        <RadioButton text="Part-Time"/>
+                        <RadioButton text="Freelance"/>
+                        <RadioButton text="Intern"/>
+                      </RadioButtonGroup>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+              <Panel headerText="Options" class="sapUiSmallMarginTop" expandable="true" expanded="true">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Remote Work Eligible"/>
+                      <Switch customTextOn="Yes" customTextOff="No"/>
+                      <Label text="Has Valid Work Permit"/>
+                      <CheckBox text="Employee holds a valid work permit for this country"/>
+                      <Label text="Relocation Assistance Required"/>
+                      <CheckBox text="Employee requires relocation support package"/>
+                      <Label text="Company Car Eligible"/>
+                      <CheckBox text="Position qualifies for company car policy"/>
+                      <Label text="Skills / Competencies"/>
+                      <MultiComboBox placeholder="Select relevant skills...">
+                        <core:Item key="sap" text="SAP"/>
+                        <core:Item key="pm" text="Project Management"/>
+                        <core:Item key="dev" text="Software Development"/>
+                        <core:Item key="data" text="Data Analysis"/>
+                        <core:Item key="sales" text="Sales &amp; CRM"/>
+                        <core:Item key="hr" text="HR Management"/>
+                        <core:Item key="fin" text="Finance &amp; Controlling"/>
+                      </MultiComboBox>
+                      <Label text="Previous Employers"/>
+                      <MultiInput showValueHelp="false" placeholder="Add previous employer names as tags..."/>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+              <Panel headerText="Assessment" class="sapUiSmallMarginTop" expandable="true" expanded="true">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Salary Band Level (1–10)"/>
+                      <Slider min="1" max="10" step="1" showAdvancedTooltip="true" enableTickmarks="true" value="5"/>
+                      <Label text="Interview Score"/>
+                      <RatingIndicator maxValue="5" value="4"/>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+            </VBox>
+          </content>
+        </Page>
+
+        <!-- ── Page 4: Documents &amp; Equipment ─────────── -->
+        <Page id="onboardingDocsPage" title="Documents &amp; Equipment" class="fira-app-page"
+          showNavButton="true" navButtonPress=".onNavBack">
+          <footer>
+            <Bar>
+              <contentRight>
+                <Button text="Confirm &amp; Submit" type="Emphasized" press=".onConfirmDocs" icon="sap-icon://accept"/>
+              </contentRight>
+            </Bar>
+          </footer>
+          <content>
+            <VBox class="sapUiMediumMargin">
+              <MessageStrip text="Please ensure all required documents are uploaded before confirming." type="Information" showIcon="true" class="sapUiSmallMarginBottom"/>
+              <Panel headerText="Required Documents" expandable="false">
+                <content>
+                  <List id="documentList" items="{onboarding>/documents}" noDataText="No documents required">
+                    <CustomListItem>
+                      <content>
+                        <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapUiSmallMarginBeginEnd sapUiSmallMarginTopBottom">
+                          <HBox alignItems="Center">
+                            <core:Icon src="{path:'onboarding>uploaded', formatter:'.formatDocIcon'}"
+                              color="{path:'onboarding>uploaded', formatter:'.formatDocColor'}"
+                              size="1.25rem" class="sapUiSmallMarginEnd"/>
+                            <VBox>
+                              <Text text="{onboarding>name}" renderWhitespace="false"/>
+                              <Text text="{onboarding>description}" class="sapUiTinyMarginTop"/>
+                            </VBox>
+                          </HBox>
+                          <HBox alignItems="Center">
+                            <ObjectStatus text="{path:'onboarding>uploaded', formatter:'.formatDocStatus'}" state="{path:'onboarding>uploaded', formatter:'.formatDocState'}" class="sapUiSmallMarginEnd"/>
+                            <Button text="Upload" icon="sap-icon://upload" press=".onUploadDoc" compact="true"/>
+                          </HBox>
+                        </HBox>
+                      </content>
+                    </CustomListItem>
+                  </List>
+                </content>
+              </Panel>
+              <Panel headerText="Equipment Request" class="sapUiSmallMarginTop" expandable="true" expanded="true">
+                <content>
+                  <List id="equipmentList" items="{onboarding>/equipment}" noDataText="No equipment options" mode="MultiSelect" selectionChange=".onEquipmentSelect">
+                    <StandardListItem
+                      title="{onboarding>name}"
+                      description="{onboarding>description}"
+                      icon="{onboarding>icon}"
+                      info="{onboarding>category}"
+                      selected="{onboarding>selected}"/>
+                  </List>
+                </content>
+              </Panel>
+            </VBox>
+          </content>
+        </Page>
+
+        <!-- ── Page 5: Add / Edit New Hire ───────────────── -->
+        <Page id="onboardingNewHirePage" title="Add New Hire" class="fira-app-page"
+          showNavButton="true" navButtonPress=".onNavBack">
+          <footer>
+            <Bar>
+              <contentRight>
+                <Button text="Cancel" press=".onNavBack"/>
+                <Button text="Create Onboarding Case" type="Emphasized" press=".onSaveNewHire" icon="sap-icon://accept"/>
+              </contentRight>
+            </Bar>
+          </footer>
+          <content>
+            <VBox class="sapUiMediumMargin">
+              <Panel headerText="New Employee Details" expandable="false">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="First Name" required="true"/>
+                      <Input id="newHireFirstName" placeholder="First name"/>
+                      <Label text="Last Name" required="true"/>
+                      <Input id="newHireLastName" placeholder="Last name"/>
+                      <Label text="Role / Position" required="true"/>
+                      <Input id="newHireRole" placeholder="e.g. Software Engineer, Sales Manager..."/>
+                      <Label text="Department" required="true"/>
+                      <Select id="newHireDept" selectedKey="IT">
+                        <core:ListItem key="IT"          text="IT Department"/>
+                        <core:ListItem key="Sales"        text="Sales Germany"/>
+                        <core:ListItem key="HR"           text="Human Resources"/>
+                        <core:ListItem key="Finance"      text="Finance &amp; Controlling"/>
+                        <core:ListItem key="Logistics"    text="Logistics &amp; Warehouse"/>
+                        <core:ListItem key="Production"   text="Production"/>
+                        <core:ListItem key="Marketing"    text="Marketing"/>
+                        <core:ListItem key="Management"   text="Management"/>
+                      </Select>
+                      <Label text="Start Date" required="true"/>
+                      <DatePicker id="newHireStartDate" valueFormat="yyyy-MM-dd" displayFormat="dd.MM.yyyy"/>
+                      <Label text="Hiring Manager"/>
+                      <Input id="newHireManager" placeholder="Manager name"/>
+                      <Label text="Personal Email" required="true"/>
+                      <Input id="newHireEmail" type="Email" placeholder="personal@email.com"/>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+              <Panel headerText="Employment Details" class="sapUiSmallMarginTop" expandable="true" expanded="true">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Start Time on First Day"/>
+                      <TimePicker valueFormat="HH:mm" displayFormat="HH:mm" placeholder="HH:mm"/>
+                      <Label text="Years of Experience"/>
+                      <StepInput value="0" min="0" max="50" step="1" width="8rem"/>
+                      <Label text="Office Location"/>
+                      <ComboBox placeholder="Select or type office location...">
+                        <core:Item key="HQ-MUC" text="HQ Munich"/>
+                        <core:Item key="HQ-BER" text="HQ Berlin"/>
+                        <core:Item key="HQ-HAM" text="Hamburg Office"/>
+                        <core:Item key="HQ-FFM" text="Frankfurt Office"/>
+                        <core:Item key="REMOTE" text="Fully Remote"/>
+                      </ComboBox>
+                      <Label text="Employment Type"/>
+                      <RadioButtonGroup columns="4">
+                        <RadioButton text="Full-Time"/>
+                        <RadioButton text="Part-Time"/>
+                        <RadioButton text="Freelance"/>
+                        <RadioButton text="Intern"/>
+                      </RadioButtonGroup>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+              <Panel headerText="Options" class="sapUiSmallMarginTop" expandable="true" expanded="true">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Remote Work Eligible"/>
+                      <Switch customTextOn="Yes" customTextOff="No"/>
+                      <Label text="Has Valid Work Permit"/>
+                      <CheckBox text="Employee holds a valid work permit for this country"/>
+                      <Label text="Relocation Assistance Required"/>
+                      <CheckBox text="Employee requires relocation support package"/>
+                      <Label text="Company Car Eligible"/>
+                      <CheckBox text="Position qualifies for company car policy"/>
+                      <Label text="Skills / Competencies"/>
+                      <MultiComboBox placeholder="Select relevant skills...">
+                        <core:Item key="sap" text="SAP"/>
+                        <core:Item key="pm" text="Project Management"/>
+                        <core:Item key="dev" text="Software Development"/>
+                        <core:Item key="data" text="Data Analysis"/>
+                        <core:Item key="sales" text="Sales &amp; CRM"/>
+                        <core:Item key="hr" text="HR Management"/>
+                        <core:Item key="fin" text="Finance &amp; Controlling"/>
+                      </MultiComboBox>
+                      <Label text="Previous Employers"/>
+                      <MultiInput showValueHelp="false" placeholder="Add previous employer names as tags..."/>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+              <Panel headerText="Assessment" class="sapUiSmallMarginTop" expandable="true" expanded="true">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Salary Band Level (1–10)"/>
+                      <Slider min="1" max="10" step="1" showAdvancedTooltip="true" enableTickmarks="true" value="5"/>
+                      <Label text="Interview Score"/>
+                      <RatingIndicator maxValue="5" value="4"/>
+                      <Label text="Onboarding Notes"/>
+                      <TextArea rows="3" width="100%" placeholder="Additional notes for the HR team or hiring manager..."/>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+            </VBox>
+          </content>
+        </Page>
+
+      </NavContainer>
+    </content>
+  </Page>
+
+</mvc:View>

@@ -1,0 +1,79 @@
+{
+  "_version": "1.58.0",
+  "sap.app": {
+    "id": "ui5.fira.demos",
+    "type": "application",
+    "title": "Fira Demo Portal",
+    "description": "Real-world UI5 application scenarios — ORKLABS.IO",
+    "applicationVersion": { "version": "1.0.0" }
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "deviceTypes": { "desktop": true, "tablet": true, "phone": false }
+  },
+  "sap.ui5": {
+    "rootView": {
+      "viewName": "ui5.fira.demos.view.App",
+      "type": "XML",
+      "async": true,
+      "id": "app"
+    },
+    "dependencies": {
+      "minUI5Version": "1.120.0",
+      "libs": {
+        "sap.m": {},
+        "sap.ui.core": {},
+        "sap.ui.layout": {},
+        "sap.f": {},
+        "sap.tnt": {},
+        "sap.uxap": {},
+        "sap.ui.table": {},
+        "sap.ui.unified": {}
+      }
+    },
+    "resources": {
+      "css": [{ "uri": "css/style.css" }]
+    },
+    "contentDensities": { "compact": true, "cozy": true },
+    "routing": {
+      "config": {
+        "routerClass": "sap.m.routing.Router",
+        "viewType": "XML",
+        "viewPath": "ui5.fira.demos.view",
+        "controlId": "appNavContainer",
+        "controlAggregation": "pages",
+        "async": true
+      },
+      "routes": [
+        { "name": "login",       "pattern": "login",       "target": "login"       },
+        { "name": "launchpad",   "pattern": "",            "target": "launchpad"   },
+        { "name": "po",          "pattern": "po",          "target": "po"          },
+        { "name": "leave",       "pattern": "leave",       "target": "leave"       },
+        { "name": "sales",       "pattern": "sales",       "target": "sales"       },
+        { "name": "travel",      "pattern": "travel",      "target": "travel"      },
+        { "name": "helpdesk",    "pattern": "helpdesk",    "target": "helpdesk"    },
+        { "name": "onboarding",  "pattern": "onboarding",  "target": "onboarding"  },
+        { "name": "assets",      "pattern": "assets",      "target": "assets"      },
+        { "name": "quality",     "pattern": "quality",     "target": "quality"     },
+        { "name": "budget",      "pattern": "budget",      "target": "budget"      },
+        { "name": "warehouse",   "pattern": "warehouse",   "target": "warehouse"   },
+        { "name": "playground",  "pattern": "playground",  "target": "playground"  }
+      ],
+      "targets": {
+        "login":      { "viewId": "login",      "viewName": "Login"                           },
+        "launchpad":  { "viewId": "launchpad",  "viewName": "Launchpad"                       },
+        "po":         { "viewId": "po",         "viewName": "apps.po.POApp"                  },
+        "leave":      { "viewId": "leave",      "viewName": "apps.leave.LeaveApp"            },
+        "sales":      { "viewId": "sales",      "viewName": "apps.sales.SalesApp"            },
+        "travel":     { "viewId": "travel",     "viewName": "apps.travel.TravelApp"          },
+        "helpdesk":   { "viewId": "helpdesk",   "viewName": "apps.helpdesk.HelpdeskApp"      },
+        "onboarding": { "viewId": "onboarding", "viewName": "apps.onboarding.OnboardingApp"  },
+        "assets":     { "viewId": "assets",     "viewName": "apps.assets.AssetApp"           },
+        "quality":    { "viewId": "quality",    "viewName": "apps.quality.QualityApp"        },
+        "budget":     { "viewId": "budget",     "viewName": "apps.budget.BudgetApp"          },
+        "warehouse":  { "viewId": "warehouse",  "viewName": "apps.warehouse.WarehouseApp"    },
+        "playground": { "viewId": "playground", "viewName": "apps.playground.PlaygroundApp"  }
+      }
+    }
+  }
+}

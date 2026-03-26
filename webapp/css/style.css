@@ -1,0 +1,160 @@
+/* ─── Login Page ─────────────────────────────────────────────── */
+.fira-login-page {
+  background: linear-gradient(135deg, #f0f4ff 0%, #e8edf8 100%);
+  min-height: 100%;
+}
+
+.fira-login-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 112, 243, 0.12);
+  padding: 2.5rem 2rem;
+  width: 22rem;
+  max-width: 95vw;
+}
+
+.fira-login-error {
+  width: 100%;
+}
+
+.fira-login-btn {
+  border-radius: 6px !important;
+}
+
+.fira-login-hint {
+  color: #8c8c8c;
+  font-size: 0.75rem;
+}
+
+/* ─── Height chain fix ───────────────────────────────────────── */
+#container,
+#container-uiarea,
+#container-demos---app,
+#container-demos---app--appNavContainer {
+  height: 100%;
+}
+
+/* ─── Launchpad ──────────────────────────────────────────────── */
+.fira-launchpad-page.sapMPage > .sapMPageEnableScrolling {
+  background: #f5f6f7;
+}
+
+.fira-launchpad-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 3rem;
+}
+
+.fira-launchpad-header {
+  margin-bottom: 2rem;
+}
+
+.fira-portal-brand {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: #0070F2;
+  text-transform: uppercase;
+}
+
+.fira-tile-grid {
+  gap: 1rem;
+}
+
+/* ─── Playground category grid ──────────────────────────────── */
+.fira-playground-grid {
+  gap: 1rem;
+  padding: 0 1rem 2rem;
+}
+
+.fira-tile {
+  width: 220px;
+  margin: 0 !important;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  border-radius: 12px !important;
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.fira-tile:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.14);
+  transform: translateY(-2px);
+}
+
+.fira-tile-playground {
+  background: linear-gradient(135deg, #0070F2 0%, #0050BE 100%) !important;
+}
+
+.fira-tile-playground .sapMGTHdrTxt,
+.fira-tile-playground .sapMGTSubHdrTxt {
+  color: #fff !important;
+}
+
+/* ─── App shell ──────────────────────────────────────────────── */
+.fira-app-page .sapMPageHeader {
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.fira-section-title {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #8c8c8c;
+  padding: 1rem 1rem 0.25rem;
+}
+
+/* ─── Status badges ──────────────────────────────────────────── */
+.fira-status-open      { color: #0070F2 !important; }
+.fira-status-pending   { color: #E9730C !important; }
+.fira-status-approved  { color: #188918 !important; }
+.fira-status-closed    { color: #8c8c8c !important; }
+.fira-status-rejected  { color: #BB0000 !important; }
+
+/* ─── Success screen ─────────────────────────────────────────── */
+.fira-success-box {
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
+.fira-success-icon {
+  color: #188918;
+  margin-bottom: 1rem;
+}
+
+/* ─── Welcome / Onboarding ───────────────────────────────────── */
+.fira-onboarding-card {
+  border-radius: 12px;
+  border: 1px solid #e5e5e5;
+  overflow: hidden;
+}
+
+.fira-progress-bar {
+  height: 6px;
+  background: #e5e5e5;
+  border-radius: 3px;
+  margin: 0.5rem 0 0;
+}
+
+.fira-progress-fill {
+  height: 100%;
+  background: #0070F2;
+  border-radius: 3px;
+}
+
+/* ─── Budget chart table ─────────────────────────────────────── */
+.fira-budget-bar {
+  height: 8px;
+  background: #e5e5e5;
+  border-radius: 4px;
+  overflow: hidden;
+  min-width: 80px;
+}
+
+.fira-budget-fill {
+  height: 100%;
+  border-radius: 4px;
+  background: #0070F2;
+}
+
+.fira-budget-fill-warn  { background: #E9730C; }
+.fira-budget-fill-over  { background: #BB0000; }
