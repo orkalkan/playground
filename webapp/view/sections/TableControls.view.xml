@@ -1,0 +1,328 @@
+<mvc:View
+  controllerName="ui5.fira.playground.controller.sections.TableControls"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:core="sap.ui.core"
+  xmlns:t="sap.ui.table"
+  displayBlock="true">
+
+  <Page title="5. Table Controls" showNavButton="false"
+    class="sapUiResponsivePadding--header sapUiResponsivePadding--content">
+    <content>
+
+      <!-- 5.1 sap.m.Table -->
+      <Panel headerText="5.1 sap.m.Table (Responsive)" expandable="true" expanded="true" class="sapUiMediumMarginBottom">
+        <content>
+          <Toolbar>
+            <Title text="MT-P-001 Customers"/>
+            <ToolbarSpacer/>
+            <SearchField id="tbl-search" width="200px" search=".onTableSearch" placeholder="Filter customers..."/>
+            <Button icon="sap-icon://sort" tooltip="Sort" press=".onTableSort"/>
+          </Toolbar>
+          <Table id="mt-table"
+            items="{/Customers}"
+            mode="MultiToggle"
+            sticky="ColumnHeaders,HeaderToolbar"
+            alternateRowColors="true"
+            noDataText="No customers found"
+            selectionChange=".onTableSelectionChange"
+            itemPress=".onTableItemPress"
+            updateFinished=".onTableUpdateFinished">
+            <columns>
+              <Column width="9rem"><Text text="Col 01 · ID"/></Column>
+              <Column width="14rem"><Text text="Col 02 · Company"/></Column>
+              <Column width="10rem"><Text text="Col 03 · Country"/></Column>
+              <Column width="9rem"><Text text="Col 04 · City"/></Column>
+              <Column width="10rem"><Text text="Col 05 · Phone"/></Column>
+              <Column width="9rem" hAlign="End"><Text text="Col 06 · Revenue"/></Column>
+              <Column width="12rem"><Text text="Col 07 · Notes"/></Column>
+              <Column width="9rem"><Text text="Col 08 · Status"/></Column>
+              <Column width="9rem"><Text text="Col 09 · Region"/></Column>
+              <Column width="10rem"><Text text="Col 10 · Segment"/></Column>
+              <Column width="9rem" hAlign="End"><Text text="Col 11 · Discount %"/></Column>
+              <Column width="9rem"><Text text="Col 12 · Priority"/></Column>
+              <Column width="10rem"><Text text="Col 13 · Contact Email"/></Column>
+              <Column width="9rem"><Text text="Col 14 · Industry"/></Column>
+              <Column width="9rem" hAlign="End"><Text text="Col 15 · Employees"/></Column>
+              <Column width="9rem"><Text text="Col 16 · Founded"/></Column>
+              <Column width="9rem"><Text text="Col 17 · Rating"/></Column>
+              <Column width="9rem"><Text text="Col 18 · Currency"/></Column>
+              <Column width="10rem"><Text text="Col 19 · Website"/></Column>
+              <Column width="9rem"><Text text="Col 20 · Tax ID"/></Column>
+              <Column width="9rem" hAlign="End"><Text text="Col 21 · Credit Limit"/></Column>
+              <Column width="9rem"><Text text="Col 22 · Pay Terms"/></Column>
+              <Column width="9rem"><Text text="Col 23 · Account Mgr"/></Column>
+              <Column width="9rem"><Text text="Col 24 · Last Order"/></Column>
+              <Column width="9rem" hAlign="End"><Text text="Col 25 · Open Orders"/></Column>
+              <Column width="9rem"><Text text="Col 26 · Tier"/></Column>
+              <Column width="9rem" hAlign="End"><Text text="Col 27 · YTD Sales"/></Column>
+              <Column width="9rem"><Text text="Col 28 · Language"/></Column>
+              <Column width="10rem"><Text text="Col 29 · Contract Type"/></Column>
+              <Column width="9rem"><Text text="Col 30 · Active Since"/></Column>
+            </columns>
+            <items>
+              <ColumnListItem>
+                <cells>
+                  <ObjectIdentifier title="{CustomerID}"/>
+                  <Input value="{CompanyName}" placeholder="Company name..." change=".onCellChange"/>
+                  <Select selectedKey="{Country}" change=".onCountryChange">
+                    <core:Item key="Germany" text="Germany"/>
+                    <core:Item key="USA" text="USA"/>
+                    <core:Item key="France" text="France"/>
+                    <core:Item key="UK" text="UK"/>
+                    <core:Item key="Japan" text="Japan"/>
+                    <core:Item key="China" text="China"/>
+                    <core:Item key="India" text="India"/>
+                    <core:Item key="Spain" text="Spain"/>
+                    <core:Item key="Italy" text="Italy"/>
+                    <core:Item key="Brazil" text="Brazil"/>
+                    <core:Item key="Canada" text="Canada"/>
+                    <core:Item key="Australia" text="Australia"/>
+                    <core:Item key="Sweden" text="Sweden"/>
+                    <core:Item key="Norway" text="Norway"/>
+                    <core:Item key="Switzerland" text="Switzerland"/>
+                    <core:Item key="Netherlands" text="Netherlands"/>
+                    <core:Item key="Singapore" text="Singapore"/>
+                    <core:Item key="South Korea" text="South Korea"/>
+                    <core:Item key="Austria" text="Austria"/>
+                    <core:Item key="Belgium" text="Belgium"/>
+                    <core:Item key="Mexico" text="Mexico"/>
+                    <core:Item key="Russia" text="Russia"/>
+                    <core:Item key="Poland" text="Poland"/>
+                    <core:Item key="UAE" text="UAE"/>
+                    <core:Item key="Portugal" text="Portugal"/>
+                    <core:Item key="Denmark" text="Denmark"/>
+                    <core:Item key="Finland" text="Finland"/>
+                    <core:Item key="Ireland" text="Ireland"/>
+                    <core:Item key="Taiwan" text="Taiwan"/>
+                    <core:Item key="Israel" text="Israel"/>
+                  </Select>
+                  <Text text="{City}"/>
+                  <Text text="{Phone}"/>
+                  <StepInput value="{Revenue}" min="0" max="9999999" step="1000" change=".onRevenueChange"/>
+                  <Input value="{Notes}" placeholder="Add a note..." change=".onCellChange"/>
+                  <Select selectedKey="{Status}" change=".onStatusChange">
+                    <core:Item key="Active" text="Active"/>
+                    <core:Item key="Inactive" text="Inactive"/>
+                    <core:Item key="Pending" text="Pending"/>
+                  </Select>
+                  <Text text="{Region}"/>
+                  <Select selectedKey="{Segment}" change=".onCellSelectChange">
+                    <core:Item key="Enterprise" text="Enterprise"/>
+                    <core:Item key="SMB" text="SMB"/>
+                    <core:Item key="Startup" text="Startup"/>
+                    <core:Item key="Public Sector" text="Public Sector"/>
+                  </Select>
+                  <StepInput value="{Discount}" min="0" max="100" step="1" change=".onDiscountChange"/>
+                  <Select selectedKey="{Priority}" change=".onCellSelectChange">
+                    <core:Item key="High" text="High"/>
+                    <core:Item key="Medium" text="Medium"/>
+                    <core:Item key="Low" text="Low"/>
+                  </Select>
+                  <Input value="{ContactEmail}" placeholder="email@company.com" change=".onCellChange"/>
+                  <Text text="{Industry}"/>
+                  <StepInput value="{Employees}" min="1" max="999999" step="100" change=".onDiscountChange"/>
+                  <Text text="{Founded}"/>
+                  <StepInput value="{Rating}" min="1" max="5" step="1" change=".onDiscountChange"/>
+                  <Select selectedKey="{Currency}" change=".onCellSelectChange">
+                    <core:Item key="USD" text="USD"/>
+                    <core:Item key="EUR" text="EUR"/>
+                    <core:Item key="GBP" text="GBP"/>
+                    <core:Item key="JPY" text="JPY"/>
+                    <core:Item key="CNY" text="CNY"/>
+                  </Select>
+                  <Input value="{Website}" placeholder="https://..." change=".onCellChange"/>
+                  <Text text="{TaxId}"/>
+                  <StepInput value="{CreditLimit}" min="0" max="9999999" step="5000" change=".onDiscountChange"/>
+                  <Select selectedKey="{PayTerms}" change=".onCellSelectChange">
+                    <core:Item key="Net30" text="Net 30"/>
+                    <core:Item key="Net60" text="Net 60"/>
+                    <core:Item key="Net90" text="Net 90"/>
+                    <core:Item key="Immediate" text="Immediate"/>
+                  </Select>
+                  <Input value="{AccountMgr}" placeholder="Manager name..." change=".onCellChange"/>
+                  <Text text="{LastOrder}"/>
+                  <StepInput value="{OpenOrders}" min="0" max="9999" step="1" change=".onDiscountChange"/>
+                  <Select selectedKey="{Tier}" change=".onCellSelectChange">
+                    <core:Item key="Gold" text="Gold"/>
+                    <core:Item key="Silver" text="Silver"/>
+                    <core:Item key="Bronze" text="Bronze"/>
+                  </Select>
+                  <StepInput value="{YtdSales}" min="0" max="9999999" step="1000" change=".onDiscountChange"/>
+                  <Select selectedKey="{Language}" change=".onCellSelectChange">
+                    <core:Item key="EN" text="English"/>
+                    <core:Item key="DE" text="German"/>
+                    <core:Item key="FR" text="French"/>
+                    <core:Item key="JA" text="Japanese"/>
+                    <core:Item key="ZH" text="Chinese"/>
+                  </Select>
+                  <Select selectedKey="{ContractType}" change=".onCellSelectChange">
+                    <core:Item key="Annual" text="Annual"/>
+                    <core:Item key="Monthly" text="Monthly"/>
+                    <core:Item key="OneTime" text="One-Time"/>
+                  </Select>
+                  <Text text="{ActiveSince}"/>
+                </cells>
+              </ColumnListItem>
+            </items>
+          </Table>
+        </content>
+      </Panel>
+
+      <!-- 5.2 sap.ui.table.Table (Grid Table) -->
+      <Panel headerText="5.2 sap.ui.table.Table (Grid Table)" expandable="true" expanded="false" class="sapUiMediumMarginBottom">
+        <content>
+          <t:Table id="gt-table"
+            rows="{/Customers}"
+            rowMode="Fixed"
+            visibleRowCount="10"
+            fixedColumnCount="2"
+            selectionMode="MultiToggle"
+            alternateRowColors="true"
+            enableColumnReordering="true"
+            rowSelectionChange=".onGridRowSelect"
+            cellClick=".onGridCellClick"
+            height="400px">
+            <t:columns>
+              <t:Column width="9rem"><Label text="Col 01 · ID"/><t:template><Text text="{CustomerID}"/></t:template></t:Column>
+              <t:Column width="14rem"><Label text="Col 02 · Company"/><t:template><Input value="{CompanyName}" change=".onCellChange"/></t:template></t:Column>
+              <t:Column width="10rem"><Label text="Col 03 · Country"/><t:template>
+                <Select selectedKey="{Country}" change=".onCountryChange">
+                  <core:Item key="Germany" text="Germany"/><core:Item key="USA" text="USA"/>
+                  <core:Item key="France" text="France"/><core:Item key="UK" text="UK"/>
+                  <core:Item key="Japan" text="Japan"/><core:Item key="China" text="China"/>
+                  <core:Item key="India" text="India"/><core:Item key="Spain" text="Spain"/>
+                  <core:Item key="Italy" text="Italy"/><core:Item key="Brazil" text="Brazil"/>
+                  <core:Item key="Canada" text="Canada"/><core:Item key="Australia" text="Australia"/>
+                  <core:Item key="Sweden" text="Sweden"/><core:Item key="Norway" text="Norway"/>
+                  <core:Item key="Switzerland" text="Switzerland"/><core:Item key="Netherlands" text="Netherlands"/>
+                  <core:Item key="Singapore" text="Singapore"/><core:Item key="South Korea" text="South Korea"/>
+                  <core:Item key="Austria" text="Austria"/><core:Item key="Belgium" text="Belgium"/>
+                </Select>
+              </t:template></t:Column>
+              <t:Column width="9rem"><Label text="Col 04 · City"/><t:template><Text text="{City}"/></t:template></t:Column>
+              <t:Column width="10rem"><Label text="Col 05 · Phone"/><t:template><Text text="{Phone}"/></t:template></t:Column>
+              <t:Column width="9rem"><Label text="Col 06 · Revenue"/><t:template><StepInput value="{Revenue}" min="0" max="9999999" step="1000" change=".onRevenueChange"/></t:template></t:Column>
+              <t:Column width="12rem"><Label text="Col 07 · Notes"/><t:template><Input value="{Notes}" placeholder="Add a note..." change=".onCellChange"/></t:template></t:Column>
+              <t:Column width="9rem"><Label text="Col 08 · Status"/><t:template>
+                <Select selectedKey="{Status}" change=".onStatusChange">
+                  <core:Item key="Active" text="Active"/><core:Item key="Inactive" text="Inactive"/><core:Item key="Pending" text="Pending"/>
+                </Select>
+              </t:template></t:Column>
+              <t:Column width="9rem"><Label text="Col 09 · Region"/><t:template><Text text="{Region}"/></t:template></t:Column>
+              <t:Column width="10rem"><Label text="Col 10 · Segment"/><t:template>
+                <Select selectedKey="{Segment}" change=".onCellSelectChange">
+                  <core:Item key="Enterprise" text="Enterprise"/><core:Item key="SMB" text="SMB"/>
+                  <core:Item key="Startup" text="Startup"/><core:Item key="Public Sector" text="Public Sector"/>
+                </Select>
+              </t:template></t:Column>
+              <t:Column width="9rem"><Label text="Col 11 · Discount %"/><t:template><StepInput value="{Discount}" min="0" max="100" step="1" change=".onDiscountChange"/></t:template></t:Column>
+              <t:Column width="9rem"><Label text="Col 12 · Priority"/><t:template>
+                <Select selectedKey="{Priority}" change=".onCellSelectChange">
+                  <core:Item key="High" text="High"/><core:Item key="Medium" text="Medium"/><core:Item key="Low" text="Low"/>
+                </Select>
+              </t:template></t:Column>
+              <t:Column width="13rem"><Label text="Col 13 · Email"/><t:template><Input value="{ContactEmail}" change=".onCellChange"/></t:template></t:Column>
+              <t:Column width="9rem"><Label text="Col 14 · Industry"/><t:template><Text text="{Industry}"/></t:template></t:Column>
+              <t:Column width="9rem"><Label text="Col 15 · Employees"/><t:template><StepInput value="{Employees}" min="1" max="999999" step="100" change=".onDiscountChange"/></t:template></t:Column>
+              <t:Column width="9rem"><Label text="Col 16 · Founded"/><t:template><Text text="{Founded}"/></t:template></t:Column>
+              <t:Column width="9rem"><Label text="Col 17 · Rating"/><t:template><StepInput value="{Rating}" min="1" max="5" step="1" change=".onDiscountChange"/></t:template></t:Column>
+              <t:Column width="9rem"><Label text="Col 18 · Currency"/><t:template>
+                <Select selectedKey="{Currency}" change=".onCellSelectChange">
+                  <core:Item key="USD" text="USD"/><core:Item key="EUR" text="EUR"/>
+                  <core:Item key="GBP" text="GBP"/><core:Item key="JPY" text="JPY"/><core:Item key="CNY" text="CNY"/>
+                </Select>
+              </t:template></t:Column>
+              <t:Column width="13rem"><Label text="Col 19 · Website"/><t:template><Input value="{Website}" change=".onCellChange"/></t:template></t:Column>
+              <t:Column width="9rem"><Label text="Col 20 · Tax ID"/><t:template><Text text="{TaxId}"/></t:template></t:Column>
+              <t:Column width="9rem"><Label text="Col 21 · Credit Limit"/><t:template><StepInput value="{CreditLimit}" min="0" max="9999999" step="5000" change=".onDiscountChange"/></t:template></t:Column>
+              <t:Column width="9rem"><Label text="Col 22 · Pay Terms"/><t:template>
+                <Select selectedKey="{PayTerms}" change=".onCellSelectChange">
+                  <core:Item key="Net30" text="Net 30"/><core:Item key="Net60" text="Net 60"/>
+                  <core:Item key="Net90" text="Net 90"/><core:Item key="Immediate" text="Immediate"/>
+                </Select>
+              </t:template></t:Column>
+              <t:Column width="12rem"><Label text="Col 23 · Account Mgr"/><t:template><Input value="{AccountMgr}" change=".onCellChange"/></t:template></t:Column>
+              <t:Column width="9rem"><Label text="Col 24 · Last Order"/><t:template><Text text="{LastOrder}"/></t:template></t:Column>
+              <t:Column width="9rem"><Label text="Col 25 · Open Orders"/><t:template><StepInput value="{OpenOrders}" min="0" max="9999" step="1" change=".onDiscountChange"/></t:template></t:Column>
+              <t:Column width="9rem"><Label text="Col 26 · Tier"/><t:template>
+                <Select selectedKey="{Tier}" change=".onCellSelectChange">
+                  <core:Item key="Gold" text="Gold"/><core:Item key="Silver" text="Silver"/><core:Item key="Bronze" text="Bronze"/>
+                </Select>
+              </t:template></t:Column>
+              <t:Column width="9rem"><Label text="Col 27 · YTD Sales"/><t:template><StepInput value="{YtdSales}" min="0" max="9999999" step="1000" change=".onDiscountChange"/></t:template></t:Column>
+              <t:Column width="9rem"><Label text="Col 28 · Language"/><t:template>
+                <Select selectedKey="{Language}" change=".onCellSelectChange">
+                  <core:Item key="EN" text="English"/><core:Item key="DE" text="German"/>
+                  <core:Item key="FR" text="French"/><core:Item key="JA" text="Japanese"/><core:Item key="ZH" text="Chinese"/>
+                </Select>
+              </t:template></t:Column>
+              <t:Column width="10rem"><Label text="Col 29 · Contract"/><t:template>
+                <Select selectedKey="{ContractType}" change=".onCellSelectChange">
+                  <core:Item key="Annual" text="Annual"/><core:Item key="Monthly" text="Monthly"/><core:Item key="OneTime" text="One-Time"/>
+                </Select>
+              </t:template></t:Column>
+              <t:Column width="9rem"><Label text="Col 30 · Active Since"/><t:template><Text text="{ActiveSince}"/></t:template></t:Column>
+            </t:columns>
+          </t:Table>
+        </content>
+      </Panel>
+
+      <!-- 5.3 TreeTable -->
+      <Panel headerText="5.3 sap.ui.table.TreeTable" expandable="true" expanded="false" class="sapUiMediumMarginBottom">
+        <content>
+          <t:TreeTable id="tt-table"
+            rows="{
+              path: '/treeData',
+              parameters: { arrayNames: ['children'] }
+            }"
+            selectionMode="MultiToggle"
+            selectionBehavior="Row"
+            expandFirstLevel="false"
+            toggleOpenState=".onTreeToggle"
+            rowSelectionChange=".onGridRowSelect"
+            height="800px">
+            <t:columns>
+              <t:Column width="18rem"><Label text="Col 01 · Name"/><t:template><Text text="{name}"/></t:template></t:Column>
+              <t:Column width="10rem"><Label text="Col 02 · Company"/><t:template><Input value="{company}" change=".onCellChange"/></t:template></t:Column>
+              <t:Column width="10rem"><Label text="Col 03 · Country"/><t:template>
+                <Select selectedKey="{country}" change=".onCountryChange">
+                  <core:Item key="Germany" text="Germany"/><core:Item key="USA" text="USA"/>
+                  <core:Item key="France" text="France"/><core:Item key="UK" text="UK"/>
+                  <core:Item key="Japan" text="Japan"/><core:Item key="China" text="China"/>
+                  <core:Item key="India" text="India"/><core:Item key="Spain" text="Spain"/>
+                </Select>
+              </t:template></t:Column>
+              <t:Column width="9rem"><Label text="Col 04 · City"/><t:template><Text text="{city}"/></t:template></t:Column>
+              <t:Column width="9rem"><Label text="Col 05 · Revenue"/><t:template><StepInput value="{revenue}" min="0" max="9999999" step="1000" change=".onRevenueChange"/></t:template></t:Column>
+              <t:Column width="9rem"><Label text="Col 06 · Status"/><t:template>
+                <Select selectedKey="{status}" change=".onStatusChange">
+                  <core:Item key="Active" text="Active"/><core:Item key="Inactive" text="Inactive"/><core:Item key="Pending" text="Pending"/>
+                </Select>
+              </t:template></t:Column>
+              <t:Column width="9rem"><Label text="Col 07 · Discount %"/><t:template><StepInput value="{discount}" min="0" max="100" step="1" change=".onDiscountChange"/></t:template></t:Column>
+              <t:Column width="9rem"><Label text="Col 08 · Priority"/><t:template>
+                <Select selectedKey="{priority}" change=".onCellSelectChange">
+                  <core:Item key="High" text="High"/><core:Item key="Medium" text="Medium"/><core:Item key="Low" text="Low"/>
+                </Select>
+              </t:template></t:Column>
+              <t:Column width="12rem"><Label text="Col 09 · Notes"/><t:template><Input value="{notes}" placeholder="Add a note..." change=".onCellChange"/></t:template></t:Column>
+              <t:Column width="9rem"><Label text="Col 10 · Rating"/><t:template><StepInput value="{rating}" min="1" max="5" step="1" change=".onDiscountChange"/></t:template></t:Column>
+            </t:columns>
+          </t:TreeTable>
+        </content>
+      </Panel>
+
+      <!-- Events log -->
+      <Panel headerText="Events Log" expandable="true" expanded="true">
+        <content>
+          <VBox class="sapUiSmallMargin">
+            <TextArea id="tbl-events-log" rows="5" editable="false" placeholder="Table events appear here..."/>
+            <Button text="Clear" press=".onClearLog" type="Transparent" class="sapUiSmallMarginTop"/>
+          </VBox>
+        </content>
+      </Panel>
+
+    </content>
+  </Page>
+</mvc:View>
