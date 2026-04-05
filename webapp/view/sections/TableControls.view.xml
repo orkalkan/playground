@@ -59,6 +59,16 @@
               <Column width="9rem"><Text text="Col 28 · Language"/></Column>
               <Column width="10rem"><Text text="Col 29 · Contract Type"/></Column>
               <Column width="9rem"><Text text="Col 30 · Active Since"/></Column>
+              <Column width="9rem"><Text text="Col 31 · Renewal Date"/></Column>
+              <Column width="9rem"><Text text="Col 32 · Next Review"/></Column>
+              <Column width="9rem"><Text text="Col 33 · Support Level"/></Column>
+              <Column width="9rem"><Text text="Col 34 · Onboarding"/></Column>
+              <Column width="7rem" hAlign="End"><Text text="Col 35 · NPS"/></Column>
+              <Column width="7rem" hAlign="End"><Text text="Col 36 · CSAT %"/></Column>
+              <Column width="9rem"><Text text="Col 37 · Churn Risk"/></Column>
+              <Column width="7rem" hAlign="End"><Text text="Col 38 · Upsell"/></Column>
+              <Column width="9rem"><Text text="Col 39 · Last Contact"/></Column>
+              <Column width="10rem"><Text text="Col 40 · Owner"/></Column>
             </columns>
             <items>
               <ColumnListItem>
@@ -162,6 +172,32 @@
                     <core:Item key="OneTime" text="One-Time"/>
                   </Select>
                   <Text text="{ActiveSince}"/>
+                  <Text text="{RenewalDate}"/>
+                  <Text text="{NextReview}"/>
+                  <Select selectedKey="{SupportLevel}" change=".onCellSelectChange">
+                    <core:Item key="Basic" text="Basic"/>
+                    <core:Item key="Standard" text="Standard"/>
+                    <core:Item key="Premium" text="Premium"/>
+                    <core:Item key="Enterprise" text="Enterprise"/>
+                    <core:Item key="Platinum" text="Platinum"/>
+                  </Select>
+                  <Select selectedKey="{Onboarding}" change=".onCellSelectChange">
+                    <core:Item key="Completed" text="Completed"/>
+                    <core:Item key="In Progress" text="In Progress"/>
+                    <core:Item key="Pending" text="Pending"/>
+                    <core:Item key="Skipped" text="Skipped"/>
+                  </Select>
+                  <StepInput value="{NpsScore}" min="1" max="10" step="1" change=".onDiscountChange"/>
+                  <StepInput value="{CsatPct}" min="0" max="100" step="1" change=".onDiscountChange"/>
+                  <Select selectedKey="{ChurnRisk}" change=".onCellSelectChange">
+                    <core:Item key="Low" text="Low"/>
+                    <core:Item key="Medium" text="Medium"/>
+                    <core:Item key="High" text="High"/>
+                    <core:Item key="Critical" text="Critical"/>
+                  </Select>
+                  <StepInput value="{UpsellScore}" min="1" max="5" step="1" change=".onDiscountChange"/>
+                  <Text text="{LastContact}"/>
+                  <Input value="{Owner}" placeholder="Owner name..." change=".onCellChange"/>
                 </cells>
               </ColumnListItem>
             </items>
@@ -263,6 +299,32 @@
                 </Select>
               </t:template></t:Column>
               <t:Column width="9rem"><Label text="Col 30 · Active Since"/><t:template><Text text="{ActiveSince}"/></t:template></t:Column>
+              <t:Column width="9rem"><Label text="Col 31 · Renewal Date"/><t:template><Text text="{RenewalDate}"/></t:template></t:Column>
+              <t:Column width="9rem"><Label text="Col 32 · Next Review"/><t:template><Text text="{NextReview}"/></t:template></t:Column>
+              <t:Column width="9rem"><Label text="Col 33 · Support Level"/><t:template>
+                <Select selectedKey="{SupportLevel}" change=".onCellSelectChange">
+                  <core:Item key="Basic" text="Basic"/><core:Item key="Standard" text="Standard"/>
+                  <core:Item key="Premium" text="Premium"/><core:Item key="Enterprise" text="Enterprise"/>
+                  <core:Item key="Platinum" text="Platinum"/>
+                </Select>
+              </t:template></t:Column>
+              <t:Column width="9rem"><Label text="Col 34 · Onboarding"/><t:template>
+                <Select selectedKey="{Onboarding}" change=".onCellSelectChange">
+                  <core:Item key="Completed" text="Completed"/><core:Item key="In Progress" text="In Progress"/>
+                  <core:Item key="Pending" text="Pending"/><core:Item key="Skipped" text="Skipped"/>
+                </Select>
+              </t:template></t:Column>
+              <t:Column width="7rem"><Label text="Col 35 · NPS"/><t:template><StepInput value="{NpsScore}" min="1" max="10" step="1" change=".onDiscountChange"/></t:template></t:Column>
+              <t:Column width="7rem"><Label text="Col 36 · CSAT %"/><t:template><StepInput value="{CsatPct}" min="0" max="100" step="1" change=".onDiscountChange"/></t:template></t:Column>
+              <t:Column width="9rem"><Label text="Col 37 · Churn Risk"/><t:template>
+                <Select selectedKey="{ChurnRisk}" change=".onCellSelectChange">
+                  <core:Item key="Low" text="Low"/><core:Item key="Medium" text="Medium"/>
+                  <core:Item key="High" text="High"/><core:Item key="Critical" text="Critical"/>
+                </Select>
+              </t:template></t:Column>
+              <t:Column width="7rem"><Label text="Col 38 · Upsell"/><t:template><StepInput value="{UpsellScore}" min="1" max="5" step="1" change=".onDiscountChange"/></t:template></t:Column>
+              <t:Column width="9rem"><Label text="Col 39 · Last Contact"/><t:template><Text text="{LastContact}"/></t:template></t:Column>
+              <t:Column width="10rem"><Label text="Col 40 · Owner"/><t:template><Input value="{Owner}" change=".onCellChange"/></t:template></t:Column>
             </t:columns>
           </t:Table>
         </content>
