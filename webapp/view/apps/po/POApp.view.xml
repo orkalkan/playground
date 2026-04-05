@@ -46,7 +46,7 @@
                 <Column><Text text="Actions"/></Column>
               </columns>
               <items>
-                <ColumnListItem press=".onPORowPress" type="Navigation">
+                <ColumnListItem press=".onPORowPress" type="Active">
                   <cells>
                     <ObjectIdentifier title="{po>id}" text="{po>purchasingGroup}"/>
                     <VBox>
@@ -58,6 +58,7 @@
                     <Text text="{path:'po>deliveryDate', formatter:'.formatDate'}"/>
                     <ObjectStatus text="{po>status}" state="{path:'po>status', formatter:'.formatStatusState'}"/>
                     <HBox>
+                      <Button icon="sap-icon://detail-view" tooltip="View Detail" type="Transparent" press=".onViewPODetail"/>
                       <Button icon="sap-icon://edit" tooltip="Edit" type="Transparent" press=".onEditPOPress"/>
                       <Button icon="sap-icon://delete" tooltip="Delete" type="Transparent" press=".onDeletePOPress"/>
                     </HBox>
@@ -65,6 +66,173 @@
                 </ColumnListItem>
               </items>
             </Table>
+            <Panel id="poLineItemsPanel" class="sapUiSmallMarginTop" expandable="false">
+              <headerToolbar>
+                <Toolbar>
+                  <Title id="poLineItemsTitle" text="Line Items — Select a purchase order above" level="H5"/>
+                  <ToolbarSpacer/>
+                  <Button id="poNewLineItemBtn" text="New" icon="sap-icon://add" type="Emphasized" press=".onNewLineItem" enabled="false"/>
+                </Toolbar>
+              </headerToolbar>
+              <content>
+                <Table id="poLineItemsTable" items="{po>/selectedPO/lineItems}" noDataText="Select a purchase order to view its line items">
+                  <columns>
+                    <Column width="5rem"><Text text="Item"/></Column>
+                    <Column width="8rem"><Text text="Material"/></Column>
+                    <Column><Text text="Description"/></Column>
+                    <Column hAlign="End" width="6rem"><Text text="Qty"/></Column>
+                    <Column width="5rem"><Text text="UoM"/></Column>
+                    <Column hAlign="End" width="9rem"><Text text="Unit Price"/></Column>
+                    <Column hAlign="End" width="9rem"><Text text="Total"/></Column>
+                    <Column width="9rem"><Text text="Delivery Date"/></Column>
+                    <Column><Text text="Comment"/></Column>
+                    <Column width="5rem"><Text text=""/></Column>
+                  </columns>
+                  <items>
+                    <ColumnListItem type="Inactive">
+                      <cells>
+                        <Text text="{po>id}"/>
+                        <Text text="{po>materialId}"/>
+                        <Text text="{po>description}"/>
+                        <ObjectNumber number="{po>qty}" unit="{po>uom}" emphasized="false"/>
+                        <Text text="{po>uom}"/>
+                        <ObjectNumber number="{po>unitPrice}" unit="{po>/selectedPO/currency}"/>
+                        <ObjectNumber number="{po>total}" unit="{po>/selectedPO/currency}"/>
+                        <Text text="{path:'po>deliveryDate', formatter:'.formatDate'}"/>
+                        <Text text="{po>comment}"/>
+                        <Button icon="sap-icon://detail-view" tooltip="View Detail" type="Transparent" press=".onLineItemDetailPress"/>
+                      </cells>
+                    </ColumnListItem>
+                  </items>
+                </Table>
+              </content>
+            </Panel>
+          </content>
+        </Page>
+
+        <!-- ── Page 6: Line Item Detail ──────────────────────── -->
+        <Page id="poLineItemDetailPage" title="Line Item Detail" class="fira-app-page"
+          showNavButton="true" navButtonPress=".onNavBack">
+          <content>
+            <VBox class="sapUiMediumMargin">
+              <Panel expandable="false">
+                <content>
+                  <f:SimpleForm layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Item"/>         <Text text="{po>/selectedLineItem/id}"/>
+                      <Label text="Material"/>     <Text text="{po>/selectedLineItem/materialId}"/>
+                      <Label text="Description"/>  <Text text="{po>/selectedLineItem/description}"/>
+                      <Label text="Quantity"/>     <Text text="{po>/selectedLineItem/qty}"/>
+                      <Label text="UoM"/>          <Text text="{po>/selectedLineItem/uom}"/>
+                      <Label text="Unit Price"/>   <Text text="{path:'po>/selectedLineItem/unitPrice', formatter:'.formatCurrency'}"/>
+                      <Label text="Total"/>        <Text text="{path:'po>/selectedLineItem/total', formatter:'.formatCurrency'}"/>
+                      <Label text="Delivery"/>     <Text text="{path:'po>/selectedLineItem/deliveryDate', formatter:'.formatDate'}"/>
+                      <Label text="Comment"/>      <Text text="{po>/selectedLineItem/comment}"/>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+
+              <Panel headerText="Delivery Schedule" class="sapUiSmallMarginTop" expandable="false">
+                <headerToolbar>
+                  <Toolbar>
+                    <Title text="Delivery Schedule" level="H5"/>
+                    <ToolbarSpacer/>
+                    <Button text="New Entry" icon="sap-icon://add" type="Emphasized" press=".onNewDelivery"/>
+                  </Toolbar>
+                </headerToolbar>
+                <content>
+                  <Table id="deliveriesTable" items="{po>/selectedLineItem/deliveries}" noDataText="No delivery entries yet">
+                    <columns>
+                      <Column><Text text="Date"/></Column>
+                      <Column><Text text="Time"/></Column>
+                      <Column hAlign="End"><Text text="Quantity"/></Column>
+                      <Column><Text text="Comment"/></Column>
+                    </columns>
+                    <items>
+                      <ColumnListItem type="Inactive">
+                        <cells>
+                          <Text text="{path:'po>date', formatter:'.formatDate'}"/>
+                          <Text text="{po>time}"/>
+                          <Text text="{po>qty}"/>
+                          <Text text="{po>comment}"/>
+                        </cells>
+                      </ColumnListItem>
+                    </items>
+                  </Table>
+                </content>
+              </Panel>
+
+              <Panel headerText="Schedule Lines" class="sapUiSmallMarginTop" expandable="false">
+                <headerToolbar>
+                  <Toolbar>
+                    <Title text="Schedule Lines" level="H5"/>
+                    <ToolbarSpacer/>
+                    <Button text="New" icon="sap-icon://add" type="Emphasized" press=".onAddScheduleLine"/>
+                    <Button text="Save" icon="sap-icon://accept" type="Default" press=".onSaveScheduleLines" enabled="{po>/scheduleCanSave}"/>
+                  </Toolbar>
+                </headerToolbar>
+                <content>
+                  <Table id="scheduleLinesTable" items="{po>/selectedLineItem/scheduleLines}"
+                    noDataText="No schedule lines — click New to add one">
+                    <columns>
+                      <Column width="10rem"><Text text="Date"/></Column>
+                      <Column width="8rem"><Text text="Time"/></Column>
+                      <Column width="10rem" hAlign="End"><Text text="Quantity"/></Column>
+                      <Column><Text text="Comment"/></Column>
+                      <Column width="4rem"><Text text=""/></Column>
+                    </columns>
+                    <items>
+                      <ColumnListItem type="Active" press=".onScheduleLineRowPress">
+                        <cells>
+                          <DatePicker value="{po>date}" valueFormat="yyyy-MM-dd" displayFormat="dd.MM.yyyy" width="9rem" enabled="{po>isEditing}" change=".onScheduleLineFieldChange"/>
+                          <TimePicker value="{po>time}" valueFormat="HH:mm" displayFormat="HH:mm" width="7rem" enabled="{po>isEditing}"/>
+                          <StepInput value="{po>qty}" min="0.001" step="1" displayValuePrecision="3" width="9rem" textAlign="End" enabled="{po>isEditing}" change=".onScheduleLineFieldChange"/>
+                          <Input value="{po>comment}" placeholder="Notes..." width="100%" enabled="{po>isEditing}"/>
+                          <Button icon="sap-icon://delete" type="Transparent" tooltip="Remove" press=".onDeleteScheduleLine"/>
+                        </cells>
+                      </ColumnListItem>
+                    </items>
+                  </Table>
+                </content>
+              </Panel>
+            </VBox>
+          </content>
+        </Page>
+
+        <!-- ── Page 7: New Delivery Entry ─────────────────────── -->
+        <Page id="poDeliveryCreatePage" title="New Delivery Entry" class="fira-app-page"
+          showNavButton="true" navButtonPress=".onNavBack">
+          <footer>
+            <Bar>
+              <contentRight>
+                <Button text="Cancel" press=".onNavBack"/>
+                <Button text="Save Entry" type="Emphasized" press=".onSaveDelivery" icon="sap-icon://accept"/>
+              </contentRight>
+            </Bar>
+          </footer>
+          <content>
+            <VBox class="sapUiMediumMargin">
+              <Panel expandable="false">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Delivery Date" required="true"/>
+                      <DatePicker id="newDeliveryDate" value="{po>/newDelivery/date}" valueFormat="yyyy-MM-dd" displayFormat="dd.MM.yyyy" placeholder="Select date"/>
+
+                      <Label text="Delivery Time"/>
+                      <TimePicker id="newDeliveryTime" value="{po>/newDelivery/time}" valueFormat="HH:mm" displayFormat="HH:mm" placeholder="HH:mm"/>
+
+                      <Label text="Quantity" required="true"/>
+                      <StepInput id="newDeliveryQty" value="{po>/newDelivery/qty}" min="0.001" step="1" displayValuePrecision="3" width="12rem"/>
+
+                      <Label text="Comment"/>
+                      <TextArea id="newDeliveryComment" value="{po>/newDelivery/comment}" rows="3" width="100%" growing="true" placeholder="Delivery notes, instructions..."/>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+            </VBox>
           </content>
         </Page>
 

@@ -4,6 +4,11 @@
   xmlns="sap.m"
   xmlns:core="sap.ui.core"
   xmlns:f="sap.f"
+  xmlns:tnt="sap.tnt"
+  xmlns:l="sap.ui.layout"
+  xmlns:u="sap.ui.unified"
+  xmlns:uxap="sap.uxap"
+  xmlns:card="sap.f.cards"
   displayBlock="true">
 
   <Page showHeader="false" enableScrolling="false" class="sapUiNoContentPadding">
@@ -48,179 +53,1493 @@
           </content>
         </Page>
 
-        <!-- PAGE 2: Component List -->
-        <Page id="categoryPage" title="{playground>/selectedCategory/name}" showNavButton="true" navButtonPress=".onNavToHome">
-          <content>
-            <List items="{playground>/selectedCategory/components}" mode="None">
-              <StandardListItem
-                title="{playground>name}"
-                description="{playground>description}"
-                icon="{playground>icon}"
-                info="{playground>tag}"
-                infoState="None"
-                type="Navigation"
-                press=".onComponentPress">
-                <customData>
-                  <core:CustomData key="componentKey" value="{playground>key}"/>
-                </customData>
-              </StandardListItem>
-            </List>
-          </content>
-        </Page>
-
-        <!-- PAGE 3: Component Demo -->
-        <Page id="componentDetail" title="{playground>/selectedComponent/name}" showNavButton="true" navButtonPress=".onNavToCategory">
-          <headerContent>
-            <Button icon="sap-icon://favorite" tooltip="Add to Favorites" type="Transparent" press=".onAddFavorite"/>
-          </headerContent>
+        <!-- PAGE 2: Category Demo — all components for the selected category -->
+        <Page id="categoryDemoPage" title="{playground>/selectedCategory/name}" showNavButton="true" navButtonPress=".onNavToHome">
           <content>
             <VBox class="sapUiMediumMargin">
 
-              <MessageStrip
-                text="{playground>/selectedComponent/description}"
-                type="Information"
-                showIcon="true"
-                showCloseButton="false"
-                class="sapUiSmallMarginBottom"/>
+              <!-- ══════════════════════════════════════════════
+                   CAT 0 — FORM CONTROLS
+                   ══════════════════════════════════════════════ -->
+              <VBox id="catGroup-0">
 
-              <!-- Form Controls Demo -->
-              <Panel headerText="Input Controls" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
-                <content>
-                  <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginBottom">
-                    <HBox wrap="Wrap" class="sapUiSmallMarginTop">
-                      <VBox class="sapUiSmallMarginEnd" width="15rem">
-                        <Label text="Text Input" class="sapUiTinyMarginBottom"/>
-                        <Input placeholder="Type something..." value="{playground>/demo/inputValue}"/>
+                <Panel headerText="Input — Variants &amp; Value States" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginBottom">
+                      <HBox wrap="Wrap" class="sapUiSmallMarginTop">
+                        <VBox class="sapUiSmallMarginEnd" width="14rem">
+                          <Label text="Default" class="sapUiTinyMarginBottom"/>
+                          <Input placeholder="Type here..." value="{playground>/demo/inputValue}"/>
+                        </VBox>
+                        <VBox class="sapUiSmallMarginEnd" width="14rem">
+                          <Label text="Success" class="sapUiTinyMarginBottom"/>
+                          <Input value="Valid value" valueState="Success" valueStateText="Looks good!"/>
+                        </VBox>
+                        <VBox class="sapUiSmallMarginEnd" width="14rem">
+                          <Label text="Warning" class="sapUiTinyMarginBottom"/>
+                          <Input value="Check value" valueState="Warning" valueStateText="Please review this field"/>
+                        </VBox>
+                        <VBox class="sapUiSmallMarginEnd" width="14rem">
+                          <Label text="Error" class="sapUiTinyMarginBottom"/>
+                          <Input value="Bad value" valueState="Error" valueStateText="This field is required"/>
+                        </VBox>
+                      </HBox>
+                      <HBox wrap="Wrap" class="sapUiSmallMarginTop">
+                        <VBox class="sapUiSmallMarginEnd" width="14rem">
+                          <Label text="Disabled" class="sapUiTinyMarginBottom"/>
+                          <Input value="Cannot edit" enabled="false"/>
+                        </VBox>
+                        <VBox class="sapUiSmallMarginEnd" width="14rem">
+                          <Label text="Read-only" class="sapUiTinyMarginBottom"/>
+                          <Input value="Read only text" editable="false"/>
+                        </VBox>
+                        <VBox class="sapUiSmallMarginEnd" width="14rem">
+                          <Label text="With icon" class="sapUiTinyMarginBottom"/>
+                          <Input placeholder="Search..." showValueHelp="true" valueHelpIconSrc="sap-icon://search"/>
+                        </VBox>
+                        <VBox class="sapUiSmallMarginEnd" width="14rem">
+                          <Label text="Password" class="sapUiTinyMarginBottom"/>
+                          <Input placeholder="Enter password" type="Password"/>
+                        </VBox>
+                      </HBox>
+                    </VBox>
+                  </content>
+                </Panel>
+
+                <Panel headerText="ComboBox — Single Select Dropdown" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginBottom">
+                      <HBox wrap="Wrap" class="sapUiSmallMarginTop">
+                        <VBox class="sapUiSmallMarginEnd" width="14rem">
+                          <Label text="Default" class="sapUiTinyMarginBottom"/>
+                          <ComboBox selectedKey="sap_horizon">
+                            <core:Item key="sap_horizon" text="SAP Horizon"/>
+                            <core:Item key="sap_quartz" text="SAP Quartz"/>
+                            <core:Item key="sap_belize" text="SAP Belize"/>
+                          </ComboBox>
+                        </VBox>
+                        <VBox class="sapUiSmallMarginEnd" width="14rem">
+                          <Label text="With filter" class="sapUiTinyMarginBottom"/>
+                          <ComboBox filterSecondaryValues="true" placeholder="Type to filter...">
+                            <core:Item key="de" text="Germany"/>
+                            <core:Item key="fr" text="France"/>
+                            <core:Item key="es" text="Spain"/>
+                            <core:Item key="it" text="Italy"/>
+                            <core:Item key="pl" text="Poland"/>
+                          </ComboBox>
+                        </VBox>
+                        <VBox class="sapUiSmallMarginEnd" width="14rem">
+                          <Label text="Warning state" class="sapUiTinyMarginBottom"/>
+                          <ComboBox valueState="Warning" valueStateText="Select a valid option">
+                            <core:Item key="a" text="Option A"/>
+                            <core:Item key="b" text="Option B"/>
+                          </ComboBox>
+                        </VBox>
+                        <VBox class="sapUiSmallMarginEnd" width="14rem">
+                          <Label text="Disabled" class="sapUiTinyMarginBottom"/>
+                          <ComboBox enabled="false" selectedKey="a">
+                            <core:Item key="a" text="Locked option"/>
+                          </ComboBox>
+                        </VBox>
+                      </HBox>
+                    </VBox>
+                  </content>
+                </Panel>
+
+                <Panel headerText="MultiComboBox — Multi Select" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginBottom">
+                      <HBox wrap="Wrap" class="sapUiSmallMarginTop">
+                        <VBox class="sapUiSmallMarginEnd" width="20rem">
+                          <Label text="Countries (pre-selected)" class="sapUiTinyMarginBottom"/>
+                          <MultiComboBox selectedKeys="de fr">
+                            <core:Item key="de" text="Germany"/>
+                            <core:Item key="fr" text="France"/>
+                            <core:Item key="es" text="Spain"/>
+                            <core:Item key="it" text="Italy"/>
+                            <core:Item key="pl" text="Poland"/>
+                          </MultiComboBox>
+                        </VBox>
+                        <VBox class="sapUiSmallMarginEnd" width="20rem">
+                          <Label text="Roles (empty)" class="sapUiTinyMarginBottom"/>
+                          <MultiComboBox placeholder="Assign roles...">
+                            <core:Item key="admin" text="Administrator"/>
+                            <core:Item key="dev" text="Developer"/>
+                            <core:Item key="viewer" text="Viewer"/>
+                            <core:Item key="tester" text="Tester"/>
+                          </MultiComboBox>
+                        </VBox>
+                        <VBox class="sapUiSmallMarginEnd" width="20rem">
+                          <Label text="Error state" class="sapUiTinyMarginBottom"/>
+                          <MultiComboBox valueState="Error" valueStateText="At least one item required" placeholder="Select items...">
+                            <core:Item key="x" text="Item X"/>
+                            <core:Item key="y" text="Item Y"/>
+                          </MultiComboBox>
+                        </VBox>
+                      </HBox>
+                    </VBox>
+                  </content>
+                </Panel>
+
+                <Panel headerText="DatePicker — Calendar Selection" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginBottom">
+                      <HBox wrap="Wrap" class="sapUiSmallMarginTop">
+                        <VBox class="sapUiSmallMarginEnd" width="14rem">
+                          <Label text="Default (dd.MM.yyyy)" class="sapUiTinyMarginBottom"/>
+                          <DatePicker value="{playground>/demo/dateValue}" valueFormat="yyyy-MM-dd" displayFormat="dd.MM.yyyy"/>
+                        </VBox>
+                        <VBox class="sapUiSmallMarginEnd" width="14rem">
+                          <Label text="US Format (MM/dd/yyyy)" class="sapUiTinyMarginBottom"/>
+                          <DatePicker value="2025-06-15" valueFormat="yyyy-MM-dd" displayFormat="MM/dd/yyyy"/>
+                        </VBox>
+                        <VBox class="sapUiSmallMarginEnd" width="14rem">
+                          <Label text="Value state — Error" class="sapUiTinyMarginBottom"/>
+                          <DatePicker value="not-a-date" valueFormat="yyyy-MM-dd" displayFormat="dd.MM.yyyy"
+                                      valueState="Error" valueStateText="Invalid date"/>
+                        </VBox>
+                        <VBox class="sapUiSmallMarginEnd" width="14rem">
+                          <Label text="Disabled" class="sapUiTinyMarginBottom"/>
+                          <DatePicker value="2025-03-15" valueFormat="yyyy-MM-dd" displayFormat="dd.MM.yyyy" enabled="false"/>
+                        </VBox>
+                      </HBox>
+                      <HBox wrap="Wrap" class="sapUiSmallMarginTop">
+                        <VBox class="sapUiSmallMarginEnd" width="14rem">
+                          <Label text="DateRangeSelection" class="sapUiTinyMarginBottom"/>
+                          <DateRangeSelection delimiter=" – " displayFormat="dd.MM.yyyy" valueFormat="yyyy-MM-dd"
+                                              value="2025-04-01 – 2025-04-30"/>
+                        </VBox>
+                        <VBox class="sapUiSmallMarginEnd" width="14rem">
+                          <Label text="DateTimePicker" class="sapUiTinyMarginBottom"/>
+                          <DateTimePicker value="2025-04-01T09:00:00" valueFormat="yyyy-MM-dd'T'HH:mm:ss" displayFormat="dd.MM.yyyy HH:mm"/>
+                        </VBox>
+                      </HBox>
+                    </VBox>
+                  </content>
+                </Panel>
+
+                <Panel headerText="TimePicker — Clock Selection" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginBottom">
+                      <HBox wrap="Wrap" class="sapUiSmallMarginTop">
+                        <VBox class="sapUiSmallMarginEnd" width="14rem">
+                          <Label text="24h format" class="sapUiTinyMarginBottom"/>
+                          <TimePicker value="{playground>/demo/timeValue}" valueFormat="HH:mm" displayFormat="HH:mm"/>
+                        </VBox>
+                        <VBox class="sapUiSmallMarginEnd" width="14rem">
+                          <Label text="12h AM/PM format" class="sapUiTinyMarginBottom"/>
+                          <TimePicker value="09:30" valueFormat="HH:mm" displayFormat="hh:mm a"/>
+                        </VBox>
+                        <VBox class="sapUiSmallMarginEnd" width="14rem">
+                          <Label text="With seconds" class="sapUiTinyMarginBottom"/>
+                          <TimePicker value="14:25:30" valueFormat="HH:mm:ss" displayFormat="HH:mm:ss"/>
+                        </VBox>
+                        <VBox class="sapUiSmallMarginEnd" width="14rem">
+                          <Label text="Disabled" class="sapUiTinyMarginBottom"/>
+                          <TimePicker value="08:00" valueFormat="HH:mm" displayFormat="HH:mm" enabled="false"/>
+                        </VBox>
+                      </HBox>
+                    </VBox>
+                  </content>
+                </Panel>
+
+                <Panel headerText="StepInput — Numeric Increment" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginBottom">
+                      <HBox wrap="Wrap" class="sapUiSmallMarginTop">
+                        <VBox class="sapUiSmallMarginEnd" width="14rem">
+                          <Label text="Default (step 1)" class="sapUiTinyMarginBottom"/>
+                          <StepInput value="{playground>/demo/stepValue}" min="0" max="100" step="1"/>
+                        </VBox>
+                        <VBox class="sapUiSmallMarginEnd" width="14rem">
+                          <Label text="Step 5, min 0 max 50" class="sapUiTinyMarginBottom"/>
+                          <StepInput value="25" min="0" max="50" step="5"/>
+                        </VBox>
+                        <VBox class="sapUiSmallMarginEnd" width="14rem">
+                          <Label text="Decimal (step 0.5)" class="sapUiTinyMarginBottom"/>
+                          <StepInput value="2.5" min="0" max="10" step="0.5" displayValuePrecision="1"/>
+                        </VBox>
+                        <VBox class="sapUiSmallMarginEnd" width="14rem">
+                          <Label text="Disabled" class="sapUiTinyMarginBottom"/>
+                          <StepInput value="10" enabled="false"/>
+                        </VBox>
+                      </HBox>
+                      <HBox wrap="Wrap" class="sapUiSmallMarginTop">
+                        <VBox class="sapUiSmallMarginEnd" width="14rem">
+                          <Label text="Warning state" class="sapUiTinyMarginBottom"/>
+                          <StepInput value="5" min="10" max="50" valueState="Warning" valueStateText="Value below minimum"/>
+                        </VBox>
+                        <VBox class="sapUiSmallMarginEnd" width="14rem">
+                          <Label text="Error state" class="sapUiTinyMarginBottom"/>
+                          <StepInput value="99" min="0" max="50" valueState="Error" valueStateText="Value exceeds maximum"/>
+                        </VBox>
+                      </HBox>
+                    </VBox>
+                  </content>
+                </Panel>
+
+                <Panel headerText="TextArea — Multi-line Input" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginBottom">
+                      <HBox wrap="Wrap" class="sapUiSmallMarginTop">
+                        <VBox class="sapUiSmallMarginEnd" width="20rem">
+                          <Label text="Default (auto-grow)" class="sapUiTinyMarginBottom"/>
+                          <TextArea value="{playground>/demo/textArea}" rows="3" growing="true" placeholder="Enter notes..."/>
+                        </VBox>
+                        <VBox class="sapUiSmallMarginEnd" width="20rem">
+                          <Label text="With max length (100)" class="sapUiTinyMarginBottom"/>
+                          <TextArea rows="3" maxLength="100" showExceededText="true" placeholder="Max 100 chars..."/>
+                        </VBox>
+                        <VBox class="sapUiSmallMarginEnd" width="20rem">
+                          <Label text="Error state" class="sapUiTinyMarginBottom"/>
+                          <TextArea rows="3" valueState="Error" valueStateText="This field is required" placeholder="Required field..."/>
+                        </VBox>
+                      </HBox>
+                      <HBox wrap="Wrap" class="sapUiSmallMarginTop">
+                        <VBox class="sapUiSmallMarginEnd" width="20rem">
+                          <Label text="Read-only" class="sapUiTinyMarginBottom"/>
+                          <TextArea rows="3" editable="false" value="This content is read-only and cannot be modified."/>
+                        </VBox>
+                        <VBox class="sapUiSmallMarginEnd" width="20rem">
+                          <Label text="Fixed height (no grow)" class="sapUiTinyMarginBottom"/>
+                          <TextArea rows="5" growing="false" placeholder="Fixed 5 rows, no auto-grow..."/>
+                        </VBox>
+                      </HBox>
+                    </VBox>
+                  </content>
+                </Panel>
+
+                <Panel headerText="CheckBox — Binary Selection" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginBottom">
+                      <HBox wrap="Wrap" class="sapUiSmallMarginTop">
+                        <VBox class="sapUiSmallMarginEnd" width="14rem">
+                          <Label text="Default" class="sapUiTinyMarginBottom"/>
+                          <CheckBox text="Unchecked" selected="{playground>/demo/check2}"/>
+                          <CheckBox text="Checked" selected="{playground>/demo/check1}"/>
+                        </VBox>
+                        <VBox class="sapUiSmallMarginEnd" width="14rem">
+                          <Label text="Warning state" class="sapUiTinyMarginBottom"/>
+                          <CheckBox text="Needs attention" valueState="Warning"/>
+                          <CheckBox text="Also warning" valueState="Warning" selected="true"/>
+                        </VBox>
+                        <VBox class="sapUiSmallMarginEnd" width="14rem">
+                          <Label text="Error state" class="sapUiTinyMarginBottom"/>
+                          <CheckBox text="Required field" valueState="Error"/>
+                          <CheckBox text="Invalid selection" valueState="Error" selected="true"/>
+                        </VBox>
+                        <VBox class="sapUiSmallMarginEnd" width="14rem">
+                          <Label text="Disabled" class="sapUiTinyMarginBottom"/>
+                          <CheckBox text="Disabled unchecked" enabled="false"/>
+                          <CheckBox text="Disabled checked" enabled="false" selected="true"/>
+                        </VBox>
+                      </HBox>
+                      <HBox wrap="Wrap" class="sapUiSmallMarginTop">
+                        <VBox class="sapUiSmallMarginEnd" width="14rem">
+                          <Label text="Partial select" class="sapUiTinyMarginBottom"/>
+                          <CheckBox text="Select all" partiallySelected="true"/>
+                        </VBox>
+                      </HBox>
+                    </VBox>
+                  </content>
+                </Panel>
+
+                <Panel headerText="RadioButtonGroup — Exclusive Selection" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginBottom">
+                      <HBox wrap="Wrap" class="sapUiSmallMarginTop">
+                        <VBox class="sapUiSmallMarginEnd" width="14rem">
+                          <Label text="Vertical (default)" class="sapUiTinyMarginBottom"/>
+                          <RadioButtonGroup selectedIndex="{playground>/demo/radioIndex}">
+                            <RadioButton text="Option A"/>
+                            <RadioButton text="Option B"/>
+                            <RadioButton text="Option C"/>
+                          </RadioButtonGroup>
+                        </VBox>
+                        <VBox class="sapUiSmallMarginEnd" width="20rem">
+                          <Label text="Horizontal (2 columns)" class="sapUiTinyMarginBottom"/>
+                          <RadioButtonGroup columns="2">
+                            <RadioButton text="Choice 1"/>
+                            <RadioButton text="Choice 2"/>
+                            <RadioButton text="Choice 3"/>
+                            <RadioButton text="Choice 4"/>
+                          </RadioButtonGroup>
+                        </VBox>
+                        <VBox class="sapUiSmallMarginEnd" width="14rem">
+                          <Label text="Warning state" class="sapUiTinyMarginBottom"/>
+                          <RadioButtonGroup valueState="Warning">
+                            <RadioButton text="Select one"/>
+                            <RadioButton text="Or this"/>
+                          </RadioButtonGroup>
+                        </VBox>
+                        <VBox class="sapUiSmallMarginEnd" width="14rem">
+                          <Label text="Error state" class="sapUiTinyMarginBottom"/>
+                          <RadioButtonGroup valueState="Error">
+                            <RadioButton text="Required A"/>
+                            <RadioButton text="Required B"/>
+                          </RadioButtonGroup>
+                        </VBox>
+                      </HBox>
+                    </VBox>
+                  </content>
+                </Panel>
+
+                <Panel headerText="Switch — On/Off Toggle" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginBottom">
+                      <HBox wrap="Wrap" alignItems="Center" class="sapUiSmallMarginTop">
+                        <VBox class="sapUiSmallMarginEnd" width="14rem">
+                          <Label text="Default ON/OFF" class="sapUiTinyMarginBottom"/>
+                          <Switch state="{playground>/demo/switchState}"/>
+                        </VBox>
+                        <VBox class="sapUiSmallMarginEnd" width="14rem">
+                          <Label text="Custom labels" class="sapUiTinyMarginBottom"/>
+                          <Switch state="true" customTextOn="YES" customTextOff="NO"/>
+                        </VBox>
+                        <VBox class="sapUiSmallMarginEnd" width="14rem">
+                          <Label text="Accept / Reject type" class="sapUiTinyMarginBottom"/>
+                          <Switch state="true" type="AcceptReject"/>
+                        </VBox>
+                        <VBox class="sapUiSmallMarginEnd" width="14rem">
+                          <Label text="Disabled (on)" class="sapUiTinyMarginBottom"/>
+                          <Switch state="true" enabled="false"/>
+                        </VBox>
+                        <VBox class="sapUiSmallMarginEnd" width="14rem">
+                          <Label text="Disabled (off)" class="sapUiTinyMarginBottom"/>
+                          <Switch state="false" enabled="false"/>
+                        </VBox>
+                      </HBox>
+                    </VBox>
+                  </content>
+                </Panel>
+
+              </VBox>
+
+              <!-- ══════════════════════════════════════════════
+                   CAT 1 — BUTTONS &amp; ACTIONS
+                   ══════════════════════════════════════════════ -->
+              <VBox id="catGroup-1" visible="false">
+
+                <Panel headerText="Button — All Types &amp; Variants" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginBottom">
+                      <Label text="Types" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
+                      <HBox wrap="Wrap">
+                        <Button text="Default"     type="Default"     class="sapUiTinyMarginEnd sapUiTinyMarginBottom"/>
+                        <Button text="Emphasized"  type="Emphasized"  class="sapUiTinyMarginEnd sapUiTinyMarginBottom"/>
+                        <Button text="Accept"      type="Accept"      class="sapUiTinyMarginEnd sapUiTinyMarginBottom"/>
+                        <Button text="Reject"      type="Reject"      class="sapUiTinyMarginEnd sapUiTinyMarginBottom"/>
+                        <Button text="Attention"   type="Attention"   class="sapUiTinyMarginEnd sapUiTinyMarginBottom"/>
+                        <Button text="Transparent" type="Transparent" class="sapUiTinyMarginEnd sapUiTinyMarginBottom"/>
+                        <Button text="Ghost"       type="Ghost"       class="sapUiTinyMarginEnd sapUiTinyMarginBottom"/>
+                        <Button text="Neutral"     type="Neutral"     class="sapUiTinyMarginEnd sapUiTinyMarginBottom"/>
+                      </HBox>
+                      <Label text="With icons" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
+                      <HBox wrap="Wrap">
+                        <Button icon="sap-icon://add"    type="Default"    tooltip="Add"    class="sapUiTinyMarginEnd sapUiTinyMarginBottom"/>
+                        <Button icon="sap-icon://edit"   type="Default"    tooltip="Edit"   class="sapUiTinyMarginEnd sapUiTinyMarginBottom"/>
+                        <Button icon="sap-icon://delete" type="Reject"     tooltip="Delete" class="sapUiTinyMarginEnd sapUiTinyMarginBottom"/>
+                        <Button icon="sap-icon://save"   type="Emphasized" tooltip="Save"   class="sapUiTinyMarginEnd sapUiTinyMarginBottom"/>
+                        <Button text="Add item" icon="sap-icon://add" type="Emphasized"  class="sapUiTinyMarginEnd sapUiTinyMarginBottom"/>
+                        <Button text="Download" icon="sap-icon://download" iconFirst="false" class="sapUiTinyMarginEnd sapUiTinyMarginBottom"/>
+                      </HBox>
+                      <Label text="States" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
+                      <HBox wrap="Wrap">
+                        <Button text="Disabled"  type="Emphasized" enabled="false" class="sapUiTinyMarginEnd sapUiTinyMarginBottom"/>
+                        <Button text="Busy"      type="Default"    busy="true"     class="sapUiTinyMarginEnd sapUiTinyMarginBottom"/>
+                      </HBox>
+                    </VBox>
+                  </content>
+                </Panel>
+
+                <Panel headerText="ToggleButton — Pressed State" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <HBox wrap="Wrap" class="sapUiSmallMargin">
+                      <ToggleButton text="Bold"        icon="sap-icon://bold"        pressed="true"  type="Default"    class="sapUiTinyMarginEnd sapUiTinyMarginBottom"/>
+                      <ToggleButton text="Italic"      icon="sap-icon://italic"      pressed="false" type="Default"    class="sapUiTinyMarginEnd sapUiTinyMarginBottom"/>
+                      <ToggleButton text="Underline"   icon="sap-icon://underline"   pressed="true"  type="Default"    class="sapUiTinyMarginEnd sapUiTinyMarginBottom"/>
+                      <ToggleButton text="Mute"        icon="sap-icon://mute"        pressed="false" type="Reject"     class="sapUiTinyMarginEnd sapUiTinyMarginBottom"/>
+                      <ToggleButton text="Favorite"    icon="sap-icon://favorite"    pressed="true"  type="Emphasized" class="sapUiTinyMarginEnd sapUiTinyMarginBottom"/>
+                      <ToggleButton text="Pin"         icon="sap-icon://pushpin-off" pressed="false" type="Transparent" class="sapUiTinyMarginEnd sapUiTinyMarginBottom"/>
+                      <ToggleButton text="Disabled"    type="Default" enabled="false" class="sapUiTinyMarginEnd sapUiTinyMarginBottom"/>
+                    </HBox>
+                  </content>
+                </Panel>
+
+                <Panel headerText="SegmentedButton — Tab-like Selection" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginBottom">
+                      <Label text="Text only" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
+                      <SegmentedButton selectedKey="month">
+                        <items>
+                          <SegmentedButtonItem key="day"   text="Day"/>
+                          <SegmentedButtonItem key="week"  text="Week"/>
+                          <SegmentedButtonItem key="month" text="Month"/>
+                          <SegmentedButtonItem key="year"  text="Year"/>
+                        </items>
+                      </SegmentedButton>
+                      <Label text="Icons only" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
+                      <SegmentedButton selectedKey="list">
+                        <items>
+                          <SegmentedButtonItem key="grid" icon="sap-icon://grid"/>
+                          <SegmentedButtonItem key="list" icon="sap-icon://list"/>
+                          <SegmentedButtonItem key="map"  icon="sap-icon://map"/>
+                        </items>
+                      </SegmentedButton>
+                      <Label text="Text + icons" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
+                      <SegmentedButton selectedKey="active">
+                        <items>
+                          <SegmentedButtonItem key="all"      text="All"      icon="sap-icon://globe"/>
+                          <SegmentedButtonItem key="active"   text="Active"   icon="sap-icon://accept"/>
+                          <SegmentedButtonItem key="inactive" text="Inactive" icon="sap-icon://decline"/>
+                        </items>
+                      </SegmentedButton>
+                    </VBox>
+                  </content>
+                </Panel>
+
+                <Panel headerText="OverflowToolbar — Collapsing Actions" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginBottom">
+                      <Label text="All buttons — resize window to see overflow" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
+                      <OverflowToolbar>
+                        <Title text="Orders" level="H4"/>
+                        <ToolbarSpacer/>
+                        <Button text="Create"  icon="sap-icon://add"    type="Emphasized"/>
+                        <Button text="Edit"    icon="sap-icon://edit"/>
+                        <Button text="Copy"    icon="sap-icon://copy"/>
+                        <Button text="Delete"  icon="sap-icon://delete" type="Reject"/>
+                        <Button text="Export"  icon="sap-icon://download"/>
+                        <Button text="Filter"  icon="sap-icon://filter"/>
+                        <Button text="Sort"    icon="sap-icon://sort"/>
+                        <Button text="Group"   icon="sap-icon://group-2"/>
+                        <Button text="Print"   icon="sap-icon://print"/>
+                        <Button text="Refresh" icon="sap-icon://refresh" type="Transparent"/>
+                      </OverflowToolbar>
+                      <Label text="With SearchField" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
+                      <OverflowToolbar>
+                        <SearchField width="15rem" placeholder="Search..."/>
+                        <ToolbarSpacer/>
+                        <Button text="New"    icon="sap-icon://add"    type="Emphasized"/>
+                        <Button text="Edit"   icon="sap-icon://edit"/>
+                        <Button text="Delete" icon="sap-icon://delete" type="Reject"/>
+                      </OverflowToolbar>
+                    </VBox>
+                  </content>
+                </Panel>
+
+                <Panel headerText="MenuButton — Dropdown Action Menu" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <HBox wrap="Wrap" class="sapUiSmallMargin">
+                      <MenuButton text="Actions" type="Default" class="sapUiSmallMarginEnd">
+                        <menu>
+                          <Menu>
+                            <items>
+                              <MenuItem text="Edit"   icon="sap-icon://edit"/>
+                              <MenuItem text="Copy"   icon="sap-icon://copy"/>
+                              <MenuItem text="Delete" icon="sap-icon://delete"/>
+                            </items>
+                          </Menu>
+                        </menu>
+                      </MenuButton>
+                      <MenuButton text="Export" type="Emphasized" icon="sap-icon://download" class="sapUiSmallMarginEnd">
+                        <menu>
+                          <Menu>
+                            <items>
+                              <MenuItem text="Export as PDF"   icon="sap-icon://pdf-attachment"/>
+                              <MenuItem text="Export as Excel" icon="sap-icon://excel-attachment"/>
+                              <MenuItem text="Export as CSV"   icon="sap-icon://document-text"/>
+                            </items>
+                          </Menu>
+                        </menu>
+                      </MenuButton>
+                      <MenuButton text="New" type="Ghost" icon="sap-icon://add" class="sapUiSmallMarginEnd">
+                        <menu>
+                          <Menu>
+                            <items>
+                              <MenuItem text="Order">
+                                <items>
+                                  <MenuItem text="Standard Order"/>
+                                  <MenuItem text="Urgent Order"/>
+                                </items>
+                              </MenuItem>
+                              <MenuItem text="Invoice"/>
+                              <MenuItem text="Delivery Note"/>
+                            </items>
+                          </Menu>
+                        </menu>
+                      </MenuButton>
+                    </HBox>
+                  </content>
+                </Panel>
+
+              </VBox>
+
+              <!-- ══════════════════════════════════════════════
+                   CAT 2 — LISTS &amp; TABLES
+                   ══════════════════════════════════════════════ -->
+              <VBox id="catGroup-2" visible="false">
+
+                <Panel headerText="List — Item Types" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginBottom">
+                      <Label text="StandardListItem" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
+                      <List mode="SingleSelectMaster">
+                        <StandardListItem title="Sales Order 4500012345" description="Customer: Acme Corp" icon="sap-icon://sales-order" info="Open" infoState="Warning" type="Navigation"/>
+                        <StandardListItem title="Sales Order 4500012346" description="Customer: Global Inc" icon="sap-icon://sales-order" info="Completed" infoState="Success" type="Navigation"/>
+                        <StandardListItem title="Sales Order 4500012347" description="Customer: Beta GmbH" icon="sap-icon://sales-order" info="Error" infoState="Error" type="Navigation"/>
+                      </List>
+                      <Label text="ObjectListItem" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
+                      <List mode="None">
+                        <ObjectListItem title="Invoice INV-2025-0001" number="12,450.00" numberUnit="EUR" numberState="Success" type="Navigation">
+                          <attributes>
+                            <ObjectAttribute text="Due: 30.04.2025"/>
+                            <ObjectAttribute text="Vendor: Acme Corp"/>
+                          </attributes>
+                          <firstStatus>
+                            <ObjectStatus text="Approved" state="Success" icon="sap-icon://accept"/>
+                          </firstStatus>
+                        </ObjectListItem>
+                        <ObjectListItem title="Invoice INV-2025-0002" number="8,900.00" numberUnit="EUR" numberState="Error" type="Navigation">
+                          <attributes>
+                            <ObjectAttribute text="Due: 15.04.2025 (Overdue)"/>
+                            <ObjectAttribute text="Vendor: Beta GmbH"/>
+                          </attributes>
+                          <firstStatus>
+                            <ObjectStatus text="Overdue" state="Error" icon="sap-icon://alert"/>
+                          </firstStatus>
+                        </ObjectListItem>
+                      </List>
+                    </VBox>
+                  </content>
+                </Panel>
+
+                <Panel headerText="Table (sap.m) — Responsive Table" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <Table mode="MultiSelect" alternateRowColors="true">
+                      <columns>
+                        <Column><Text text="Order ID"/></Column>
+                        <Column><Text text="Customer"/></Column>
+                        <Column><Text text="Amount"/></Column>
+                        <Column><Text text="Status"/></Column>
+                        <Column><Text text="Date"/></Column>
+                      </columns>
+                      <items>
+                        <ColumnListItem type="Navigation">
+                          <cells>
+                            <Text text="4500012345"/><Text text="Acme Corp"/><Text text="12,450 EUR"/>
+                            <ObjectStatus text="Open"      state="Warning"/>
+                            <Text text="01.04.2025"/>
+                          </cells>
+                        </ColumnListItem>
+                        <ColumnListItem type="Navigation">
+                          <cells>
+                            <Text text="4500012346"/><Text text="Global Inc"/><Text text="8,900 EUR"/>
+                            <ObjectStatus text="Completed" state="Success"/>
+                            <Text text="28.03.2025"/>
+                          </cells>
+                        </ColumnListItem>
+                        <ColumnListItem type="Navigation">
+                          <cells>
+                            <Text text="4500012347"/><Text text="Beta GmbH"/><Text text="3,200 EUR"/>
+                            <ObjectStatus text="Error"     state="Error"/>
+                            <Text text="25.03.2025"/>
+                          </cells>
+                        </ColumnListItem>
+                        <ColumnListItem type="Navigation">
+                          <cells>
+                            <Text text="4500012348"/><Text text="Sigma AG"/><Text text="54,000 EUR"/>
+                            <ObjectStatus text="In Process" state="Information"/>
+                            <Text text="20.03.2025"/>
+                          </cells>
+                        </ColumnListItem>
+                      </items>
+                    </Table>
+                  </content>
+                </Panel>
+
+                <Panel headerText="UI Table (sap.ui.table) — High-performance Grid" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <MessageStrip text="sap.ui.table.Table is used for large datasets with virtual scrolling. See the dedicated Table Controls demo." type="Information" showIcon="true" showCloseButton="false" class="sapUiSmallMargin"/>
+                  </content>
+                </Panel>
+
+                <Panel headerText="Tree — Hierarchical Data" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginBottom">
+                      <MessageStrip text="sap.m.Tree is bound to a hierarchical JSON/OData model. Hierarchy is defined in the data, not in the XML view." type="Information" showIcon="true" showCloseButton="false" class="sapUiSmallMarginTop sapUiSmallMarginBottom"/>
+                      <List mode="None">
+                        <StandardListItem title="Procurement"         icon="sap-icon://folder"       description="Root node"  type="Navigation"/>
+                        <StandardListItem title="  ↳ Purchase Orders" icon="sap-icon://sales-order"  description="Level 1"   type="Navigation"/>
+                        <StandardListItem title="  ↳ Invoices"        icon="sap-icon://paper-plane"  description="Level 1"   type="Navigation"/>
+                        <StandardListItem title="  ↳ Vendors"         icon="sap-icon://supplier"     description="Level 1"   type="Navigation"/>
+                        <StandardListItem title="     ↳ Acme Corp"    icon="sap-icon://building"     description="Level 2"   type="Navigation"/>
+                        <StandardListItem title="     ↳ Beta GmbH"    icon="sap-icon://building"     description="Level 2"   type="Navigation"/>
+                        <StandardListItem title="Sales"               icon="sap-icon://folder"       description="Root node"  type="Navigation"/>
+                        <StandardListItem title="  ↳ Sales Orders"    icon="sap-icon://sales-order"  description="Level 1"   type="Navigation"/>
+                        <StandardListItem title="  ↳ Customers"       icon="sap-icon://customer"     description="Level 1"   type="Navigation"/>
+                      </List>
+                    </VBox>
+                  </content>
+                </Panel>
+
+                <Panel headerText="UploadCollection — File Upload List (deprecated)" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <MessageStrip text="sap.m.UploadCollection is deprecated. Use sap.m.upload.UploadSet for new implementations." type="Warning" showIcon="true" showCloseButton="false" class="sapUiSmallMargin"/>
+                  </content>
+                </Panel>
+
+              </VBox>
+
+              <!-- ══════════════════════════════════════════════
+                   CAT 3 — NAVIGATION
+                   ══════════════════════════════════════════════ -->
+              <VBox id="catGroup-3" visible="false">
+
+                <Panel headerText="IconTabBar — Tab Navigation" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginBottom">
+                      <Label text="Default (text + icons)" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
+                      <IconTabBar selectedKey="orders">
+                        <items>
+                          <IconTabFilter key="orders"   text="Orders"    icon="sap-icon://sales-order" count="24"/>
+                          <IconTabFilter key="invoices" text="Invoices"  icon="sap-icon://paper-plane"  count="7"/>
+                          <IconTabFilter key="alerts"   text="Alerts"    icon="sap-icon://alert"        count="3" iconColor="Negative"/>
+                          <IconTabFilter key="docs"     text="Documents" icon="sap-icon://documents"/>
+                        </items>
+                        <content>
+                          <Text text="Orders tab content — list of sales orders would appear here." class="sapUiSmallMargin"/>
+                        </content>
+                      </IconTabBar>
+                      <Label text="Process steps (no icons, colored)" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
+                      <IconTabBar tabDensityMode="Cozy" selectedKey="step2">
+                        <items>
+                          <IconTabFilter key="step1" text="1. Create"  iconColor="Positive" count=""/>
+                          <IconTabSeparator/>
+                          <IconTabFilter key="step2" text="2. Review"  iconColor="Critical" count=""/>
+                          <IconTabSeparator/>
+                          <IconTabFilter key="step3" text="3. Approve" iconColor="Neutral"  count=""/>
+                          <IconTabSeparator/>
+                          <IconTabFilter key="step4" text="4. Release" iconColor="Neutral"  count=""/>
+                        </items>
+                      </IconTabBar>
+                    </VBox>
+                  </content>
+                </Panel>
+
+                <Panel headerText="Breadcrumb — Path Navigation" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginBottom">
+                      <Label text="Standard breadcrumb" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
+                      <Breadcrumbs currentLocationText="Order 4500012345">
+                        <links>
+                          <Link text="Home"/>
+                          <Link text="Sales"/>
+                          <Link text="Orders"/>
+                        </links>
+                      </Breadcrumbs>
+                      <Label text="Deep path" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
+                      <Breadcrumbs currentLocationText="Item Details">
+                        <links>
+                          <Link text="Launchpad"/>
+                          <Link text="Procurement"/>
+                          <Link text="Purchase Orders"/>
+                          <Link text="PO 4500099123"/>
+                          <Link text="Items"/>
+                        </links>
+                      </Breadcrumbs>
+                    </VBox>
+                  </content>
+                </Panel>
+
+                <Panel headerText="ShellBar — App Top Header" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginBottom">
+                      <Label text="Standard ShellBar" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
+                      <f:ShellBar
+                        title="My App"
+                        secondTitle="Dashboard"
+                        homeIcon="sap-icon://home"
+                        showNotifications="true"
+                        notificationsNumber="3"
+                        showProductSwitcher="true"
+                        showSearch="true">
+                        <f:profile>
+                          <Avatar initials="JS" displaySize="XS" backgroundColor="Accent6"/>
+                        </f:profile>
+                      </f:ShellBar>
+                    </VBox>
+                  </content>
+                </Panel>
+
+                <Panel headerText="SideNavigation — Side Panel Nav" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginBottom">
+                      <tnt:SideNavigation selectedKey="orders">
+                        <tnt:item>
+                          <tnt:NavigationList>
+                            <tnt:NavigationListItem text="Home"      key="home"      icon="sap-icon://home"/>
+                            <tnt:NavigationListItem text="Orders"    key="orders"    icon="sap-icon://sales-order" expanded="true">
+                              <tnt:NavigationListItem text="Open"      key="open"/>
+                              <tnt:NavigationListItem text="Completed" key="completed"/>
+                            </tnt:NavigationListItem>
+                            <tnt:NavigationListItem text="Customers" key="customers" icon="sap-icon://customer"/>
+                            <tnt:NavigationListItem text="Analytics" key="analytics" icon="sap-icon://bar-chart"/>
+                            <tnt:NavigationListItem text="Settings"  key="settings"  icon="sap-icon://settings"/>
+                          </tnt:NavigationList>
+                        </tnt:item>
+                      </tnt:SideNavigation>
+                    </VBox>
+                  </content>
+                </Panel>
+
+              </VBox>
+
+              <!-- ══════════════════════════════════════════════
+                   CAT 4 — FEEDBACK &amp; ALERTS
+                   ══════════════════════════════════════════════ -->
+              <VBox id="catGroup-4" visible="false">
+
+                <Panel headerText="MessageBox — Modal Dialogs" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginBottom">
+                      <Label text="Trigger different MessageBox types" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
+                      <HBox wrap="Wrap">
+                        <Button text="Show Confirm"     type="Emphasized" press=".onShowMessageBox" class="sapUiSmallMarginEnd sapUiSmallMarginBottom">
+                          <customData><core:CustomData key="msgType" value="confirm"/></customData>
+                        </Button>
+                        <Button text="Show Alert"       type="Default"    press=".onShowMessageBox" class="sapUiSmallMarginEnd sapUiSmallMarginBottom">
+                          <customData><core:CustomData key="msgType" value="alert"/></customData>
+                        </Button>
+                        <Button text="Show Error"       type="Reject"     press=".onShowMessageBox" class="sapUiSmallMarginEnd sapUiSmallMarginBottom">
+                          <customData><core:CustomData key="msgType" value="error"/></customData>
+                        </Button>
+                        <Button text="Show Warning"     type="Attention"  press=".onShowMessageBox" class="sapUiSmallMarginEnd sapUiSmallMarginBottom">
+                          <customData><core:CustomData key="msgType" value="warning"/></customData>
+                        </Button>
+                        <Button text="Show Information" type="Default"    press=".onShowMessageBox" class="sapUiSmallMarginEnd sapUiSmallMarginBottom">
+                          <customData><core:CustomData key="msgType" value="information"/></customData>
+                        </Button>
+                        <Button text="Show Success"     type="Accept"     press=".onShowMessageBox" class="sapUiSmallMarginEnd sapUiSmallMarginBottom">
+                          <customData><core:CustomData key="msgType" value="success"/></customData>
+                        </Button>
+                      </HBox>
+                    </VBox>
+                  </content>
+                </Panel>
+
+                <Panel headerText="MessageToast — Non-blocking Notifications" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginBottom">
+                      <Label text="Click to show a toast notification" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
+                      <HBox wrap="Wrap">
+                        <Button text="Short toast"  type="Default"    press=".onShowMessageToast" class="sapUiSmallMarginEnd sapUiSmallMarginBottom"/>
+                        <Button text="Longer toast" type="Emphasized" press=".onShowMessageToast" class="sapUiSmallMarginEnd sapUiSmallMarginBottom"/>
+                      </HBox>
+                      <MessageStrip text="MessageToast appears at the bottom of the screen for ~3 seconds." type="Information" showIcon="true" showCloseButton="false"/>
+                    </VBox>
+                  </content>
+                </Panel>
+
+                <Panel headerText="MessageStrip — Inline Status Messages" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginBottom">
+                      <MessageStrip text="Information: Your changes have been saved successfully." type="Information" showIcon="true" showCloseButton="true" class="sapUiTinyMarginTop sapUiTinyMarginBottom"/>
+                      <MessageStrip text="Success: Order 4500012345 has been submitted." type="Success" showIcon="true" showCloseButton="true" class="sapUiTinyMarginTop sapUiTinyMarginBottom"/>
+                      <MessageStrip text="Warning: This item is below minimum stock level." type="Warning" showIcon="true" showCloseButton="true" class="sapUiTinyMarginTop sapUiTinyMarginBottom"/>
+                      <MessageStrip text="Error: Connection to the server failed. Please try again." type="Error" showIcon="true" showCloseButton="true" class="sapUiTinyMarginTop sapUiTinyMarginBottom"/>
+                      <MessageStrip text="Without icon, without close button." type="Information" showIcon="false" showCloseButton="false" class="sapUiTinyMarginTop sapUiTinyMarginBottom"/>
+                      <MessageStrip text="With a custom link action." type="Warning" showIcon="true" showCloseButton="true" class="sapUiTinyMarginTop sapUiTinyMarginBottom">
+                        <link>
+                          <Link text="Learn more"/>
+                        </link>
+                      </MessageStrip>
+                    </VBox>
+                  </content>
+                </Panel>
+
+                <Panel headerText="BusyDialog — Loading Overlay" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginBottom">
+                      <Label text="Opens a loading overlay for 3 seconds" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
+                      <HBox>
+                        <Button text="Open BusyDialog" type="Emphasized" press=".onShowBusyDialog" class="sapUiSmallMarginEnd"/>
+                      </HBox>
+                      <MessageStrip text="BusyDialog blocks the UI and shows a spinner with a message. Auto-closes after 3 seconds in this demo." type="Information" showIcon="true" showCloseButton="false" class="sapUiSmallMarginTop"/>
+                    </VBox>
+                  </content>
+                </Panel>
+
+              </VBox>
+
+              <!-- ══════════════════════════════════════════════
+                   CAT 5 — LAYOUT
+                   ══════════════════════════════════════════════ -->
+              <VBox id="catGroup-5" visible="false">
+
+                <Panel headerText="FlexBox — CSS Flexbox Layout" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginBottom">
+                      <Label text="Row (default) — justifyContent: SpaceBetween" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
+                      <FlexBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiTinyMarginBottom">
+                        <Button text="Left" type="Default"/>
+                        <Text text="Center content"/>
+                        <Button text="Right" type="Emphasized"/>
+                      </FlexBox>
+                      <Label text="Wrap — multiple items" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
+                      <FlexBox wrap="Wrap" justifyContent="Start">
+                        <Button text="Item 1" class="sapUiTinyMarginEnd sapUiTinyMarginBottom"/>
+                        <Button text="Item 2" class="sapUiTinyMarginEnd sapUiTinyMarginBottom"/>
+                        <Button text="Item 3" class="sapUiTinyMarginEnd sapUiTinyMarginBottom"/>
+                        <Button text="Item 4" class="sapUiTinyMarginEnd sapUiTinyMarginBottom"/>
+                        <Button text="Item 5" class="sapUiTinyMarginEnd sapUiTinyMarginBottom"/>
+                      </FlexBox>
+                      <Label text="Column direction" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
+                      <FlexBox direction="Column" alignItems="Start">
+                        <Button text="Top"    class="sapUiTinyMarginBottom"/>
+                        <Button text="Middle" class="sapUiTinyMarginBottom"/>
+                        <Button text="Bottom"/>
+                      </FlexBox>
+                    </VBox>
+                  </content>
+                </Panel>
+
+                <Panel headerText="Grid (sap.ui.layout) — 12-column Layout" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginBottom">
+                      <Label text="3-column layout (L4 M6 S12)" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
+                      <l:Grid defaultSpan="L4 M6 S12" hSpacing="1">
+                        <Panel headerText="Column 1">
+                          <content><Text text="Span L4 M6 S12" class="sapUiSmallMargin"/></content>
+                        </Panel>
+                        <Panel headerText="Column 2">
+                          <content><Text text="Span L4 M6 S12" class="sapUiSmallMargin"/></content>
+                        </Panel>
+                        <Panel headerText="Column 3">
+                          <content><Text text="Span L4 M6 S12" class="sapUiSmallMargin"/></content>
+                        </Panel>
+                      </l:Grid>
+                      <Label text="Mixed spans" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
+                      <l:Grid hSpacing="1">
+                        <Panel headerText="Wide (L8 M12)">
+                          <layoutData><l:GridData span="L8 M12 S12"/></layoutData>
+                          <content><Text text="Main content area" class="sapUiSmallMargin"/></content>
+                        </Panel>
+                        <Panel headerText="Sidebar (L4 M12)">
+                          <layoutData><l:GridData span="L4 M12 S12"/></layoutData>
+                          <content><Text text="Sidebar" class="sapUiSmallMargin"/></content>
+                        </Panel>
+                      </l:Grid>
+                    </VBox>
+                  </content>
+                </Panel>
+
+                <Panel headerText="Panel — Collapsible Container" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginBottom">
+                      <Panel headerText="Expanded panel (default)" expandable="true" expanded="true" class="sapUiTinyMarginBottom">
+                        <content>
+                          <Text text="This panel is expanded by default. Click the header to collapse it." class="sapUiSmallMargin"/>
+                        </content>
+                      </Panel>
+                      <Panel headerText="Collapsed panel" expandable="true" expanded="false" class="sapUiTinyMarginBottom">
+                        <content>
+                          <Text text="This panel starts collapsed. Expand it to see this content." class="sapUiSmallMargin"/>
+                        </content>
+                      </Panel>
+                      <Panel headerText="Non-expandable" expandable="false" class="sapUiTinyMarginBottom">
+                        <content>
+                          <Text text="This panel cannot be collapsed — the toggle button is hidden." class="sapUiSmallMargin"/>
+                        </content>
+                      </Panel>
+                      <Panel class="sapUiTinyMarginBottom">
+                        <headerToolbar>
+                          <Toolbar>
+                            <Title text="Custom Toolbar Header" level="H4"/>
+                            <ToolbarSpacer/>
+                            <Button text="Action" type="Transparent"/>
+                          </Toolbar>
+                        </headerToolbar>
+                        <content>
+                          <Text text="Panel with a custom toolbar instead of a plain header text." class="sapUiSmallMargin"/>
+                        </content>
+                      </Panel>
+                    </VBox>
+                  </content>
+                </Panel>
+
+                <Panel headerText="SplitApp — Master/Detail Layout" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <MessageStrip text="sap.m.SplitApp requires a dedicated route and wraps the entire page. On tablet/desktop it shows master + detail side by side. On phone it stacks them." type="Information" showIcon="true" showCloseButton="false" class="sapUiSmallMargin"/>
+                  </content>
+                </Panel>
+
+                <Panel headerText="DynamicPage — Collapsible Header Page" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <MessageStrip text="sap.f.DynamicPage wraps the entire page and provides a collapsible header that snaps on scroll. Used for object detail pages." type="Information" showIcon="true" showCloseButton="false" class="sapUiSmallMargin"/>
+                  </content>
+                </Panel>
+
+              </VBox>
+
+              <!-- ══════════════════════════════════════════════
+                   CAT 6 — DATA VISUALIZATION
+                   ══════════════════════════════════════════════ -->
+              <VBox id="catGroup-6" visible="false">
+
+                <Panel headerText="ObjectHeader — Entity Header" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <ObjectHeader
+                      title="Sales Order 4500012345"
+                      number="12,450.00"
+                      numberUnit="EUR"
+                      numberState="Success"
+                      intro="Acme Corp · US East">
+                      <statuses>
+                        <ObjectStatus text="Approved" state="Success" icon="sap-icon://accept"/>
+                        <ObjectStatus text="Priority: High" state="Warning" icon="sap-icon://alert"/>
+                      </statuses>
+                      <attributes>
+                        <ObjectAttribute title="Created by" text="John Doe"/>
+                        <ObjectAttribute title="Created on" text="01.04.2025"/>
+                        <ObjectAttribute title="Delivery"   text="15.04.2025"/>
+                      </attributes>
+                    </ObjectHeader>
+                  </content>
+                </Panel>
+
+                <Panel headerText="GenericTile — Launchpad Tiles" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <HBox wrap="Wrap" class="sapUiSmallMargin">
+                      <GenericTile header="Open Orders" subheader="Last 30 days" class="sapUiSmallMarginEnd sapUiSmallMarginBottom">
+                        <tileContent>
+                          <TileContent footer="Orders">
+                            <content><NumericContent value="24" indicator="Up" valueColor="Good" withMargin="false"/></content>
+                          </TileContent>
+                        </tileContent>
+                      </GenericTile>
+                      <GenericTile header="Revenue" subheader="Q1 2025" class="sapUiSmallMarginEnd sapUiSmallMarginBottom">
+                        <tileContent>
+                          <TileContent footer="EUR">
+                            <content><NumericContent value="1.2M" indicator="Up" valueColor="Good" withMargin="false"/></content>
+                          </TileContent>
+                        </tileContent>
+                      </GenericTile>
+                      <GenericTile header="Critical Alerts" subheader="Needs attention" class="sapUiSmallMarginEnd sapUiSmallMarginBottom">
+                        <tileContent>
+                          <TileContent footer="Alerts">
+                            <content><NumericContent value="7" indicator="Down" valueColor="Critical" withMargin="false"/></content>
+                          </TileContent>
+                        </tileContent>
+                      </GenericTile>
+                      <GenericTile header="Failed Jobs" frameType="TwoByOne" class="sapUiSmallMarginEnd sapUiSmallMarginBottom">
+                        <tileContent>
+                          <TileContent footer="Last 24h">
+                            <content><NumericContent value="3" valueColor="Critical" withMargin="false"/></content>
+                          </TileContent>
+                        </tileContent>
+                      </GenericTile>
+                    </HBox>
+                  </content>
+                </Panel>
+
+                <Panel headerText="NumericContent — KPI Display" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <HBox wrap="Wrap" alignItems="Center" class="sapUiSmallMargin">
+                      <VBox class="sapUiSmallMarginEnd" alignItems="Center">
+                        <Label text="Good / Up" class="sapUiTinyMarginBottom"/>
+                        <NumericContent value="1,234" indicator="Up" valueColor="Good"/>
                       </VBox>
-                      <VBox class="sapUiSmallMarginEnd" width="15rem">
-                        <Label text="StepInput" class="sapUiTinyMarginBottom"/>
-                        <StepInput value="{playground>/demo/stepValue}" min="0" max="100" step="5"/>
+                      <VBox class="sapUiSmallMarginEnd" alignItems="Center">
+                        <Label text="Critical / Down" class="sapUiTinyMarginBottom"/>
+                        <NumericContent value="456" indicator="Down" valueColor="Critical"/>
                       </VBox>
-                      <VBox class="sapUiSmallMarginEnd" width="15rem">
-                        <Label text="ComboBox" class="sapUiTinyMarginBottom"/>
-                        <ComboBox selectedKey="{playground>/demo/comboKey}" items="{playground>/demo/comboItems}">
-                          <core:Item key="{key}" text="{text}"/>
-                        </ComboBox>
+                      <VBox class="sapUiSmallMarginEnd" alignItems="Center">
+                        <Label text="Error / Down" class="sapUiTinyMarginBottom"/>
+                        <NumericContent value="7" indicator="Down" valueColor="Error"/>
+                      </VBox>
+                      <VBox class="sapUiSmallMarginEnd" alignItems="Center">
+                        <Label text="Neutral / None" class="sapUiTinyMarginBottom"/>
+                        <NumericContent value="99" indicator="None" valueColor="Neutral"/>
+                      </VBox>
+                      <VBox class="sapUiSmallMarginEnd" alignItems="Center">
+                        <Label text="With scale" class="sapUiTinyMarginBottom"/>
+                        <NumericContent value="1.2" scale="M" indicator="Up" valueColor="Good"/>
+                      </VBox>
+                      <VBox class="sapUiSmallMarginEnd" alignItems="Center">
+                        <Label text="Icon" class="sapUiTinyMarginBottom"/>
+                        <NumericContent value="42" icon="sap-icon://customer" valueColor="Good"/>
                       </VBox>
                     </HBox>
-                    <HBox wrap="Wrap" class="sapUiSmallMarginTop">
-                      <VBox class="sapUiSmallMarginEnd" width="15rem">
-                        <Label text="DatePicker" class="sapUiTinyMarginBottom"/>
-                        <DatePicker value="{playground>/demo/dateValue}" valueFormat="yyyy-MM-dd" displayFormat="dd.MM.yyyy"/>
-                      </VBox>
-                      <VBox class="sapUiSmallMarginEnd" width="15rem">
-                        <Label text="TimePicker" class="sapUiTinyMarginBottom"/>
-                        <TimePicker value="{playground>/demo/timeValue}" valueFormat="HH:mm" displayFormat="HH:mm"/>
-                      </VBox>
-                      <VBox class="sapUiSmallMarginEnd" width="15rem">
-                        <Label text="MultiComboBox" class="sapUiTinyMarginBottom"/>
-                        <MultiComboBox selectedKeys="{playground>/demo/multiKeys}" items="{playground>/demo/comboItems}">
-                          <core:Item key="{key}" text="{text}"/>
-                        </MultiComboBox>
-                      </VBox>
-                    </HBox>
-                    <HBox wrap="Wrap" class="sapUiSmallMarginTop">
-                      <VBox class="sapUiSmallMarginEnd" width="15rem">
-                        <Label text="Slider (0–100)" class="sapUiTinyMarginBottom"/>
-                        <Slider value="{playground>/demo/sliderValue}" min="0" max="100" step="1" enableTickmarks="true"/>
-                        <Text text="Value: {playground>/demo/sliderValue}" class="sapUiTinyMarginTop"/>
-                      </VBox>
-                      <VBox class="sapUiSmallMarginEnd" width="15rem">
-                        <Label text="Rating" class="sapUiTinyMarginBottom"/>
-                        <RatingIndicator value="{playground>/demo/ratingValue}" maxValue="5"/>
-                      </VBox>
-                      <VBox class="sapUiSmallMarginEnd" width="15rem">
-                        <Label text="Switch" class="sapUiTinyMarginBottom"/>
-                        <Switch state="{playground>/demo/switchState}" customTextOn="ON" customTextOff="OFF"/>
-                      </VBox>
-                    </HBox>
-                    <HBox wrap="Wrap" class="sapUiSmallMarginTop">
-                      <VBox class="sapUiSmallMarginEnd" width="15rem">
-                        <Label text="CheckBox" class="sapUiTinyMarginBottom"/>
-                        <CheckBox text="Option Alpha" selected="{playground>/demo/check1}"/>
-                        <CheckBox text="Option Beta" selected="{playground>/demo/check2}"/>
-                        <CheckBox text="Option Gamma" selected="{playground>/demo/check3}"/>
-                      </VBox>
-                      <VBox class="sapUiSmallMarginEnd" width="15rem">
-                        <Label text="RadioButtonGroup" class="sapUiTinyMarginBottom"/>
-                        <RadioButtonGroup selectedIndex="{playground>/demo/radioIndex}">
-                          <RadioButton text="Choice A"/>
-                          <RadioButton text="Choice B"/>
-                          <RadioButton text="Choice C"/>
-                        </RadioButtonGroup>
-                      </VBox>
-                      <VBox class="sapUiSmallMarginEnd" width="15rem">
-                        <Label text="TextArea" class="sapUiTinyMarginBottom"/>
-                        <TextArea value="{playground>/demo/textArea}" rows="3" growing="true" placeholder="Enter notes..."/>
-                      </VBox>
-                    </HBox>
-                  </VBox>
-                </content>
-              </Panel>
+                  </content>
+                </Panel>
 
-              <!-- Button Types -->
-              <Panel headerText="Button Types" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
-                <content>
-                  <HBox wrap="Wrap" class="sapUiSmallMargin">
-                    <Button text="Default"     type="Default"     class="sapUiTinyMarginEnd sapUiTinyMarginBottom"/>
-                    <Button text="Emphasized"  type="Emphasized"  class="sapUiTinyMarginEnd sapUiTinyMarginBottom"/>
-                    <Button text="Accept"      type="Accept"      class="sapUiTinyMarginEnd sapUiTinyMarginBottom"/>
-                    <Button text="Reject"      type="Reject"      class="sapUiTinyMarginEnd sapUiTinyMarginBottom"/>
-                    <Button text="Attention"   type="Attention"   class="sapUiTinyMarginEnd sapUiTinyMarginBottom"/>
-                    <Button text="Transparent" type="Transparent" class="sapUiTinyMarginEnd sapUiTinyMarginBottom"/>
-                    <Button text="Ghost"       type="Ghost"       class="sapUiTinyMarginEnd sapUiTinyMarginBottom"/>
-                    <Button text="Neutral"     type="Neutral"     class="sapUiTinyMarginEnd sapUiTinyMarginBottom"/>
-                    <Button icon="sap-icon://add"  tooltip="Add"  class="sapUiTinyMarginEnd sapUiTinyMarginBottom"/>
-                    <Button text="With Icon" icon="sap-icon://edit" class="sapUiTinyMarginEnd sapUiTinyMarginBottom"/>
-                  </HBox>
-                </content>
-              </Panel>
+                <Panel headerText="RatingIndicator — Star Rating" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginBottom">
+                      <HBox wrap="Wrap" alignItems="Center" class="sapUiSmallMarginTop">
+                        <VBox class="sapUiSmallMarginEnd">
+                          <Label text="Interactive (5 stars)" class="sapUiTinyMarginBottom"/>
+                          <RatingIndicator value="{playground>/demo/ratingValue}" maxValue="5"/>
+                        </VBox>
+                        <VBox class="sapUiSmallMarginEnd">
+                          <Label text="Interactive (10 stars)" class="sapUiTinyMarginBottom"/>
+                          <RatingIndicator value="7" maxValue="10"/>
+                        </VBox>
+                        <VBox class="sapUiSmallMarginEnd">
+                          <Label text="Read-only" class="sapUiTinyMarginBottom"/>
+                          <RatingIndicator value="3.5" maxValue="5" editable="false"/>
+                        </VBox>
+                        <VBox class="sapUiSmallMarginEnd">
+                          <Label text="Disabled" class="sapUiTinyMarginBottom"/>
+                          <RatingIndicator value="2" maxValue="5" enabled="false"/>
+                        </VBox>
+                      </HBox>
+                    </VBox>
+                  </content>
+                </Panel>
 
-              <!-- Status Indicators -->
-              <Panel headerText="Status Indicators" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
-                <content>
-                  <HBox wrap="Wrap" alignItems="Center" class="sapUiSmallMargin">
-                    <ObjectStatus text="None"        state="None"        class="sapUiSmallMarginEnd"/>
-                    <ObjectStatus text="Success"     state="Success"     icon="sap-icon://accept"      class="sapUiSmallMarginEnd"/>
-                    <ObjectStatus text="Warning"     state="Warning"     icon="sap-icon://alert"       class="sapUiSmallMarginEnd"/>
-                    <ObjectStatus text="Error"       state="Error"       icon="sap-icon://error"       class="sapUiSmallMarginEnd"/>
-                    <ObjectStatus text="Information" state="Information" icon="sap-icon://information" class="sapUiSmallMarginEnd"/>
-                  </HBox>
-                  <HBox wrap="Wrap" class="sapUiSmallMarginBegin sapUiSmallMarginBottom">
-                    <MessageStrip text="Success"     type="Success"     showIcon="true" class="sapUiSmallMarginEnd sapUiTinyMarginBottom" width="12rem"/>
-                    <MessageStrip text="Warning"     type="Warning"     showIcon="true" class="sapUiSmallMarginEnd sapUiTinyMarginBottom" width="12rem"/>
-                    <MessageStrip text="Error"       type="Error"       showIcon="true" class="sapUiSmallMarginEnd sapUiTinyMarginBottom" width="12rem"/>
-                    <MessageStrip text="Information" type="Information" showIcon="true" class="sapUiTinyMarginBottom"                     width="12rem"/>
-                  </HBox>
-                </content>
-              </Panel>
+              </VBox>
 
-              <!-- Avatar Showcase -->
-              <Panel headerText="Avatar" expandable="true" expanded="false">
-                <content>
-                  <HBox wrap="Wrap" alignItems="Center" class="sapUiSmallMargin">
-                    <Avatar initials="AB" displaySize="XS" backgroundColor="Accent1" class="sapUiSmallMarginEnd"/>
-                    <Avatar initials="CD" displaySize="S"  backgroundColor="Accent2" class="sapUiSmallMarginEnd"/>
-                    <Avatar initials="EF" displaySize="M"  backgroundColor="Accent3" class="sapUiSmallMarginEnd"/>
-                    <Avatar initials="GH" displaySize="L"  backgroundColor="Accent4" class="sapUiSmallMarginEnd"/>
-                    <Avatar initials="IJ" displaySize="XL" backgroundColor="Accent5" class="sapUiSmallMarginEnd"/>
-                    <Avatar initials="KL" displayShape="Square" displaySize="M" backgroundColor="Accent6" class="sapUiSmallMarginEnd"/>
-                    <Avatar initials="MN" displayShape="Square" displaySize="M" backgroundColor="Accent7"/>
-                  </HBox>
-                </content>
-              </Panel>
+              <!-- ══════════════════════════════════════════════
+                   CAT 7 — DIALOGS &amp; POPOVERS
+                   ══════════════════════════════════════════════ -->
+              <VBox id="catGroup-7" visible="false">
+
+                <Panel headerText="Dialog — Modal Window" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginBottom">
+                      <HBox wrap="Wrap">
+                        <Button text="Open Dialog"      type="Emphasized" press=".onShowDialog"     class="sapUiSmallMarginEnd sapUiSmallMarginBottom"/>
+                        <Button text="Open BusyDialog"  type="Default"    press=".onShowBusyDialog" class="sapUiSmallMarginEnd sapUiSmallMarginBottom"/>
+                      </HBox>
+                      <MessageStrip text="sap.m.Dialog: modal, blocks interaction with the rest of the page. Has header, scrollable content, and action buttons." type="Information" showIcon="true" showCloseButton="false"/>
+                    </VBox>
+                  </content>
+                </Panel>
+
+                <Panel headerText="Popover — Contextual Panel" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginBottom">
+                      <HBox wrap="Wrap">
+                        <Button id="popoverTrigger" text="Open Popover" type="Emphasized" press=".onShowPopover" class="sapUiSmallMarginEnd sapUiSmallMarginBottom"/>
+                      </HBox>
+                      <MessageStrip text="sap.m.Popover: non-modal, anchored to a control, closes on outside click. Used for quick edits and contextual actions." type="Information" showIcon="true" showCloseButton="false"/>
+                    </VBox>
+                  </content>
+                </Panel>
+
+                <Panel headerText="ActionSheet — Mobile Bottom Sheet" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginBottom">
+                      <HBox wrap="Wrap">
+                        <Button id="actionSheetTrigger" text="Open ActionSheet" type="Emphasized" press=".onShowActionSheet" class="sapUiSmallMarginEnd sapUiSmallMarginBottom"/>
+                      </HBox>
+                      <MessageStrip text="sap.m.ActionSheet: appears at the bottom on mobile, as a popover on desktop. Used for contextual action lists." type="Information" showIcon="true" showCloseButton="false"/>
+                    </VBox>
+                  </content>
+                </Panel>
+
+                <Panel headerText="ResponsivePopover — Adaptive Overlay" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginBottom">
+                      <HBox wrap="Wrap">
+                        <Button id="responsivePopoverTrigger" text="Open ResponsivePopover" type="Emphasized" press=".onShowResponsivePopover" class="sapUiSmallMarginEnd sapUiSmallMarginBottom"/>
+                      </HBox>
+                      <MessageStrip text="sap.m.ResponsivePopover: Popover on desktop, Dialog on mobile. Automatically adapts to screen size." type="Information" showIcon="true" showCloseButton="false"/>
+                    </VBox>
+                  </content>
+                </Panel>
+
+              </VBox>
+
+              <!-- ══════════════════════════════════════════════
+                   CAT 8 — OBJECT DISPLAY
+                   ══════════════════════════════════════════════ -->
+              <VBox id="catGroup-8" visible="false">
+
+                <Panel headerText="Avatar — User &amp; Entity Display" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginBottom">
+                      <Label text="Sizes" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
+                      <HBox wrap="Wrap" alignItems="Center">
+                        <Avatar initials="XS" displaySize="XS" backgroundColor="Accent1" class="sapUiSmallMarginEnd"/>
+                        <Avatar initials="SM" displaySize="S"  backgroundColor="Accent2" class="sapUiSmallMarginEnd"/>
+                        <Avatar initials="MD" displaySize="M"  backgroundColor="Accent3" class="sapUiSmallMarginEnd"/>
+                        <Avatar initials="LG" displaySize="L"  backgroundColor="Accent4" class="sapUiSmallMarginEnd"/>
+                        <Avatar initials="XL" displaySize="XL" backgroundColor="Accent5" class="sapUiSmallMarginEnd"/>
+                      </HBox>
+                      <Label text="Shapes" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
+                      <HBox wrap="Wrap" alignItems="Center">
+                        <Avatar initials="CI" displayShape="Circle" displaySize="M" backgroundColor="Accent6" class="sapUiSmallMarginEnd"/>
+                        <Avatar initials="SQ" displayShape="Square" displaySize="M" backgroundColor="Accent7" class="sapUiSmallMarginEnd"/>
+                      </HBox>
+                      <Label text="With icon" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
+                      <HBox wrap="Wrap" alignItems="Center">
+                        <Avatar src="sap-icon://person-placeholder" displaySize="M" backgroundColor="Accent1" class="sapUiSmallMarginEnd"/>
+                        <Avatar src="sap-icon://building"           displaySize="M" backgroundColor="Accent2" class="sapUiSmallMarginEnd"/>
+                        <Avatar src="sap-icon://product"            displaySize="M" backgroundColor="Accent3" class="sapUiSmallMarginEnd"/>
+                      </HBox>
+                      <Label text="Colors" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
+                      <HBox wrap="Wrap" alignItems="Center">
+                        <Avatar initials="A1" displaySize="S" backgroundColor="Accent1"  class="sapUiTinyMarginEnd"/>
+                        <Avatar initials="A2" displaySize="S" backgroundColor="Accent2"  class="sapUiTinyMarginEnd"/>
+                        <Avatar initials="A3" displaySize="S" backgroundColor="Accent3"  class="sapUiTinyMarginEnd"/>
+                        <Avatar initials="A4" displaySize="S" backgroundColor="Accent4"  class="sapUiTinyMarginEnd"/>
+                        <Avatar initials="A5" displaySize="S" backgroundColor="Accent5"  class="sapUiTinyMarginEnd"/>
+                        <Avatar initials="A6" displaySize="S" backgroundColor="Accent6"  class="sapUiTinyMarginEnd"/>
+                        <Avatar initials="A7" displaySize="S" backgroundColor="Accent7"  class="sapUiTinyMarginEnd"/>
+                        <Avatar initials="A8" displaySize="S" backgroundColor="Accent8"  class="sapUiTinyMarginEnd"/>
+                        <Avatar initials="A9" displaySize="S" backgroundColor="Accent9"  class="sapUiTinyMarginEnd"/>
+                        <Avatar initials="A0" displaySize="S" backgroundColor="Accent10"/>
+                      </HBox>
+                    </VBox>
+                  </content>
+                </Panel>
+
+                <Panel headerText="ObjectStatus — State Colors &amp; Icons" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginBottom">
+                      <Label text="States" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
+                      <HBox wrap="Wrap" alignItems="Center">
+                        <ObjectStatus text="None"        state="None"        class="sapUiSmallMarginEnd"/>
+                        <ObjectStatus text="Success"     state="Success"     icon="sap-icon://accept"      class="sapUiSmallMarginEnd"/>
+                        <ObjectStatus text="Warning"     state="Warning"     icon="sap-icon://alert"       class="sapUiSmallMarginEnd"/>
+                        <ObjectStatus text="Error"       state="Error"       icon="sap-icon://error"       class="sapUiSmallMarginEnd"/>
+                        <ObjectStatus text="Information" state="Information" icon="sap-icon://information" class="sapUiSmallMarginEnd"/>
+                      </HBox>
+                      <Label text="Inverted" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
+                      <HBox wrap="Wrap" alignItems="Center">
+                        <ObjectStatus text="Success inverted"     state="Success"     inverted="true" class="sapUiSmallMarginEnd"/>
+                        <ObjectStatus text="Warning inverted"     state="Warning"     inverted="true" class="sapUiSmallMarginEnd"/>
+                        <ObjectStatus text="Error inverted"       state="Error"       inverted="true" class="sapUiSmallMarginEnd"/>
+                        <ObjectStatus text="Information inverted" state="Information" inverted="true" class="sapUiSmallMarginEnd"/>
+                      </HBox>
+                      <Label text="Icon only" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
+                      <HBox wrap="Wrap" alignItems="Center">
+                        <ObjectStatus icon="sap-icon://accept"      state="Success"     class="sapUiSmallMarginEnd"/>
+                        <ObjectStatus icon="sap-icon://alert"       state="Warning"     class="sapUiSmallMarginEnd"/>
+                        <ObjectStatus icon="sap-icon://error"       state="Error"       class="sapUiSmallMarginEnd"/>
+                        <ObjectStatus icon="sap-icon://information" state="Information" class="sapUiSmallMarginEnd"/>
+                      </HBox>
+                    </VBox>
+                  </content>
+                </Panel>
+
+                <Panel headerText="Badge — Count Indicator" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginBottom">
+                      <MessageStrip text="sap.m.BadgeCustomData attaches a count badge to controls that implement IBadge (Button, Avatar, etc.)." type="Information" showIcon="true" showCloseButton="false" class="sapUiSmallMarginTop sapUiSmallMarginBottom"/>
+                      <HBox wrap="Wrap" alignItems="Center">
+                        <VBox alignItems="Center" class="sapUiSmallMarginEnd">
+                          <Text text="Button + badge" class="sapUiTinyMarginBottom"/>
+                          <Button text="Notifications" type="Default">
+                            <customData><core:CustomData key="badge" value="5" writeToDom="true"/></customData>
+                          </Button>
+                        </VBox>
+                        <VBox alignItems="Center" class="sapUiSmallMarginEnd">
+                          <Text text="Icon button + badge" class="sapUiTinyMarginBottom"/>
+                          <Button icon="sap-icon://bell" type="Default">
+                            <customData><core:CustomData key="badge" value="12" writeToDom="true"/></customData>
+                          </Button>
+                        </VBox>
+                        <VBox alignItems="Center" class="sapUiSmallMarginEnd">
+                          <Text text="Cart + badge" class="sapUiTinyMarginBottom"/>
+                          <Button text="Cart" icon="sap-icon://cart" type="Emphasized">
+                            <customData><core:CustomData key="badge" value="99+" writeToDom="true"/></customData>
+                          </Button>
+                        </VBox>
+                        <VBox alignItems="Center">
+                          <Text text="Avatar + badge" class="sapUiTinyMarginBottom"/>
+                          <Avatar initials="JD" displaySize="M" backgroundColor="Accent3">
+                            <customData><core:CustomData key="badge" value="2" writeToDom="true"/></customData>
+                          </Avatar>
+                        </VBox>
+                      </HBox>
+                    </VBox>
+                  </content>
+                </Panel>
+
+              </VBox>
+
+              <!-- ══════════════════════════════════════════════
+                   CAT 9 — SLIDERS &amp; RANGE
+                   ══════════════════════════════════════════════ -->
+              <VBox id="catGroup-9" visible="false">
+
+                <Panel headerText="Slider — Single Value Range" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginBottom">
+                      <Label text="Default (0–100)" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
+                      <Slider value="{playground>/demo/sliderValue}" min="0" max="100" step="1" enableTickmarks="true" width="25rem"/>
+                      <Text text="Value: {playground>/demo/sliderValue}" class="sapUiTinyMarginTop"/>
+                      <Label text="Step 10, with labels" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
+                      <Slider value="60" min="0" max="100" step="10" enableTickmarks="true" showAdvancedTooltip="true" width="25rem"/>
+                      <Label text="Disabled" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
+                      <Slider value="40" min="0" max="100" enabled="false" width="25rem"/>
+                    </VBox>
+                  </content>
+                </Panel>
+
+                <Panel headerText="RangeSlider — Two-handle Range" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginBottom">
+                      <Label text="Default range (20–75)" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
+                      <RangeSlider value="{playground>/demo/rangeSliderLow}" value2="{playground>/demo/rangeSliderHigh}"
+                                   min="0" max="100" step="1" enableTickmarks="true" width="25rem"/>
+                      <Label text="Step 5 with tooltips" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
+                      <RangeSlider value="25" value2="75" min="0" max="100" step="5"
+                                   enableTickmarks="true" showAdvancedTooltip="true" width="25rem"/>
+                      <Label text="Disabled" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
+                      <RangeSlider value="30" value2="60" min="0" max="100" enabled="false" width="25rem"/>
+                    </VBox>
+                  </content>
+                </Panel>
+
+              </VBox>
+
+              <!-- ══════════════════════════════════════════════
+                   CAT 10 — UPLOAD &amp; FILES
+                   ══════════════════════════════════════════════ -->
+              <VBox id="catGroup-10" visible="false">
+
+                <Panel headerText="FileUploader — Single File Select" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginBottom">
+                      <Label text="Default" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
+                      <u:FileUploader placeholder="Select a file..." buttonText="Browse" width="25rem"/>
+                      <Label text="Accept PDF only" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
+                      <u:FileUploader placeholder="PDF only..." fileType="pdf" mimeType="application/pdf" buttonText="Browse PDF" width="25rem"/>
+                      <Label text="Multiple files" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
+                      <u:FileUploader placeholder="Select multiple..." multiple="true" buttonText="Browse Multiple" width="25rem"/>
+                      <Label text="Disabled" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
+                      <u:FileUploader placeholder="Disabled uploader" enabled="false" buttonText="Browse" width="25rem"/>
+                    </VBox>
+                  </content>
+                </Panel>
+
+                <Panel headerText="UploadSet — Advanced Multi-file Upload" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <MessageStrip text="sap.m.upload.UploadSet: drag-and-drop upload zone with file type restriction, preview, and delete. Requires server-side upload URL configuration." type="Information" showIcon="true" showCloseButton="false" class="sapUiSmallMargin"/>
+                  </content>
+                </Panel>
+
+              </VBox>
+
+              <!-- ══════════════════════════════════════════════
+                   CAT 11 — TOKENS &amp; TAGS
+                   ══════════════════════════════════════════════ -->
+              <VBox id="catGroup-11" visible="false">
+
+                <Panel headerText="MultiInput — Input with Token Chips" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginBottom">
+                      <Label text="With pre-existing tokens" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
+                      <MultiInput placeholder="Add tags..." width="30rem">
+                        <tokens>
+                          <Token text="Germany" key="DE"/>
+                          <Token text="France"  key="FR"/>
+                          <Token text="Spain"   key="ES"/>
+                        </tokens>
+                      </MultiInput>
+                      <Label text="Empty — type and press Enter" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
+                      <MultiInput placeholder="Type and press Enter..." width="30rem"/>
+                      <Label text="Read-only tokens" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
+                      <MultiInput editable="false" width="30rem">
+                        <tokens>
+                          <Token text="Read-only"    key="ro"/>
+                          <Token text="Cannot remove" key="nr"/>
+                        </tokens>
+                      </MultiInput>
+                    </VBox>
+                  </content>
+                </Panel>
+
+                <Panel headerText="Token — Inline Tag Chip" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginBottom">
+                      <Label text="Inside a Tokenizer" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
+                      <Tokenizer>
+                        <Token text="Administrator" key="admin"/>
+                        <Token text="Developer"     key="dev"/>
+                        <Token text="Viewer"        key="viewer"/>
+                      </Tokenizer>
+                      <Label text="Read-only tokens" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
+                      <Tokenizer editable="false">
+                        <Token text="Locked A" key="a"/>
+                        <Token text="Locked B" key="b"/>
+                        <Token text="Locked C" key="c"/>
+                      </Tokenizer>
+                    </VBox>
+                  </content>
+                </Panel>
+
+              </VBox>
+
+              <!-- ══════════════════════════════════════════════
+                   CAT 12 — OBJECT PAGES
+                   ══════════════════════════════════════════════ -->
+              <VBox id="catGroup-12" visible="false">
+
+                <Panel headerText="ObjectPageLayout — Full-page Entity View" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <MessageStrip text="sap.uxap.ObjectPageLayout: requires a dedicated route and view. It wraps the entire page — cannot be embedded inline." type="Information" showIcon="true" showCloseButton="false" class="sapUiSmallMargin"/>
+                  </content>
+                </Panel>
+
+                <Panel headerText="ObjectPageSection — Scrollable Section" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <MessageStrip text="sap.uxap.ObjectPageSection is used inside sap.uxap.ObjectPageLayout to group content into anchor-navigated sections." type="Information" showIcon="true" showCloseButton="false" class="sapUiSmallMargin"/>
+                  </content>
+                </Panel>
+
+              </VBox>
+
+              <!-- ══════════════════════════════════════════════
+                   CAT 13 — WIZARD &amp; STEPS
+                   ══════════════════════════════════════════════ -->
+              <VBox id="catGroup-13" visible="false">
+
+                <Panel headerText="Wizard — Multi-step Flow (preview)" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginBottom">
+                      <MessageStrip text="sap.m.Wizard requires a full-page layout (DynamicPage). This preview shows the step structure only." type="Information" showIcon="true" showCloseButton="false" class="sapUiSmallMarginBottom"/>
+                      <HBox wrap="Wrap" alignItems="Center">
+                        <ObjectStatus text="Step 1: Personal Data"  state="Success"     icon="sap-icon://accept"      class="sapUiSmallMarginEnd"/>
+                        <ObjectStatus text="Step 2: Address"        state="Success"     icon="sap-icon://accept"      class="sapUiSmallMarginEnd"/>
+                        <ObjectStatus text="Step 3: Review"         state="Warning"     icon="sap-icon://in-progress" class="sapUiSmallMarginEnd"/>
+                        <ObjectStatus text="Step 4: Submit"         state="None"        icon="sap-icon://step"        class="sapUiSmallMarginEnd"/>
+                      </HBox>
+                      <HBox class="sapUiSmallMarginTop">
+                        <Button text="Previous" type="Default"   class="sapUiSmallMarginEnd"/>
+                        <Button text="Next"     type="Emphasized"/>
+                      </HBox>
+                    </VBox>
+                  </content>
+                </Panel>
+
+              </VBox>
+
+              <!-- ══════════════════════════════════════════════
+                   CAT 14 — CARDS (sap.f)
+                   ══════════════════════════════════════════════ -->
+              <VBox id="catGroup-14" visible="false">
+
+                <Panel headerText="Card (sap.f) — Self-contained Container" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <HBox wrap="Wrap" class="sapUiSmallMargin">
+                      <f:Card width="18rem" class="sapUiSmallMarginEnd sapUiSmallMarginBottom">
+                        <f:header>
+                          <card:Header title="Sales Performance" subtitle="Q1 2025" iconSrc="sap-icon://sales-order"/>
+                        </f:header>
+                        <f:content>
+                          <VBox class="sapUiSmallMargin">
+                            <Text text="Revenue: 1.2M EUR"/>
+                            <Text text="Orders: 234"/>
+                            <ObjectStatus text="+12% vs Q4" state="Success" icon="sap-icon://trend-up"/>
+                          </VBox>
+                        </f:content>
+                      </f:Card>
+                      <f:Card width="18rem" class="sapUiSmallMarginEnd sapUiSmallMarginBottom">
+                        <f:header>
+                          <card:Header title="Critical Alerts" subtitle="Needs attention" iconSrc="sap-icon://alert"/>
+                        </f:header>
+                        <f:content>
+                          <VBox class="sapUiSmallMargin">
+                            <ObjectStatus text="7 open issues" state="Error"   icon="sap-icon://error"/>
+                            <ObjectStatus text="3 in review"   state="Warning" icon="sap-icon://alert"/>
+                            <ObjectStatus text="14 resolved"   state="Success" icon="sap-icon://accept"/>
+                          </VBox>
+                        </f:content>
+                      </f:Card>
+                    </HBox>
+                  </content>
+                </Panel>
+
+              </VBox>
+
+              <!-- ══════════════════════════════════════════════
+                   CAT 15 — CHARTS
+                   ══════════════════════════════════════════════ -->
+              <VBox id="catGroup-15" visible="false">
+
+                <Panel headerText="Bar Chart — Visualization Preview" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginBottom">
+                      <MessageStrip text="sap.viz.ui5.controls.VizFrame charts require the sap.viz library. Add it to ui5.yaml and use a dedicated chart view." type="Information" showIcon="true" showCloseButton="false" class="sapUiSmallMarginBottom"/>
+                      <HBox wrap="Wrap" class="sapUiSmallMarginTop">
+                        <VBox alignItems="Center" class="sapUiSmallMarginEnd">
+                          <ObjectStatus text="Jan" state="Information"/>
+                          <NumericContent value="80"  valueColor="Good"     withMargin="false"/>
+                        </VBox>
+                        <VBox alignItems="Center" class="sapUiSmallMarginEnd">
+                          <ObjectStatus text="Feb" state="Information"/>
+                          <NumericContent value="120" valueColor="Good"     withMargin="false"/>
+                        </VBox>
+                        <VBox alignItems="Center" class="sapUiSmallMarginEnd">
+                          <ObjectStatus text="Mar" state="Information"/>
+                          <NumericContent value="95"  valueColor="Critical" withMargin="false"/>
+                        </VBox>
+                        <VBox alignItems="Center" class="sapUiSmallMarginEnd">
+                          <ObjectStatus text="Apr" state="Information"/>
+                          <NumericContent value="140" valueColor="Good"     withMargin="false"/>
+                        </VBox>
+                      </HBox>
+                    </VBox>
+                  </content>
+                </Panel>
+
+                <Panel headerText="Line Chart — Visualization Preview" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginBottom">
+                      <MessageStrip text="sap.viz.ui5.controls.VizFrame charts require the sap.viz library. Add it to ui5.yaml and use a dedicated chart view." type="Information" showIcon="true" showCloseButton="false" class="sapUiSmallMarginBottom"/>
+                      <HBox class="sapUiSmallMarginTop">
+                        <ObjectStatus text="Trend: +15% MoM" state="Success" icon="sap-icon://trend-up" class="sapUiSmallMarginEnd"/>
+                        <ObjectStatus text="Peak: April 2025" state="Information"/>
+                      </HBox>
+                    </VBox>
+                  </content>
+                </Panel>
+
+                <Panel headerText="Pie Chart — Visualization Preview" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginBottom">
+                      <MessageStrip text="sap.viz.ui5.controls.VizFrame charts require the sap.viz library. Add it to ui5.yaml and use a dedicated chart view." type="Information" showIcon="true" showCloseButton="false" class="sapUiSmallMarginBottom"/>
+                      <HBox wrap="Wrap" class="sapUiSmallMarginTop">
+                        <ObjectStatus text="Germany 42%" state="Success"     class="sapUiSmallMarginEnd"/>
+                        <ObjectStatus text="France 28%"  state="Information" class="sapUiSmallMarginEnd"/>
+                        <ObjectStatus text="Spain 18%"   state="Warning"     class="sapUiSmallMarginEnd"/>
+                        <ObjectStatus text="Other 12%"   state="None"/>
+                      </HBox>
+                    </VBox>
+                  </content>
+                </Panel>
+
+                <Panel headerText="Bullet Chart — Actual vs Target" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                  <content>
+                    <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginBottom">
+                      <MessageStrip text="sap.viz.ui5.controls.VizFrame charts require the sap.viz library. Add it to ui5.yaml and use a dedicated chart view." type="Information" showIcon="true" showCloseButton="false" class="sapUiSmallMarginBottom"/>
+                      <HBox wrap="Wrap" class="sapUiSmallMarginTop">
+                        <ObjectStatus text="Revenue: 85% of target" state="Warning" icon="sap-icon://target-group" class="sapUiSmallMarginEnd"/>
+                        <ObjectStatus text="Orders: 112% of target" state="Success" icon="sap-icon://target-group"/>
+                      </HBox>
+                    </VBox>
+                  </content>
+                </Panel>
+
+              </VBox>
 
             </VBox>
           </content>
         </Page>
 
-        <!-- PAGE 4: Favorites -->
+        <!-- PAGE 3: Favorites -->
         <Page id="favoritesPage" title="Favorites" showNavButton="true" navButtonPress=".onNavToHome">
           <content>
             <List
               id="favoritesList"
               items="{playground>/favorites}"
-              noDataText="No favorites yet — click the star icon on any component."
+              noDataText="No favorites yet — add components from the category pages."
               mode="Delete"
               delete=".onDeleteFavorite">
               <StandardListItem

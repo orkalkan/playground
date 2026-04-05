@@ -1,0 +1,48 @@
+<core:FragmentDefinition
+  xmlns="sap.m"
+  xmlns:core="sap.ui.core"
+  xmlns:f="sap.ui.layout.form">
+
+  <Dialog id="newLineItemDialog" title="New Line Item" contentWidth="42rem" resizable="true">
+    <content>
+      <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4" class="sapUiSmallMargin">
+        <f:content>
+          <Label text="Material ID" required="true"/>
+          <Input id="nliMaterialId" value="{po>/newLineItem/materialId}" placeholder="MAT-XXXX" width="100%"/>
+
+          <Label text="Description" required="true"/>
+          <Input id="nliDescription" value="{po>/newLineItem/description}" placeholder="Item description" width="100%"/>
+
+          <Label text="Quantity" required="true"/>
+          <StepInput id="nliQty" value="{po>/newLineItem/qty}" min="0.001" step="1" displayValuePrecision="3" width="10rem"/>
+
+          <Label text="Unit of Measure"/>
+          <Select id="nliUom" selectedKey="{po>/newLineItem/uom}">
+            <core:ListItem key="EA" text="EA — Each"/>
+            <core:ListItem key="PC" text="PC — Piece"/>
+            <core:ListItem key="KG" text="KG — Kilogram"/>
+            <core:ListItem key="LT" text="LT — Liter"/>
+            <core:ListItem key="M"  text="M  — Meter"/>
+          </Select>
+
+          <Label text="Unit Price" required="true"/>
+          <Input id="nliUnitPrice" value="{po>/newLineItem/unitPrice}" type="Number" placeholder="0.00" width="12rem" textAlign="End"/>
+
+          <Label text="Delivery Date"/>
+          <DatePicker id="nliDeliveryDate" value="{po>/newLineItem/deliveryDate}" valueFormat="yyyy-MM-dd" displayFormat="dd.MM.yyyy"/>
+
+          <Label text="Delivery Time"/>
+          <TimePicker id="nliDeliveryTime" value="{po>/newLineItem/deliveryTime}" valueFormat="HH:mm" displayFormat="HH:mm"/>
+
+          <Label text="Comment"/>
+          <TextArea id="nliComment" value="{po>/newLineItem/comment}" rows="2" width="100%" growing="true" placeholder="Notes for this line item..."/>
+        </f:content>
+      </f:SimpleForm>
+    </content>
+    <buttons>
+      <Button text="Cancel" press=".onCancelLineItem"/>
+      <Button text="Save" type="Emphasized" press=".onSaveLineItem" icon="sap-icon://accept"/>
+    </buttons>
+  </Dialog>
+
+</core:FragmentDefinition>
