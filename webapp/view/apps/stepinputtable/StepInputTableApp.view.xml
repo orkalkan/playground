@@ -1,0 +1,145 @@
+<mvc:View
+  controllerName="ui5.fira.demos.controller.apps.stepinputtable.StepInputTableApp"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:core="sap.ui.core"
+  xmlns:table="sap.ui.table"
+  displayBlock="true">
+
+  <Page id="stepInputTablePage" title="Inventory Adjustment"
+    showNavButton="true" navButtonPress=".navBackToLaunchpad"
+    class="fira-app-page">
+
+    <!-- Save toolbar in footer -->
+    <footer>
+      <Bar>
+        <contentLeft>
+          <ObjectStatus id="changeStatus" text="No unsaved changes" state="None"/>
+        </contentLeft>
+        <contentRight>
+          <Button id="discardBtn" text="Discard" type="Transparent"
+            enabled="{sit>/dirty}" press=".onDiscard"/>
+          <Button id="saveBtn" text="Save Changes" type="Emphasized"
+            icon="sap-icon://save" enabled="{sit>/dirty}" press=".onSave"
+            class="sapUiSmallMarginBegin"/>
+        </contentRight>
+      </Bar>
+    </footer>
+
+    <content>
+
+      <!-- Info banner -->
+      <MessageStrip id="infoStrip" text="Edit quantities and prices directly in the table. Save button activates on first change."
+        type="Information" showCloseButton="false" class="sapUiSmallMargin"/>
+
+      <!-- ── Desktop table: sap.ui.table.Table ─────────────────────── -->
+      <!-- visibleRowCount=8, 20 rows → virtual scrolling kicks in      -->
+      <table:Table id="inventoryTable"
+        rows="{sit>/items}"
+        visibleRowCount="8"
+        selectionMode="MultiToggle"
+        enableBusyIndicator="true"
+        threshold="5"
+        class="sapUiSmallMargin"
+        rowSelectionChange=".onRowSelect">
+
+        <table:extension>
+          <OverflowToolbar>
+            <Title text="Stock Items — Plant 0001"/>
+            <ToolbarSpacer/>
+            <SearchField id="tableSearch" width="14rem" placeholder="Search by material..."
+              search=".onTableSearch" liveChange=".onTableSearchLive"/>
+            <Button icon="sap-icon://refresh" tooltip="Reload" type="Transparent" press=".onReload"/>
+          </OverflowToolbar>
+        </table:extension>
+
+        <table:columns>
+
+          <table:Column width="9rem" sortProperty="materialId" filtered="false">
+            <Label text="Material ID"/>
+            <table:template><Text text="{sit>materialId}" wrapping="false"/></table:template>
+          </table:Column>
+
+          <table:Column sortProperty="description" filtered="false">
+            <Label text="Description"/>
+            <table:template><Text text="{sit>description}" wrapping="false"/></table:template>
+          </table:Column>
+
+          <table:Column width="7rem" hAlign="End">
+            <Label text="Current Qty"/>
+            <table:template><Text text="{sit>currentQty}" wrapping="false"/></table:template>
+          </table:Column>
+
+          <!-- StepInput col — the one tested by table row identification logic -->
+          <table:Column width="9rem" hAlign="Center">
+            <Label text="Adjustment"/>
+            <table:template>
+              <StepInput id="adjQty"
+                value="{sit>adjQty}"
+                min="-999" max="9999" step="1"
+                displayValuePrecision="0"
+                change=".onAdjustmentChange"/>
+            </table:template>
+          </table:Column>
+
+          <!-- Second StepInput col — tests colIndex targeting -->
+          <table:Column width="9rem" hAlign="Center">
+            <Label text="Reorder Level"/>
+            <table:template>
+              <StepInput id="reorderLevel"
+                value="{sit>reorderLevel}"
+                min="0" max="9999" step="5"
+                displayValuePrecision="0"
+                change=".onAdjustmentChange"/>
+            </table:template>
+          </table:Column>
+
+          <!-- Input col — tests mixed control types in same table -->
+          <table:Column width="10rem" hAlign="End">
+            <Label text="Unit Price (EUR)"/>
+            <table:template>
+              <Input id="unitPrice"
+                value="{sit>unitPrice}"
+                type="Number"
+                textAlign="End"
+                change=".onAdjustmentChange"/>
+            </table:template>
+          </table:Column>
+
+          <table:Column width="6rem">
+            <Label text="Unit"/>
+            <table:template>
+              <Select id="unitSelect" selectedKey="{sit>unit}" change=".onAdjustmentChange">
+                <core:Item key="EA"  text="EA"/>
+                <core:Item key="KG"  text="KG"/>
+                <core:Item key="L"   text="L"/>
+                <core:Item key="M"   text="M"/>
+                <core:Item key="BOX" text="BOX"/>
+              </Select>
+            </table:template>
+          </table:Column>
+
+          <table:Column width="7rem">
+            <Label text="Status"/>
+            <table:template>
+              <ObjectStatus text="{sit>statusLabel}" state="{sit>statusState}"/>
+            </table:template>
+          </table:Column>
+
+        </table:columns>
+      </table:Table>
+
+      <!-- Summary panel — shown after save -->
+      <Panel id="summaryPanel" visible="{sit>/showSummary}"
+        headerText="Last Save Summary" class="sapUiSmallMargin">
+        <content>
+          <VBox class="sapUiSmallMargin">
+            <Text id="summaryText" text="{sit>/summaryText}"/>
+          </VBox>
+        </content>
+      </Panel>
+
+    </content>
+  </Page>
+
+</mvc:View>

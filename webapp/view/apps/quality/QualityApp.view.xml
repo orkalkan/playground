@@ -14,7 +14,7 @@
         <Page id="qualityListPage" title="Quality Inspection" class="fira-app-page"
           showNavButton="true" navButtonPress=".onNavBackToLaunchpad">
           <headerContent>
-            <Button text="New Inspection" type="Emphasized" icon="sap-icon://add" press=".onNewInspectionPress"/>
+            <Button id="newInspectionBtn" text="New Inspection" type="Emphasized" icon="sap-icon://add" press=".onNewInspectionPress"/>
           </headerContent>
           <subHeader>
             <Bar>
@@ -65,8 +65,8 @@
           <footer>
             <Bar>
               <contentRight>
-                <Button text="Log Defect" type="Reject" icon="sap-icon://alert" press=".onLogDefectPress"/>
-                <Button text="Save Results" type="Emphasized" press=".onSaveResults" icon="sap-icon://accept"/>
+                <Button id="logDefectBtn" text="Log Defect" type="Reject" icon="sap-icon://alert" press=".onLogDefectPress"/>
+                <Button id="saveResultsBtn" text="Save Results" type="Emphasized" press=".onSaveResults" icon="sap-icon://accept"/>
               </contentRight>
             </Bar>
           </footer>
@@ -116,22 +116,22 @@
                   <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
                     <f:content>
                       <Label text="Inspection Start Time"/>
-                      <TimePicker valueFormat="HH:mm" displayFormat="HH:mm" placeholder="HH:mm"/>
+                      <TimePicker id="inspectionStartTime" valueFormat="HH:mm" displayFormat="HH:mm" placeholder="HH:mm"/>
                       <Label text="Sample Size"/>
-                      <StepInput value="10" min="1" max="1000" step="5" width="8rem"/>
+                      <StepInput id="inspectionSampleSize" value="10" min="1" max="1000" step="5" width="8rem"/>
                       <Label text="Inspector Name"/>
-                      <ComboBox placeholder="Select or type inspector name...">
+                      <ComboBox id="inspectionInspector" placeholder="Select or type inspector name...">
                         <core:Item key="mvogt" text="Monika Vogt"/>
                         <core:Item key="hsauer" text="Hans Sauer"/>
                         <core:Item key="pkoch" text="Peter Koch"/>
                         <core:Item key="afried" text="Anna Friedman"/>
                       </ComboBox>
                       <Label text="Inspection Method"/>
-                      <RadioButtonGroup columns="4">
-                        <RadioButton text="Visual"/>
-                        <RadioButton text="Measurement"/>
-                        <RadioButton text="Functional"/>
-                        <RadioButton text="Sampling"/>
+                      <RadioButtonGroup id="inspectionMethodGroup" columns="4">
+                        <RadioButton id="inspectionMethodVisual" text="Visual"/>
+                        <RadioButton id="inspectionMethodMeasurement" text="Measurement"/>
+                        <RadioButton id="inspectionMethodFunctional" text="Functional"/>
+                        <RadioButton id="inspectionMethodSampling" text="Sampling"/>
                       </RadioButtonGroup>
                     </f:content>
                   </f:SimpleForm>
@@ -142,15 +142,15 @@
                   <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
                     <f:content>
                       <Label text="Quarantine Batch"/>
-                      <Switch customTextOn="Yes" customTextOff="No"/>
+                      <Switch id="inspectionQuarantineSwitch" customTextOn="Yes" customTextOff="No"/>
                       <Label text="Document Photo Evidence"/>
-                      <CheckBox text="Photo evidence required for this inspection"/>
+                      <CheckBox id="inspectionPhotoCheck" text="Photo evidence required for this inspection"/>
                       <Label text="Require Re-Inspection"/>
-                      <CheckBox text="Flag batch for re-inspection after rework"/>
+                      <CheckBox id="inspectionReInspectCheck" text="Flag batch for re-inspection after rework"/>
                       <Label text="Notify Supplier"/>
-                      <CheckBox text="Send notification to supplier"/>
+                      <CheckBox id="inspectionNotifySupplierCheck" text="Send notification to supplier"/>
                       <Label text="Affected Characteristics"/>
-                      <MultiComboBox placeholder="Select affected quality characteristics...">
+                      <MultiComboBox id="inspectionAffectedChars" placeholder="Select affected quality characteristics...">
                         <core:Item key="dim" text="Dimensional Accuracy"/>
                         <core:Item key="surf" text="Surface Quality"/>
                         <core:Item key="mat" text="Material Composition"/>
@@ -159,7 +159,7 @@
                         <core:Item key="label" text="Labeling &amp; Marking"/>
                       </MultiComboBox>
                       <Label text="Batch / Lot Numbers"/>
-                      <MultiInput showValueHelp="false" placeholder="Add batch or lot numbers as tags..."/>
+                      <MultiInput id="inspectionBatchNumbers" showValueHelp="false" placeholder="Add batch or lot numbers as tags..."/>
                     </f:content>
                   </f:SimpleForm>
                 </content>
@@ -169,11 +169,11 @@
                   <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
                     <f:content>
                       <Label text="Defect Rate (%)"/>
-                      <Slider min="0" max="100" step="1" showAdvancedTooltip="true" enableTickmarks="true" value="0"/>
+                      <Slider id="inspectionDefectRateSlider" min="0" max="100" step="1" showAdvancedTooltip="true" enableTickmarks="true" value="0"/>
                       <Label text="Quality Score"/>
-                      <RatingIndicator maxValue="5" value="4"/>
+                      <RatingIndicator id="inspectionQualityScore" maxValue="5" value="4"/>
                       <Label text="Inspection Notes"/>
-                      <TextArea rows="3" width="100%" placeholder="Record observations, test conditions, or additional remarks..."/>
+                      <TextArea id="inspectionNotes" rows="3" width="100%" placeholder="Record observations, test conditions, or additional remarks..."/>
                     </f:content>
                   </f:SimpleForm>
                 </content>
@@ -188,8 +188,8 @@
           <footer>
             <Bar>
               <contentRight>
-                <Button text="Cancel" press=".onNavBack"/>
-                <Button text="Log Defect" type="Reject" press=".onSaveDefect" icon="sap-icon://alert"/>
+                <Button id="cancelDefectBtn" text="Cancel" press=".onNavBack"/>
+                <Button id="saveDefectBtn" text="Log Defect" type="Reject" press=".onSaveDefect" icon="sap-icon://alert"/>
               </contentRight>
             </Bar>
           </footer>
@@ -236,22 +236,22 @@
                   <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
                     <f:content>
                       <Label text="Inspection Start Time"/>
-                      <TimePicker valueFormat="HH:mm" displayFormat="HH:mm" placeholder="HH:mm"/>
+                      <TimePicker id="defectStartTime" valueFormat="HH:mm" displayFormat="HH:mm" placeholder="HH:mm"/>
                       <Label text="Sample Size"/>
-                      <StepInput value="10" min="1" max="1000" step="5" width="8rem"/>
+                      <StepInput id="defectSampleSize" value="10" min="1" max="1000" step="5" width="8rem"/>
                       <Label text="Inspector Name"/>
-                      <ComboBox placeholder="Select or type inspector name...">
+                      <ComboBox id="defectInspector" placeholder="Select or type inspector name...">
                         <core:Item key="mvogt" text="Monika Vogt"/>
                         <core:Item key="hsauer" text="Hans Sauer"/>
                         <core:Item key="pkoch" text="Peter Koch"/>
                         <core:Item key="afried" text="Anna Friedman"/>
                       </ComboBox>
                       <Label text="Inspection Method"/>
-                      <RadioButtonGroup columns="4">
-                        <RadioButton text="Visual"/>
-                        <RadioButton text="Measurement"/>
-                        <RadioButton text="Functional"/>
-                        <RadioButton text="Sampling"/>
+                      <RadioButtonGroup id="defectMethodGroup" columns="4">
+                        <RadioButton id="defectMethodVisual" text="Visual"/>
+                        <RadioButton id="defectMethodMeasurement" text="Measurement"/>
+                        <RadioButton id="defectMethodFunctional" text="Functional"/>
+                        <RadioButton id="defectMethodSampling" text="Sampling"/>
                       </RadioButtonGroup>
                     </f:content>
                   </f:SimpleForm>
@@ -262,15 +262,15 @@
                   <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
                     <f:content>
                       <Label text="Quarantine Batch"/>
-                      <Switch customTextOn="Yes" customTextOff="No"/>
+                      <Switch id="defectQuarantineSwitch" customTextOn="Yes" customTextOff="No"/>
                       <Label text="Document Photo Evidence"/>
-                      <CheckBox text="Photo evidence attached for this defect"/>
+                      <CheckBox id="defectPhotoCheck" text="Photo evidence attached for this defect"/>
                       <Label text="Require Re-Inspection"/>
-                      <CheckBox text="Flag batch for re-inspection after rework"/>
+                      <CheckBox id="defectReInspectCheck" text="Flag batch for re-inspection after rework"/>
                       <Label text="Notify Supplier"/>
-                      <CheckBox text="Send defect notification to supplier"/>
+                      <CheckBox id="defectNotifySupplierCheck" text="Send defect notification to supplier"/>
                       <Label text="Affected Characteristics"/>
-                      <MultiComboBox placeholder="Select affected quality characteristics...">
+                      <MultiComboBox id="defectAffectedChars" placeholder="Select affected quality characteristics...">
                         <core:Item key="dim" text="Dimensional Accuracy"/>
                         <core:Item key="surf" text="Surface Quality"/>
                         <core:Item key="mat" text="Material Composition"/>
@@ -279,7 +279,7 @@
                         <core:Item key="label" text="Labeling &amp; Marking"/>
                       </MultiComboBox>
                       <Label text="Batch / Lot Numbers"/>
-                      <MultiInput showValueHelp="false" placeholder="Add batch or lot numbers as tags..."/>
+                      <MultiInput id="defectBatchNumbers" showValueHelp="false" placeholder="Add batch or lot numbers as tags..."/>
                     </f:content>
                   </f:SimpleForm>
                 </content>
@@ -289,9 +289,9 @@
                   <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
                     <f:content>
                       <Label text="Defect Rate (%)"/>
-                      <Slider min="0" max="100" step="1" showAdvancedTooltip="true" enableTickmarks="true" value="0"/>
+                      <Slider id="defectRateSlider" min="0" max="100" step="1" showAdvancedTooltip="true" enableTickmarks="true" value="0"/>
                       <Label text="Quality Score"/>
-                      <RatingIndicator maxValue="5" value="2"/>
+                      <RatingIndicator id="defectQualityScore" maxValue="5" value="2"/>
                     </f:content>
                   </f:SimpleForm>
                 </content>
@@ -306,8 +306,8 @@
           <footer>
             <Bar>
               <contentRight>
-                <Button text="Cancel" press=".onNavBack"/>
-                <Button text="Post Usage Decision" type="Emphasized" press=".onPostDecision" icon="sap-icon://paper-plane"/>
+                <Button id="cancelDecisionBtn" text="Cancel" press=".onNavBack"/>
+                <Button id="postDecisionBtn" text="Post Usage Decision" type="Emphasized" press=".onPostDecision" icon="sap-icon://paper-plane"/>
               </contentRight>
             </Bar>
           </footer>

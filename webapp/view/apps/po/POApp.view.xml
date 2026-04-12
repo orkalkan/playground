@@ -15,7 +15,7 @@
         <Page id="poListPage" title="Purchase Orders" class="fira-app-page"
           showNavButton="true" navButtonPress=".onNavBackToLaunchpad">
           <headerContent>
-            <Button text="Create PO" type="Emphasized" press=".onCreatePress" icon="sap-icon://add"/>
+            <Button id="createPOBtn" text="Create PO" type="Emphasized" press=".onCreatePress" icon="sap-icon://add"/>
           </headerContent>
           <subHeader>
             <Bar>
@@ -138,7 +138,7 @@
                   <Toolbar>
                     <Title text="Delivery Schedule" level="H5"/>
                     <ToolbarSpacer/>
-                    <Button text="New Entry" icon="sap-icon://add" type="Emphasized" press=".onNewDelivery"/>
+                    <Button id="newDeliveryEntryBtn" text="New Entry" icon="sap-icon://add" type="Emphasized" press=".onNewDelivery"/>
                   </Toolbar>
                 </headerToolbar>
                 <content>
@@ -168,8 +168,8 @@
                   <Toolbar>
                     <Title text="Schedule Lines" level="H5"/>
                     <ToolbarSpacer/>
-                    <Button text="New" icon="sap-icon://add" type="Emphasized" press=".onAddScheduleLine"/>
-                    <Button text="Save" icon="sap-icon://accept" type="Default" press=".onSaveScheduleLines" enabled="{po>/scheduleCanSave}"/>
+                    <Button id="newScheduleLineBtn" text="New" icon="sap-icon://add" type="Emphasized" press=".onAddScheduleLine"/>
+                    <Button id="saveScheduleLinesBtn" text="Save" icon="sap-icon://accept" type="Default" press=".onSaveScheduleLines" enabled="{po>/scheduleCanSave}"/>
                   </Toolbar>
                 </headerToolbar>
                 <content>
@@ -206,8 +206,8 @@
           <footer>
             <Bar>
               <contentRight>
-                <Button text="Cancel" press=".onNavBack"/>
-                <Button text="Save Entry" type="Emphasized" press=".onSaveDelivery" icon="sap-icon://accept"/>
+                <Button id="cancelDeliveryEntryBtn" text="Cancel" press=".onNavBack"/>
+                <Button id="saveDeliveryEntryBtn" text="Save Entry" type="Emphasized" press=".onSaveDelivery" icon="sap-icon://accept"/>
               </contentRight>
             </Bar>
           </footer>
@@ -242,8 +242,8 @@
           <footer>
             <Bar>
               <contentRight>
-                <Button text="Cancel" press=".onNavBack"/>
-                <Button text="Submit for Approval" type="Emphasized" press=".onSubmitPO" icon="sap-icon://paper-plane"/>
+                <Button id="cancelPOBtn" text="Cancel" press=".onNavBack"/>
+                <Button id="submitPOBtn" text="Submit for Approval" type="Emphasized" press=".onSubmitPO" icon="sap-icon://paper-plane"/>
               </contentRight>
             </Bar>
           </footer>
@@ -292,7 +292,7 @@
                   <Toolbar>
                     <Title text="Line Items" level="H5"/>
                     <ToolbarSpacer/>
-                    <Button text="Add Item" icon="sap-icon://add" press=".onAddLineItem"/>
+                    <Button id="addPOItemBtn" text="Add Item" icon="sap-icon://add" press=".onAddLineItem"/>
                   </Toolbar>
                 </headerToolbar>
                 <content>
@@ -330,11 +330,11 @@
                   <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
                     <f:content>
                       <Label text="Expected Delivery Time"/>
-                      <TimePicker valueFormat="HH:mm" displayFormat="HH:mm" placeholder="HH:mm"/>
+                      <TimePicker id="poDeliveryTime" valueFormat="HH:mm" displayFormat="HH:mm" placeholder="HH:mm"/>
                       <Label text="Number of Line Items"/>
-                      <StepInput value="1" min="1" max="20" step="1" width="8rem"/>
+                      <StepInput id="poLineItemCount" value="1" min="1" max="20" step="1" width="8rem"/>
                       <Label text="Delivery Terms"/>
-                      <ComboBox placeholder="Select or type delivery terms...">
+                      <ComboBox id="poDeliveryTerms" placeholder="Select or type delivery terms...">
                         <core:Item key="DAP" text="DAP — Delivered at Place"/>
                         <core:Item key="DDP" text="DDP — Delivered Duty Paid"/>
                         <core:Item key="EXW" text="EXW — Ex Works"/>
@@ -342,10 +342,10 @@
                         <core:Item key="CIF" text="CIF — Cost, Insurance &amp; Freight"/>
                       </ComboBox>
                       <Label text="Delivery Type"/>
-                      <RadioButtonGroup columns="3">
-                        <RadioButton text="Standard"/>
-                        <RadioButton text="Express"/>
-                        <RadioButton text="Freight"/>
+                      <RadioButtonGroup id="poDeliveryTypeGroup" columns="3">
+                        <RadioButton id="poDeliveryStandard" text="Standard"/>
+                        <RadioButton id="poDeliveryExpress" text="Express"/>
+                        <RadioButton id="poDeliveryFreight" text="Freight"/>
                       </RadioButtonGroup>
                     </f:content>
                   </f:SimpleForm>
@@ -356,13 +356,13 @@
                   <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
                     <f:content>
                       <Label text="Urgent Order"/>
-                      <Switch customTextOn="Yes" customTextOff="No"/>
+                      <Switch id="poUrgentSwitch" customTextOn="Yes" customTextOff="No"/>
                       <Label text="GR-Based Invoice Verification"/>
-                      <CheckBox text="Activate GR-based IV"/>
+                      <CheckBox id="poGRBasedIVCheck" text="Activate GR-based IV"/>
                       <Label text="Price Variance Check"/>
-                      <CheckBox text="Enable price variance tolerance check"/>
+                      <CheckBox id="poPriceVarianceCheck" text="Enable price variance tolerance check"/>
                       <Label text="Notify Departments"/>
-                      <MultiComboBox placeholder="Select departments to notify...">
+                      <MultiComboBox id="poNotifyDepts" placeholder="Select departments to notify...">
                         <core:Item key="proc" text="Procurement"/>
                         <core:Item key="fin" text="Finance"/>
                         <core:Item key="wh" text="Warehouse"/>
@@ -370,7 +370,7 @@
                         <core:Item key="it" text="IT"/>
                       </MultiComboBox>
                       <Label text="Reference Documents"/>
-                      <MultiInput showValueHelp="false" placeholder="Add PR numbers as tags..."/>
+                      <MultiInput id="poReferences" showValueHelp="false" placeholder="Add PR numbers as tags..."/>
                     </f:content>
                   </f:SimpleForm>
                 </content>
@@ -380,11 +380,11 @@
                   <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
                     <f:content>
                       <Label text="Budget Utilization Cap (%)"/>
-                      <Slider min="0" max="100" step="5" showAdvancedTooltip="true" enableTickmarks="true" value="80"/>
+                      <Slider id="poBudgetCapSlider" min="0" max="100" step="5" showAdvancedTooltip="true" enableTickmarks="true" value="80"/>
                       <Label text="Vendor Rating"/>
-                      <RatingIndicator maxValue="5" value="3"/>
+                      <RatingIndicator id="poVendorRating" maxValue="5" value="3"/>
                       <Label text="Notes"/>
-                      <TextArea rows="3" width="100%" placeholder="Additional notes or instructions for this purchase order..."/>
+                      <TextArea id="poNotes" rows="3" width="100%" placeholder="Additional notes or instructions for this purchase order..."/>
                     </f:content>
                   </f:SimpleForm>
                 </content>
@@ -441,8 +441,8 @@
           <footer>
             <Bar>
               <contentRight>
-                <Button text="Cancel" press=".onNavBack"/>
-                <Button text="Save Changes" type="Emphasized" press=".onSavePO" icon="sap-icon://accept"/>
+                <Button id="cancelEditPOBtn" text="Cancel" press=".onNavBack"/>
+                <Button id="savePOBtn" text="Save Changes" type="Emphasized" press=".onSavePO" icon="sap-icon://accept"/>
               </contentRight>
             </Bar>
           </footer>
@@ -484,11 +484,11 @@
                   <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
                     <f:content>
                       <Label text="Expected Delivery Time"/>
-                      <TimePicker valueFormat="HH:mm" displayFormat="HH:mm" placeholder="HH:mm"/>
+                      <TimePicker id="editPoDeliveryTime" valueFormat="HH:mm" displayFormat="HH:mm" placeholder="HH:mm"/>
                       <Label text="Number of Line Items"/>
-                      <StepInput value="1" min="1" max="20" step="1" width="8rem"/>
+                      <StepInput id="editPoLineItemCount" value="1" min="1" max="20" step="1" width="8rem"/>
                       <Label text="Delivery Terms"/>
-                      <ComboBox placeholder="Select or type delivery terms...">
+                      <ComboBox id="editPoDeliveryTerms" placeholder="Select or type delivery terms...">
                         <core:Item key="DAP" text="DAP — Delivered at Place"/>
                         <core:Item key="DDP" text="DDP — Delivered Duty Paid"/>
                         <core:Item key="EXW" text="EXW — Ex Works"/>
@@ -496,10 +496,10 @@
                         <core:Item key="CIF" text="CIF — Cost, Insurance &amp; Freight"/>
                       </ComboBox>
                       <Label text="Delivery Type"/>
-                      <RadioButtonGroup columns="3">
-                        <RadioButton text="Standard"/>
-                        <RadioButton text="Express"/>
-                        <RadioButton text="Freight"/>
+                      <RadioButtonGroup id="editPoDeliveryTypeGroup" columns="3">
+                        <RadioButton id="editPoDeliveryStandard" text="Standard"/>
+                        <RadioButton id="editPoDeliveryExpress" text="Express"/>
+                        <RadioButton id="editPoDeliveryFreight" text="Freight"/>
                       </RadioButtonGroup>
                     </f:content>
                   </f:SimpleForm>
@@ -510,13 +510,13 @@
                   <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
                     <f:content>
                       <Label text="Urgent Order"/>
-                      <Switch customTextOn="Yes" customTextOff="No"/>
+                      <Switch id="editPoUrgentSwitch" customTextOn="Yes" customTextOff="No"/>
                       <Label text="GR-Based Invoice Verification"/>
-                      <CheckBox text="Activate GR-based IV"/>
+                      <CheckBox id="editPoGRBasedIVCheck" text="Activate GR-based IV"/>
                       <Label text="Price Variance Check"/>
-                      <CheckBox text="Enable price variance tolerance check"/>
+                      <CheckBox id="editPoPriceVarianceCheck" text="Enable price variance tolerance check"/>
                       <Label text="Notify Departments"/>
-                      <MultiComboBox placeholder="Select departments to notify...">
+                      <MultiComboBox id="editPoNotifyDepts" placeholder="Select departments to notify...">
                         <core:Item key="proc" text="Procurement"/>
                         <core:Item key="fin" text="Finance"/>
                         <core:Item key="wh" text="Warehouse"/>
@@ -524,7 +524,7 @@
                         <core:Item key="it" text="IT"/>
                       </MultiComboBox>
                       <Label text="Reference Documents"/>
-                      <MultiInput showValueHelp="false" placeholder="Add PR numbers as tags..."/>
+                      <MultiInput id="editPoReferences" showValueHelp="false" placeholder="Add PR numbers as tags..."/>
                     </f:content>
                   </f:SimpleForm>
                 </content>
@@ -534,11 +534,11 @@
                   <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
                     <f:content>
                       <Label text="Budget Utilization Cap (%)"/>
-                      <Slider min="0" max="100" step="5" showAdvancedTooltip="true" enableTickmarks="true" value="80"/>
+                      <Slider id="editPoBudgetCapSlider" min="0" max="100" step="5" showAdvancedTooltip="true" enableTickmarks="true" value="80"/>
                       <Label text="Vendor Rating"/>
-                      <RatingIndicator maxValue="5" value="3"/>
+                      <RatingIndicator id="editPoVendorRating" maxValue="5" value="3"/>
                       <Label text="Notes"/>
-                      <TextArea rows="3" width="100%" placeholder="Additional notes or instructions for this purchase order..."/>
+                      <TextArea id="editPoNotes" rows="3" width="100%" placeholder="Additional notes or instructions for this purchase order..."/>
                     </f:content>
                   </f:SimpleForm>
                 </content>
@@ -552,8 +552,8 @@
           <footer>
             <Bar>
               <contentRight>
-                <Button text="Create Another PO" press=".onCreateAnother"/>
-                <Button text="Back to List" type="Emphasized" press=".onBackToList"/>
+                <Button id="createAnotherPOBtn" text="Create Another PO" press=".onCreateAnother"/>
+                <Button id="poBackToListBtn" text="Back to List" type="Emphasized" press=".onBackToList"/>
               </contentRight>
             </Bar>
           </footer>
@@ -564,8 +564,8 @@
               <Text text="{po>/confirmedPOId}" class="sapUiSmallMarginTop" wrapping="false"/>
               <Text text="The PO has been submitted for approval. You will receive a notification once it is processed." class="sapUiMediumMarginTop" textAlign="Center"/>
               <HBox class="sapUiLargeMarginTop" justifyContent="Center">
-                <Button text="Print PO" icon="sap-icon://print" press=".onPrint" class="sapUiSmallMarginEnd"/>
-                <Button text="Send by Email" icon="sap-icon://email"/>
+                <Button id="printPOBtn" text="Print PO" icon="sap-icon://print" press=".onPrint" class="sapUiSmallMarginEnd"/>
+                <Button id="sendPOEmailBtn" text="Send by Email" icon="sap-icon://email"/>
               </HBox>
             </VBox>
           </content>

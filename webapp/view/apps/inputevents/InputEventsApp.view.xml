@@ -1,0 +1,229 @@
+<mvc:View
+  controllerName="ui5.fira.demos.controller.apps.inputevents.InputEventsApp"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:core="sap.ui.core"
+  xmlns:l="sap.ui.layout"
+  xmlns:f="sap.ui.layout.form"
+  displayBlock="true">
+
+  <Page id="inputEventsPage" title="System Configuration"
+    showNavButton="true" navButtonPress=".navBackToLaunchpad"
+    class="fira-app-page">
+
+    <!-- Footer: Save / Discard — enabled only when dirty -->
+    <footer>
+      <Bar>
+        <contentLeft>
+          <ObjectStatus id="formDirtyStatus"
+            text="{= ${ie>/dirty} ? 'Unsaved changes' : 'No unsaved changes'}"
+            state="{= ${ie>/dirty} ? 'Warning' : 'None'}"/>
+        </contentLeft>
+        <contentRight>
+          <Button id="discardChangesBtn" text="Discard" type="Transparent"
+            enabled="{ie>/dirty}" press=".onDiscard"/>
+          <Button id="saveChangesBtn" text="Save Configuration" type="Emphasized"
+            icon="sap-icon://save" enabled="{ie>/dirty}" press=".onSave"
+            class="sapUiSmallMarginBegin"/>
+        </contentRight>
+      </Bar>
+    </footer>
+
+    <content>
+
+      <!-- Info strip -->
+      <MessageStrip id="infoStrip"
+        text="Edit any field to activate the Save button. Discard reverts all unsaved changes."
+        type="Information" showCloseButton="false" class="sapUiSmallMargin"/>
+
+      <!-- Save confirmation banner — shown after save -->
+      <MessageStrip id="saveConfirmStrip"
+        text="{ie>/lastSaveMessage}"
+        type="Success" showCloseButton="true" visible="{ie>/showSaveConfirm}"
+        class="sapUiSmallMarginBegin sapUiSmallMarginEnd sapUiNoMarginTop"/>
+
+      <!-- ── Section 1: General Settings ──────────────────────────── -->
+      <Panel headerText="General Settings" expandable="false"
+        class="sapUiSmallMargin">
+        <content>
+          <f:SimpleForm id="generalForm" editable="true" layout="ResponsiveGridLayout"
+            labelSpanXL="3" labelSpanL="3" labelSpanM="4" labelSpanS="12"
+            columnsXL="2" columnsL="2" columnsM="1"
+            class="sapUiSmallMargin">
+            <f:content>
+
+              <Label text="System Name" labelFor="systemNameInput"/>
+              <Input id="systemNameInput"
+                value="{ie>/form/systemName}"
+                placeholder="e.g. TestForge Production"
+                liveChange=".onFieldChange"/>
+
+              <Label text="Environment" labelFor="environmentSelect"/>
+              <Select id="environmentSelect"
+                selectedKey="{ie>/form/environment}"
+                change=".onFieldChange">
+                <core:Item key="production"  text="Production"/>
+                <core:Item key="staging"     text="Staging"/>
+                <core:Item key="development" text="Development"/>
+                <core:Item key="sandbox"     text="Sandbox"/>
+              </Select>
+
+              <Label text="Region" labelFor="regionSelect"/>
+              <Select id="regionSelect"
+                selectedKey="{ie>/form/region}"
+                change=".onFieldChange">
+                <core:Item key="eu-west-1"   text="EU West (Ireland)"/>
+                <core:Item key="eu-central-1" text="EU Central (Frankfurt)"/>
+                <core:Item key="us-east-1"   text="US East (Virginia)"/>
+                <core:Item key="ap-south-1"  text="Asia Pacific (Mumbai)"/>
+              </Select>
+
+              <Label text="Admin Email" labelFor="adminEmailInput"/>
+              <Input id="adminEmailInput"
+                value="{ie>/form/adminEmail}"
+                type="Email"
+                placeholder="admin@company.com"
+                liveChange=".onFieldChange"/>
+
+            </f:content>
+          </f:SimpleForm>
+        </content>
+      </Panel>
+
+      <!-- ── Section 2: Execution Limits ──────────────────────────── -->
+      <Panel headerText="Execution Limits" expandable="false"
+        class="sapUiSmallMarginBegin sapUiSmallMarginEnd sapUiSmallMarginBottom">
+        <content>
+          <f:SimpleForm id="limitsForm" editable="true" layout="ResponsiveGridLayout"
+            labelSpanXL="4" labelSpanL="4" labelSpanM="5" labelSpanS="12"
+            columnsXL="2" columnsL="2" columnsM="1"
+            class="sapUiSmallMargin">
+            <f:content>
+
+              <Label text="Max Parallel Workers" labelFor="maxWorkersInput"/>
+              <StepInput id="maxWorkersInput"
+                value="{ie>/form/maxWorkers}"
+                min="1" max="50" step="1"
+                displayValuePrecision="0"
+                change=".onFieldChange"/>
+
+              <Label text="Test Timeout (sec)" labelFor="testTimeoutInput"/>
+              <StepInput id="testTimeoutInput"
+                value="{ie>/form/testTimeoutSec}"
+                min="10" max="600" step="10"
+                displayValuePrecision="0"
+                change=".onFieldChange"/>
+
+              <Label text="Retry Attempts" labelFor="retryAttemptsInput"/>
+              <StepInput id="retryAttemptsInput"
+                value="{ie>/form/retryAttempts}"
+                min="0" max="5" step="1"
+                displayValuePrecision="0"
+                change=".onFieldChange"/>
+
+              <Label text="Log Level" labelFor="logLevelSelect"/>
+              <Select id="logLevelSelect"
+                selectedKey="{ie>/form/logLevel}"
+                change=".onFieldChange">
+                <core:Item key="error" text="Error"/>
+                <core:Item key="warn"  text="Warn"/>
+                <core:Item key="info"  text="Info"/>
+                <core:Item key="debug" text="Debug"/>
+              </Select>
+
+              <Label text="Screenshot Mode" labelFor="screenshotSelect"/>
+              <Select id="screenshotSelect"
+                selectedKey="{ie>/form/screenshotMode}"
+                change=".onFieldChange">
+                <core:Item key="always"     text="Always"/>
+                <core:Item key="on-failure" text="On Failure Only"/>
+                <core:Item key="never"      text="Never"/>
+              </Select>
+
+              <Label text="Headless Mode" labelFor="headlessSelect"/>
+              <Select id="headlessSelect"
+                selectedKey="{ie>/form/headless}"
+                change=".onFieldChange">
+                <core:Item key="true"  text="Enabled"/>
+                <core:Item key="false" text="Disabled"/>
+              </Select>
+
+            </f:content>
+          </f:SimpleForm>
+        </content>
+      </Panel>
+
+      <!-- ── Section 3: Notifications ─────────────────────────────── -->
+      <Panel headerText="Notifications" expandable="false"
+        class="sapUiSmallMarginBegin sapUiSmallMarginEnd sapUiSmallMarginBottom">
+        <content>
+          <f:SimpleForm id="notifForm" editable="true" layout="ResponsiveGridLayout"
+            labelSpanXL="4" labelSpanL="4" labelSpanM="5" labelSpanS="12"
+            columnsXL="2" columnsL="2" columnsM="1"
+            class="sapUiSmallMargin">
+            <f:content>
+
+              <Label text="Notify on Failure" labelFor="notifyFailureSelect"/>
+              <Select id="notifyFailureSelect"
+                selectedKey="{ie>/form/notifyOnFailure}"
+                change=".onFieldChange">
+                <core:Item key="email"   text="Email"/>
+                <core:Item key="slack"   text="Slack"/>
+                <core:Item key="both"    text="Email + Slack"/>
+                <core:Item key="none"    text="Disabled"/>
+              </Select>
+
+              <Label text="Webhook URL" labelFor="webhookInput"/>
+              <Input id="webhookInput"
+                value="{ie>/form/webhookUrl}"
+                placeholder="https://hooks.slack.com/..."
+                liveChange=".onFieldChange"/>
+
+              <Label text="Failure Threshold (%)" labelFor="failureThresholdInput"/>
+              <StepInput id="failureThresholdInput"
+                value="{ie>/form/failureThreshold}"
+                min="1" max="100" step="5"
+                displayValuePrecision="0"
+                change=".onFieldChange"/>
+
+            </f:content>
+          </f:SimpleForm>
+        </content>
+      </Panel>
+
+      <!-- ── Section 4: Notes ──────────────────────────────────────── -->
+      <Panel headerText="Notes" expandable="true" expanded="true"
+        class="sapUiSmallMarginBegin sapUiSmallMarginEnd sapUiSmallMarginBottom">
+        <content>
+          <VBox class="sapUiSmallMargin">
+            <Label text="Configuration Notes" labelFor="configNotes"/>
+            <TextArea id="configNotes"
+              value="{ie>/form/notes}"
+              rows="4"
+              width="100%"
+              placeholder="Internal notes about this configuration..."
+              liveChange=".onFieldChange"/>
+          </VBox>
+        </content>
+      </Panel>
+
+      <!-- ── Change Summary (shown after save) ─────────────────────── -->
+      <Panel id="changeSummaryPanel"
+        visible="{ie>/showSaveConfirm}"
+        headerText="Last Saved Changes"
+        expandable="true" expanded="false"
+        class="sapUiSmallMarginBegin sapUiSmallMarginEnd sapUiSmallMarginBottom">
+        <content>
+          <List id="changeList" items="{ie>/changeLog}" showNoData="false">
+            <StandardListItem
+              title="{ie>field}"
+              description="{ie>from} → {ie>to}"
+              type="Inactive"/>
+          </List>
+        </content>
+      </Panel>
+
+    </content>
+  </Page>
+
+</mvc:View>

@@ -14,7 +14,7 @@
         <Page id="salesListPage" title="Sales Orders" class="fira-app-page"
           showNavButton="true" navButtonPress=".onNavBackToLaunchpad">
           <headerContent>
-            <Button text="New Order" type="Emphasized" icon="sap-icon://add" press=".onNewOrderPress"/>
+            <Button id="newSalesOrderBtn" text="New Order" type="Emphasized" icon="sap-icon://add" press=".onNewOrderPress"/>
           </headerContent>
           <subHeader>
             <Bar>
@@ -73,8 +73,8 @@
           <footer>
             <Bar>
               <contentRight>
-                <Button text="Cancel" press=".onNavBack"/>
-                <Button text="Review Order" type="Emphasized" press=".onReviewPress" icon="sap-icon://arrow-right"/>
+                <Button id="cancelOrderBtn" text="Cancel" press=".onNavBack"/>
+                <Button id="reviewOrderBtn" text="Review Order" type="Emphasized" press=".onReviewPress" icon="sap-icon://arrow-right"/>
               </contentRight>
             </Bar>
           </footer>
@@ -118,7 +118,7 @@
                   <Toolbar>
                     <Title text="Order Items" level="H5"/>
                     <ToolbarSpacer/>
-                    <Button icon="sap-icon://add" text="Add Item" press=".onAddItem"/>
+                    <Button id="addSoItemBtn" icon="sap-icon://add" text="Add Item" press=".onAddItem"/>
                   </Toolbar>
                 </headerToolbar>
                 <content>
@@ -159,21 +159,21 @@
                   <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
                     <f:content>
                       <Label text="Promised Delivery Time"/>
-                      <TimePicker valueFormat="HH:mm" displayFormat="HH:mm" placeholder="HH:mm"/>
+                      <TimePicker id="soDeliveryTime" valueFormat="HH:mm" displayFormat="HH:mm" placeholder="HH:mm"/>
                       <Label text="Number of Positions"/>
-                      <StepInput value="1" min="1" max="50" step="1" width="8rem"/>
+                      <StepInput id="soPositions" value="1" min="1" max="50" step="1" width="8rem"/>
                       <Label text="Ship-To Address"/>
-                      <ComboBox placeholder="Select or type ship-to address...">
+                      <ComboBox id="soShipToAddress" placeholder="Select or type ship-to address...">
                         <core:Item key="A1" text="Hauptstraße 12, 80331 Munich"/>
                         <core:Item key="A2" text="Industrieweg 5, 20095 Hamburg"/>
                         <core:Item key="A3" text="Berliner Allee 88, 40212 Düsseldorf"/>
                         <core:Item key="A4" text="Römerstraße 3, 50667 Cologne"/>
                       </ComboBox>
                       <Label text="Billing Type"/>
-                      <RadioButtonGroup columns="3">
-                        <RadioButton text="Monthly"/>
-                        <RadioButton text="Per Delivery"/>
-                        <RadioButton text="Advance"/>
+                      <RadioButtonGroup id="soBillingTypeGroup" columns="3">
+                        <RadioButton id="soBillingMonthly" text="Monthly"/>
+                        <RadioButton id="soBillingPerDelivery" text="Per Delivery"/>
+                        <RadioButton id="soBillingAdvance" text="Advance"/>
                       </RadioButtonGroup>
                     </f:content>
                   </f:SimpleForm>
@@ -184,20 +184,20 @@
                   <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
                     <f:content>
                       <Label text="Rush Order"/>
-                      <Switch customTextOn="Yes" customTextOff="No"/>
+                      <Switch id="soRushSwitch" customTextOn="Yes" customTextOff="No"/>
                       <Label text="Partial Delivery Allowed"/>
-                      <CheckBox text="Allow partial deliveries"/>
+                      <CheckBox id="soPartialDeliveryCheck" text="Allow partial deliveries"/>
                       <Label text="Complete Delivery Required"/>
-                      <CheckBox text="Require complete delivery in one shipment"/>
+                      <CheckBox id="soCompleteDeliveryCheck" text="Require complete delivery in one shipment"/>
                       <Label text="Notify Teams"/>
-                      <MultiComboBox placeholder="Select teams to notify...">
+                      <MultiComboBox id="soNotifyTeams" placeholder="Select teams to notify...">
                         <core:Item key="sales" text="Sales"/>
                         <core:Item key="fin" text="Finance"/>
                         <core:Item key="log" text="Logistics"/>
                         <core:Item key="cs" text="Customer Service"/>
                       </MultiComboBox>
                       <Label text="Customer PO References"/>
-                      <MultiInput showValueHelp="false" placeholder="Add customer PO numbers as tags..."/>
+                      <MultiInput id="soCustomerPORefs" showValueHelp="false" placeholder="Add customer PO numbers as tags..."/>
                     </f:content>
                   </f:SimpleForm>
                 </content>
@@ -207,11 +207,11 @@
                   <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
                     <f:content>
                       <Label text="Discount (%)"/>
-                      <Slider min="0" max="30" step="1" showAdvancedTooltip="true" enableTickmarks="true" value="0"/>
+                      <Slider id="soDiscountSlider" min="0" max="30" step="1" showAdvancedTooltip="true" enableTickmarks="true" value="0"/>
                       <Label text="Customer Priority"/>
-                      <RatingIndicator maxValue="5" value="3"/>
+                      <RatingIndicator id="soCustomerPriority" maxValue="5" value="3"/>
                       <Label text="Order Notes"/>
-                      <TextArea rows="3" width="100%" placeholder="Internal notes or special instructions for this order..."/>
+                      <TextArea id="soOrderNotes" rows="3" width="100%" placeholder="Internal notes or special instructions for this order..."/>
                     </f:content>
                   </f:SimpleForm>
                 </content>
@@ -224,8 +224,8 @@
         <Page id="salesDetailPage" title="Order Detail" class="fira-app-page"
           showNavButton="true" navButtonPress=".onNavBack">
           <headerContent>
-            <Button text="Edit" icon="sap-icon://edit" press=".onEditSelectedOrderPress"/>
-            <Button text="Delete" icon="sap-icon://delete" type="Reject" press=".onDeleteSelectedOrderPress"/>
+            <Button id="editSelectedOrderBtn" text="Edit" icon="sap-icon://edit" press=".onEditSelectedOrderPress"/>
+            <Button id="deleteSelectedOrderBtn" text="Delete" icon="sap-icon://delete" type="Reject" press=".onDeleteSelectedOrderPress"/>
           </headerContent>
           <content>
             <VBox class="sapUiMediumMargin">
@@ -255,8 +255,8 @@
           <footer>
             <Bar>
               <contentRight>
-                <Button text="Back to Edit" press=".onNavBack"/>
-                <Button text="Confirm Order" type="Emphasized" press=".onConfirmOrder" icon="sap-icon://accept"/>
+                <Button id="backToEditBtn" text="Back to Edit" press=".onNavBack"/>
+                <Button id="confirmOrderBtn" text="Confirm Order" type="Emphasized" press=".onConfirmOrder" icon="sap-icon://accept"/>
               </contentRight>
             </Bar>
           </footer>
@@ -320,8 +320,8 @@
           <footer>
             <Bar>
               <contentRight>
-                <Button text="New Order" press=".onNewOrderAfterConfirm"/>
-                <Button text="Back to List" type="Emphasized" press=".onBackToList"/>
+                <Button id="newOrderAfterConfirmBtn" text="New Order" press=".onNewOrderAfterConfirm"/>
+                <Button id="salesBackToListBtn" text="Back to List" type="Emphasized" press=".onBackToList"/>
               </contentRight>
             </Bar>
           </footer>
@@ -332,8 +332,8 @@
               <Text text="{sales>/confirmedOrderId}" class="sapUiSmallMarginTop"/>
               <Text text="Delivery date: 15 April 2025 · Net value: € 28,400.00" class="sapUiSmallMarginTop" textAlign="Center"/>
               <HBox class="sapUiLargeMarginTop" justifyContent="Center">
-                <Button text="Print Order Confirmation" icon="sap-icon://print" press=".onPrint" class="sapUiSmallMarginEnd"/>
-                <Button text="Track Delivery" icon="sap-icon://shipping-status"/>
+                <Button id="printOrderBtn" text="Print Order Confirmation" icon="sap-icon://print" press=".onPrint" class="sapUiSmallMarginEnd"/>
+                <Button id="trackDeliveryBtn" text="Track Delivery" icon="sap-icon://shipping-status"/>
               </HBox>
             </VBox>
           </content>

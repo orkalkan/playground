@@ -139,13 +139,81 @@
         </FlexBox>
 
         <Text text="DEVELOPER TOOLS" class="fira-section-title"/>
-        <FlexBox wrap="Wrap" class="fira-tile-grid">
+        <FlexBox wrap="Wrap" class="fira-tile-grid sapUiSmallMarginBottom">
 
           <GenericTile header="Fira Playground" subheader="UI5 Component Library" press=".onTilePress" class="fira-tile">
             <customData><core:CustomData key="route" value="playground"/></customData>
             <tileContent>
               <TileContent footer="857 scenarios · 16 categories">
                 <content><NumericContent value="857" indicator="None" valueColor="Neutral" withMargin="false"/></content>
+              </TileContent>
+            </tileContent>
+          </GenericTile>
+
+        </FlexBox>
+
+        <Text text="TEST AUTOMATION SCENARIOS" class="fira-section-title"/>
+        <FlexBox wrap="Wrap" class="fira-tile-grid">
+
+          <GenericTile header="Kanban Board" subheader="Drag &amp; Drop · Column moves" press=".onTilePress" class="fira-tile">
+            <customData><core:CustomData key="route" value="kanban"/></customData>
+            <tileContent>
+              <TileContent footer="4 columns · cross-list DnD · activity log">
+                <content><NumericContent value="10" indicator="None" valueColor="Good" withMargin="false"/></content>
+              </TileContent>
+            </tileContent>
+          </GenericTile>
+
+          <GenericTile header="Filter Table" subheader="Multi-filter · 5 control types" press=".onTilePress" class="fira-tile">
+            <customData><core:CustomData key="route" value="filtertable"/></customData>
+            <tileContent>
+              <TileContent footer="Select · ComboBox · MultiComboBox · Input · Button">
+                <content><NumericContent value="15" indicator="None" valueColor="Neutral" withMargin="false"/></content>
+              </TileContent>
+            </tileContent>
+          </GenericTile>
+
+          <GenericTile header="Employee Form Wizard" subheader="HR · New Hire · 3-step wizard" press=".onTilePress" class="fira-tile">
+            <customData><core:CustomData key="route" value="empform"/></customData>
+            <tileContent>
+              <TileContent footer="3-step wizard · value help · validation">
+                <content><NumericContent value="3" indicator="Up" valueColor="Good" withMargin="false"/></content>
+              </TileContent>
+            </tileContent>
+          </GenericTile>
+
+          <GenericTile header="StepInput Table" subheader="Virtual scroll · Row targeting" press=".onTilePress" class="fira-tile">
+            <customData><core:CustomData key="route" value="stepinputtable"/></customData>
+            <tileContent>
+              <TileContent footer="20 rows · 2 StepInput cols · dirty flag">
+                <content><NumericContent value="20" indicator="None" valueColor="Neutral" withMargin="false"/></content>
+              </TileContent>
+            </tileContent>
+          </GenericTile>
+
+          <GenericTile header="Input Events" subheader="Change detection · Save logic" press=".onTilePress" class="fira-tile">
+            <customData><core:CustomData key="route" value="inputevents"/></customData>
+            <tileContent>
+              <TileContent footer="Input · Select · StepInput · TextArea · dirty flag">
+                <content><NumericContent value="14" indicator="None" valueColor="Neutral" withMargin="false"/></content>
+              </TileContent>
+            </tileContent>
+          </GenericTile>
+
+          <GenericTile header="HR Employee Grid" subheader="60 rows · 20 cols · 9 control types" press=".onTilePress" class="fira-tile">
+            <customData><core:CustomData key="route" value="hrgrid"/></customData>
+            <tileContent>
+              <TileContent footer="Select · Switch · CheckBox · DatePicker · StepInput · Rating · ValueHelp">
+                <content><NumericContent value="60" indicator="None" valueColor="Neutral" withMargin="false"/></content>
+              </TileContent>
+            </tileContent>
+          </GenericTile>
+
+          <GenericTile header="Planning Calendar" subheader="Add · Delete · Drag &amp; Drop" press=".onTilePress" class="fira-tile">
+            <customData><core:CustomData key="route" value="calendar"/></customData>
+            <tileContent>
+              <TileContent footer="PlanningCalendar · intervalSelect · DnD appointments">
+                <content><NumericContent value="3" indicator="None" valueColor="Neutral" withMargin="false"/></content>
               </TileContent>
             </tileContent>
           </GenericTile>

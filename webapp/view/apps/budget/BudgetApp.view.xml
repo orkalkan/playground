@@ -14,7 +14,7 @@
         <Page id="budgetOverviewPage" title="Budget Planning — Q1 2025" class="fira-app-page"
           showNavButton="true" navButtonPress=".onNavBackToLaunchpad">
           <headerContent>
-            <Button text="Request Supplement" type="Emphasized" icon="sap-icon://add" press=".onRequestSupplementPress"/>
+            <Button id="requestSupplementBtn" text="Request Supplement" type="Emphasized" icon="sap-icon://add" press=".onRequestSupplementPress"/>
           </headerContent>
           <subHeader>
             <Bar>
@@ -77,8 +77,8 @@
         <Page id="budgetDetailPage" title="Department Budget Detail" class="fira-app-page"
           showNavButton="true" navButtonPress=".onNavBack">
           <headerContent>
-            <Button text="Edit" icon="sap-icon://edit" press=".onEditSelectedDeptPress"/>
-            <Button text="Request Supplement" icon="sap-icon://add" press=".onRequestSupplementPress"/>
+            <Button id="editDeptBtn" text="Edit" icon="sap-icon://edit" press=".onEditSelectedDeptPress"/>
+            <Button id="editDeptRequestBtn" text="Request Supplement" icon="sap-icon://add" press=".onRequestSupplementPress"/>
           </headerContent>
           <content>
             <VBox class="sapUiMediumMargin">
@@ -129,8 +129,8 @@
           <footer>
             <Bar>
               <contentRight>
-                <Button text="Cancel" press=".onNavBack"/>
-                <Button text="Submit Request" type="Emphasized" press=".onSubmitRequest" icon="sap-icon://paper-plane"/>
+                <Button id="cancelBudgetRequestBtn" text="Cancel" press=".onNavBack"/>
+                <Button id="submitBudgetRequestBtn" text="Submit Request" type="Emphasized" press=".onSubmitRequest" icon="sap-icon://paper-plane"/>
               </contentRight>
             </Bar>
           </footer>
@@ -169,7 +169,7 @@
                       <Label text="Business Justification" required="true"/>
                       <TextArea id="requestJustification" rows="5" width="100%" placeholder="Explain why additional budget is needed..."/>
                       <Label text="Supporting Documents"/>
-                      <Input placeholder="Attach file name(s), e.g. cost_estimate_Q1.pdf"/>
+                      <Input id="requestSupportingDocs" placeholder="Attach file name(s), e.g. cost_estimate_Q1.pdf"/>
                     </f:content>
                   </f:SimpleForm>
                 </content>
@@ -179,22 +179,22 @@
                   <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
                     <f:content>
                       <Label text="Deadline Time for Approval"/>
-                      <TimePicker valueFormat="HH:mm" displayFormat="HH:mm" placeholder="HH:mm"/>
+                      <TimePicker id="requestDeadlineTime" valueFormat="HH:mm" displayFormat="HH:mm" placeholder="HH:mm"/>
                       <Label text="Number of Sub-Items"/>
-                      <StepInput value="1" min="1" max="20" step="1" width="8rem"/>
+                      <StepInput id="requestSubItems" value="1" min="1" max="20" step="1" width="8rem"/>
                       <Label text="Approver"/>
-                      <ComboBox placeholder="Select or type approver name...">
+                      <ComboBox id="requestApprover" placeholder="Select or type approver name...">
                         <core:Item key="cfo" text="CFO — Dr. Klaus Werner"/>
                         <core:Item key="coo" text="COO — Sandra Berger"/>
                         <core:Item key="findir" text="Finance Director — Michael Braun"/>
                         <core:Item key="controller" text="Controller — Anna Huber"/>
                       </ComboBox>
                       <Label text="Priority"/>
-                      <RadioButtonGroup columns="4">
-                        <RadioButton text="Low"/>
-                        <RadioButton text="Medium"/>
-                        <RadioButton text="High"/>
-                        <RadioButton text="Critical"/>
+                      <RadioButtonGroup id="requestPriorityGroup" columns="4">
+                        <RadioButton id="requestPriorityLow" text="Low"/>
+                        <RadioButton id="requestPriorityMedium" text="Medium"/>
+                        <RadioButton id="requestPriorityHigh" text="High"/>
+                        <RadioButton id="requestPriorityCritical" text="Critical"/>
                       </RadioButtonGroup>
                     </f:content>
                   </f:SimpleForm>
@@ -205,15 +205,15 @@
                   <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
                     <f:content>
                       <Label text="Recurring Request"/>
-                      <Switch customTextOn="Yes" customTextOff="No"/>
+                      <Switch id="requestRecurringSwitch" customTextOn="Yes" customTextOff="No"/>
                       <Label text="CFO Approval Required"/>
-                      <CheckBox text="This request requires CFO sign-off"/>
+                      <CheckBox id="requestCFOCheck" text="This request requires CFO sign-off"/>
                       <Label text="Reserve Budget Available"/>
-                      <CheckBox text="Reserve budget can cover part of the request"/>
+                      <CheckBox id="requestReserveCheck" text="Reserve budget can cover part of the request"/>
                       <Label text="Already Committed"/>
-                      <CheckBox text="Expenditure already committed / in progress"/>
+                      <CheckBox id="requestCommittedCheck" text="Expenditure already committed / in progress"/>
                       <Label text="Budget Categories Affected"/>
-                      <MultiComboBox placeholder="Select budget categories...">
+                      <MultiComboBox id="requestCategories" placeholder="Select budget categories...">
                         <core:Item key="opex" text="Operating Expenses"/>
                         <core:Item key="capex" text="Capital Expenditure"/>
                         <core:Item key="personnel" text="Personnel Costs"/>
@@ -222,7 +222,7 @@
                         <core:Item key="marketing" text="Marketing"/>
                       </MultiComboBox>
                       <Label text="Supporting References"/>
-                      <MultiInput showValueHelp="false" placeholder="Add reference document IDs as tags..."/>
+                      <MultiInput id="requestReferences" showValueHelp="false" placeholder="Add reference document IDs as tags..."/>
                     </f:content>
                   </f:SimpleForm>
                 </content>
@@ -232,9 +232,9 @@
                   <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
                     <f:content>
                       <Label text="Confidence Level (%)"/>
-                      <Slider min="0" max="100" step="5" showAdvancedTooltip="true" enableTickmarks="true" value="80"/>
+                      <Slider id="requestConfidenceSlider" min="0" max="100" step="5" showAdvancedTooltip="true" enableTickmarks="true" value="80"/>
                       <Label text="Business Impact"/>
-                      <RatingIndicator maxValue="5" value="3"/>
+                      <RatingIndicator id="requestImpactRating" maxValue="5" value="3"/>
                     </f:content>
                   </f:SimpleForm>
                 </content>
@@ -247,7 +247,7 @@
         <Page id="budgetRequestsListPage" title="Supplement Requests" class="fira-app-page"
           showNavButton="true" navButtonPress=".onNavBack">
           <headerContent>
-            <Button text="New Request" type="Emphasized" icon="sap-icon://add" press=".onRequestSupplementPress"/>
+            <Button id="newSupplementBtn" text="New Request" type="Emphasized" icon="sap-icon://add" press=".onRequestSupplementPress"/>
           </headerContent>
           <content>
             <Table id="supplementTable" items="{budget>/supplementRequests}" noDataText="No supplement requests">

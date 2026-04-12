@@ -158,3 +158,23 @@
 
 .fira-budget-fill-warn  { background: #E9730C; }
 .fira-budget-fill-over  { background: #BB0000; }
+
+/* ─── Kanban board ───────────────────────────────────────────── */
+.kanban-list {
+  min-height: 8rem;
+  background: #f5f6f7;
+  border-radius: 8px;
+  border: 1px dashed #d9d9d9;
+}
+
+.kanban-card {
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid #e5e5e5;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  transition: box-shadow 0.12s ease;
+}
+
+.kanban-card:hover {
+  box-shadow: 0 3px 10px rgba(0,0,0,0.12);
+}

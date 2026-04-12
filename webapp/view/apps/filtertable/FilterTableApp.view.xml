@@ -1,0 +1,171 @@
+<mvc:View
+  controllerName="ui5.fira.demos.controller.apps.filtertable.FilterTableApp"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:core="sap.ui.core"
+  xmlns:t="sap.ui.table"
+  displayBlock="true">
+
+  <Page showHeader="false" enableScrolling="true" class="sapUiNoContentPadding">
+    <content>
+      <Page title="Purchase Orders" class="fira-app-page"
+        showNavButton="true" navButtonPress=".onNavBackToLaunchpad">
+        <content>
+          <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginTopBottom">
+
+            <!-- Filter Panel -->
+            <Panel id="filterPanel" headerText="Filter" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+              <content>
+                <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginTopBottom">
+
+                  <HBox wrap="Wrap" alignItems="Center" class="sapUiSmallMarginBottom">
+                    <VBox class="sapUiSmallMarginEnd" width="14rem">
+                      <Label text="Status"/>
+                      <Select id="statusFilter" width="100%">
+                        <core:ListItem key="all"      text="All Statuses"/>
+                        <core:ListItem key="Open"     text="Open"/>
+                        <core:ListItem key="Approved" text="Approved"/>
+                        <core:ListItem key="Rejected" text="Rejected"/>
+                        <core:ListItem key="Pending"  text="Pending"/>
+                      </Select>
+                    </VBox>
+
+                    <VBox class="sapUiSmallMarginEnd" width="16rem">
+                      <Label text="Supplier"/>
+                      <ComboBox id="supplierFilter" placeholder="Type or select supplier..." width="100%">
+                        <core:Item key="alpha"    text="Alpha Components GmbH"/>
+                        <core:Item key="beta"     text="Beta Industrial Supply"/>
+                        <core:Item key="gamma"    text="Gamma Tech Solutions"/>
+                        <core:Item key="delta"    text="Delta Logistics AG"/>
+                        <core:Item key="epsilon"  text="Epsilon Materials Ltd"/>
+                        <core:Item key="zeta"     text="Zeta Office Supplies"/>
+                        <core:Item key="eta"      text="Eta Electronics Corp"/>
+                        <core:Item key="theta"    text="Theta Facility Services"/>
+                      </ComboBox>
+                    </VBox>
+
+                    <VBox class="sapUiSmallMarginEnd" width="18rem">
+                      <Label text="Category"/>
+                      <MultiComboBox id="categoryFilter" placeholder="Select categories..." width="100%">
+                        <core:Item key="Materials"   text="Materials"/>
+                        <core:Item key="Services"    text="Services"/>
+                        <core:Item key="Equipment"   text="Equipment"/>
+                        <core:Item key="IT"          text="IT"/>
+                        <core:Item key="Facilities"  text="Facilities"/>
+                      </MultiComboBox>
+                    </VBox>
+
+                    <VBox class="sapUiSmallMarginEnd" width="16rem">
+                      <Label text="Requestor"/>
+                      <Input id="requestorFilter" placeholder="Search requestor..." width="100%"
+                        showSuggestion="true" liveChange=".onRequestorLiveChange">
+                        <suggestionItems>
+                          <core:Item text="Anna Weber"/>
+                          <core:Item text="Ben Schulz"/>
+                          <core:Item text="Clara Fischer"/>
+                          <core:Item text="David Müller"/>
+                          <core:Item text="Eva Braun"/>
+                          <core:Item text="Felix Keller"/>
+                          <core:Item text="Greta Hoffmann"/>
+                          <core:Item text="Hans Richter"/>
+                        </suggestionItems>
+                      </Input>
+                    </VBox>
+                  </HBox>
+
+                  <HBox wrap="Wrap" alignItems="Center" class="sapUiSmallMarginBottom">
+                    <VBox class="sapUiSmallMarginEnd" width="20rem">
+                      <Label text="Order Date Range"/>
+                      <DateRangeSelection id="dateRangeFilter" displayFormat="dd.MM.yyyy" width="100%"/>
+                    </VBox>
+
+                    <VBox class="sapUiSmallMarginEnd" width="16rem">
+                      <Label text="Free Text Search"/>
+                      <SearchField id="freeTextSearch" width="100%" placeholder="Search all columns..." search=".onFreeTextSearch"/>
+                    </VBox>
+
+                    <VBox class="sapUiSmallMarginEnd" width="14rem">
+                      <Label text="Sort By"/>
+                      <Select id="sortBySelect" width="100%" change=".onSortChange">
+                        <core:ListItem key="orderDate" text="Order Date"/>
+                        <core:ListItem key="amount"    text="Amount"/>
+                        <core:ListItem key="supplier"  text="Supplier"/>
+                        <core:ListItem key="status"    text="Status"/>
+                      </Select>
+                    </VBox>
+                  </HBox>
+
+                  <HBox>
+                    <Button text="Apply Filters" type="Emphasized" icon="sap-icon://filter" press=".onApplyFilters" class="sapUiSmallMarginEnd"/>
+                    <Button text="Reset" icon="sap-icon://clear-filter" press=".onResetFilters"/>
+                  </HBox>
+
+                </VBox>
+              </content>
+            </Panel>
+
+            <!-- Table Toolbar -->
+            <t:Table id="poTable"
+              rows="{ft>/filteredOrders}"
+              selectionMode="MultiToggle"
+              visibleRowCount="15"
+              enableBusyIndicator="true"
+              class="sapUiSmallMarginBottom">
+              <t:toolbar>
+                <Toolbar>
+                  <Title text="Purchase Orders"/>
+                  <ToolbarSpacer/>
+                  <Text id="rowCountText" text="{ft>/rowCountText}"/>
+                  <Button text="Export Selected" icon="sap-icon://excel-attachment" press=".onExportSelected" class="sapUiSmallMarginBegin"/>
+                </Toolbar>
+              </t:toolbar>
+              <t:columns>
+                <t:Column width="8rem" sortProperty="orderId" filtered="false">
+                  <Label text="Order ID"/>
+                  <t:template><Text text="{ft>orderId}" wrapping="false"/></t:template>
+                </t:Column>
+                <t:Column width="12rem" sortProperty="supplier">
+                  <Label text="Supplier"/>
+                  <t:template><Text text="{ft>supplier}" wrapping="false"/></t:template>
+                </t:Column>
+                <t:Column width="9rem" sortProperty="category">
+                  <Label text="Category"/>
+                  <t:template><Text text="{ft>category}" wrapping="false"/></t:template>
+                </t:Column>
+                <t:Column width="10rem" sortProperty="requestor">
+                  <Label text="Requestor"/>
+                  <t:template><Text text="{ft>requestor}" wrapping="false"/></t:template>
+                </t:Column>
+                <t:Column width="8rem" hAlign="End" sortProperty="amount">
+                  <Label text="Amount"/>
+                  <t:template><Text text="{path:'ft>amount', formatter:'.formatAmount'}" wrapping="false"/></t:template>
+                </t:Column>
+                <t:Column width="8rem" sortProperty="status">
+                  <Label text="Status"/>
+                  <t:template>
+                    <ObjectStatus text="{ft>status}" state="{path:'ft>status', formatter:'.formatOrderStatusState'}"/>
+                  </t:template>
+                </t:Column>
+                <t:Column width="8rem" sortProperty="orderDate">
+                  <Label text="Order Date"/>
+                  <t:template><Text text="{path:'ft>orderDate', formatter:'.formatDate'}" wrapping="false"/></t:template>
+                </t:Column>
+                <t:Column width="10rem">
+                  <Label text="Actions"/>
+                  <t:template>
+                    <HBox>
+                      <Button text="Approve" type="Accept"  press=".onApproveRow" class="sapUiTinyMarginEnd"/>
+                      <Button text="Reject"  type="Reject"  press=".onRejectRow"/>
+                    </HBox>
+                  </t:template>
+                </t:Column>
+              </t:columns>
+            </t:Table>
+
+          </VBox>
+        </content>
+      </Page>
+    </content>
+  </Page>
+
+</mvc:View>

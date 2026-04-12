@@ -1,0 +1,376 @@
+<mvc:View
+  controllerName="ui5.fira.demos.controller.apps.hrgrid.HRGridApp"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:core="sap.ui.core"
+  xmlns:table="sap.ui.table"
+  displayBlock="true">
+
+  <Page id="hrGridPage" title="Employee Master Data"
+    showNavButton="true" navButtonPress=".navBackToLaunchpad"
+    class="fira-app-page">
+
+    <footer>
+      <Bar>
+        <contentLeft>
+          <ObjectStatus id="hrChangeStatus"
+            text="{= ${hr>/dirty} ? 'Unsaved changes' : 'No unsaved changes'}"
+            state="{= ${hr>/dirty} ? 'Warning' : 'None'}"/>
+        </contentLeft>
+        <contentMiddle>
+          <Text id="hrRowCount" text="{= ${hr>/filteredCount} + ' / 60 employees'}"/>
+        </contentMiddle>
+        <contentRight>
+          <Button id="hrDiscardBtn" text="Discard" type="Transparent"
+            enabled="{hr>/dirty}" press=".onDiscard"/>
+          <Button id="hrSaveBtn" text="Save All Changes" type="Emphasized"
+            icon="sap-icon://save" enabled="{hr>/dirty}" press=".onSave"
+            class="sapUiSmallMarginBegin"/>
+        </contentRight>
+      </Bar>
+    </footer>
+
+    <content>
+
+      <MessageStrip id="hrInfoStrip"
+        text="Edit any cell to activate Save. All 20 columns contain editable controls — each fires a change event."
+        type="Information" showCloseButton="false" class="sapUiSmallMargin"/>
+
+      <table:Table id="hrTable"
+        rows="{hr>/employees}"
+        visibleRowCount="12"
+        selectionMode="MultiToggle"
+        enableBusyIndicator="true"
+        threshold="10"
+        class="sapUiSmallMargin"
+        rowSelectionChange=".onRowSelect">
+
+        <table:extension>
+          <OverflowToolbar>
+            <Title text="Employees — All Plants"/>
+            <ToolbarSpacer/>
+
+            <!-- filter by department — Select triggers onDeptFilter -->
+            <Select id="deptFilterSelect" change=".onDeptFilter">
+              <core:Item key=""    text="All Departments"/>
+              <core:Item key="IT"  text="IT"/>
+              <core:Item key="HR"  text="Human Resources"/>
+              <core:Item key="FI"  text="Finance"/>
+              <core:Item key="SD"  text="Sales"/>
+              <core:Item key="MM"  text="Procurement"/>
+              <core:Item key="QM"  text="Quality"/>
+              <core:Item key="PM"  text="Project Mgmt"/>
+            </Select>
+
+            <!-- filter by status — SegmentedButton triggers onStatusFilter -->
+            <SegmentedButton id="statusFilterBtn" selectionChange=".onStatusFilter"
+              class="sapUiSmallMarginBegin">
+              <items>
+                <SegmentedButtonItem id="allStatusBtn"    key="all"      text="All"/>
+                <SegmentedButtonItem id="activeStatusBtn" key="active"   text="Active"/>
+                <SegmentedButtonItem id="inactiveStatusBtn" key="inactive" text="Inactive"/>
+              </items>
+            </SegmentedButton>
+
+            <SearchField id="hrSearch" width="12rem" placeholder="Name or ID..."
+              search=".onSearch" liveChange=".onSearchLive"
+              class="sapUiSmallMarginBegin"/>
+            <Button icon="sap-icon://refresh" tooltip="Reload" type="Transparent"
+              press=".onReload"/>
+          </OverflowToolbar>
+        </table:extension>
+
+        <table:columns>
+
+          <!-- 1. Employee ID — Text (read-only identifier) -->
+          <table:Column width="7rem" sortProperty="empId">
+            <Label text="Emp. ID"/>
+            <table:template>
+              <Text id="empIdText" text="{hr>empId}" wrapping="false"/>
+            </table:template>
+          </table:Column>
+
+          <!-- 2. Full Name — Input · liveChange → dirty -->
+          <table:Column width="12rem" sortProperty="fullName">
+            <Label text="Full Name"/>
+            <table:template>
+              <Input id="fullNameInput"
+                value="{hr>fullName}"
+                liveChange=".onFieldChange"/>
+            </table:template>
+          </table:Column>
+
+          <!-- 3. Department — Select · change → dirty -->
+          <table:Column width="10rem">
+            <Label text="Department"/>
+            <table:template>
+              <Select id="departmentSelect"
+                selectedKey="{hr>department}"
+                change=".onFieldChange">
+                <core:Item key="IT"  text="IT"/>
+                <core:Item key="HR"  text="HR"/>
+                <core:Item key="FI"  text="Finance"/>
+                <core:Item key="SD"  text="Sales"/>
+                <core:Item key="MM"  text="Procurement"/>
+                <core:Item key="QM"  text="Quality"/>
+                <core:Item key="PM"  text="Project Mgmt"/>
+              </Select>
+            </table:template>
+          </table:Column>
+
+          <!-- 4. Job Role — ComboBox · change → dirty -->
+          <table:Column width="13rem">
+            <Label text="Job Role"/>
+            <table:template>
+              <ComboBox id="roleComboBox"
+                value="{hr>role}"
+                change=".onFieldChange">
+                <core:Item key="Frontend Dev"        text="Frontend Dev"/>
+                <core:Item key="Backend Dev"         text="Backend Dev"/>
+                <core:Item key="UI5 Developer"       text="UI5 Developer"/>
+                <core:Item key="DevOps Engineer"     text="DevOps Engineer"/>
+                <core:Item key="Architect"           text="Architect"/>
+                <core:Item key="QA Engineer"         text="QA Engineer"/>
+                <core:Item key="HR Business Partner" text="HR Business Partner"/>
+                <core:Item key="Recruiter"           text="Recruiter"/>
+                <core:Item key="Financial Analyst"   text="Financial Analyst"/>
+                <core:Item key="Controller"          text="Controller"/>
+                <core:Item key="Sales Manager"       text="Sales Manager"/>
+                <core:Item key="Buyer"               text="Buyer"/>
+                <core:Item key="Quality Inspector"   text="Quality Inspector"/>
+                <core:Item key="Project Manager"     text="Project Manager"/>
+                <core:Item key="Scrum Master"        text="Scrum Master"/>
+              </ComboBox>
+            </table:template>
+          </table:Column>
+
+          <!-- 5. Skills — Text + value-help Button → SelectDialog (multi) -->
+          <table:Column width="14rem">
+            <Label text="Skills"/>
+            <table:template>
+              <HBox alignItems="Center">
+                <Text id="skillsText"
+                  text="{path:'hr>skills', formatter:'.formatArrayLabel'}"
+                  wrapping="false" class="sapUiSmallMarginEnd"/>
+                <Button id="skillsVHBtn" icon="sap-icon://value-help" type="Transparent"
+                  tooltip="Open skill picker" press=".onValueHelpOpen">
+                  <customData><core:CustomData key="field" value="skills"/></customData>
+                </Button>
+              </HBox>
+            </table:template>
+          </table:Column>
+
+          <!-- 6. Hire Date — DatePicker · change → dirty -->
+          <table:Column width="10rem">
+            <Label text="Hire Date"/>
+            <table:template>
+              <DatePicker id="hireDatePicker"
+                value="{hr>hireDate}"
+                valueFormat="yyyy-MM-dd"
+                displayFormat="dd.MM.yyyy"
+                change=".onFieldChange"/>
+            </table:template>
+          </table:Column>
+
+          <!-- 7. Contract — Select · change → dirty -->
+          <table:Column width="10rem">
+            <Label text="Contract"/>
+            <table:template>
+              <Select id="contractSelect"
+                selectedKey="{hr>contract}"
+                change=".onFieldChange">
+                <core:Item key="permanent"  text="Permanent"/>
+                <core:Item key="fixed"      text="Fixed Term"/>
+                <core:Item key="contractor" text="Contractor"/>
+                <core:Item key="intern"     text="Intern"/>
+              </Select>
+            </table:template>
+          </table:Column>
+
+          <!-- 8. Active — Switch · change → dirty -->
+          <table:Column width="7rem" hAlign="Center">
+            <Label text="Active"/>
+            <table:template>
+              <Switch id="activeSwitch"
+                state="{hr>active}"
+                change=".onFieldChange"/>
+            </table:template>
+          </table:Column>
+
+          <!-- 9. Remote — CheckBox · select → dirty -->
+          <table:Column width="7rem" hAlign="Center">
+            <Label text="Remote"/>
+            <table:template>
+              <CheckBox id="remoteCheckBox"
+                selected="{hr>remote}"
+                select=".onFieldChange"/>
+            </table:template>
+          </table:Column>
+
+          <!-- 10. Office Location — Select · change → dirty -->
+          <table:Column width="10rem">
+            <Label text="Office"/>
+            <table:template>
+              <Select id="locationSelect"
+                selectedKey="{hr>location}"
+                change=".onFieldChange">
+                <core:Item key="berlin"    text="Berlin"/>
+                <core:Item key="munich"    text="Munich"/>
+                <core:Item key="frankfurt" text="Frankfurt"/>
+                <core:Item key="hamburg"   text="Hamburg"/>
+                <core:Item key="remote"    text="Remote"/>
+              </Select>
+            </table:template>
+          </table:Column>
+
+          <!-- 11. Manager — Text + value-help Button → SelectDialog (single) -->
+          <table:Column width="12rem">
+            <Label text="Manager"/>
+            <table:template>
+              <HBox alignItems="Center">
+                <Text id="managerText"
+                  text="{path:'hr>manager', formatter:'.formatManagerLabel'}"
+                  wrapping="false" class="sapUiSmallMarginEnd"/>
+                <Button id="managerVHBtn" icon="sap-icon://value-help" type="Transparent"
+                  tooltip="Open manager picker" press=".onValueHelpOpen">
+                  <customData><core:CustomData key="field" value="manager"/></customData>
+                </Button>
+              </HBox>
+            </table:template>
+          </table:Column>
+
+          <!-- 12. Salary Grade — StepInput · change → dirty -->
+          <table:Column width="9rem" hAlign="Center">
+            <Label text="Salary Grade"/>
+            <table:template>
+              <StepInput id="salaryGradeInput"
+                value="{hr>salaryGrade}"
+                min="1" max="10" step="1"
+                displayValuePrecision="0"
+                change=".onFieldChange"/>
+            </table:template>
+          </table:Column>
+
+          <!-- 13. Target Bonus % — StepInput · change → dirty -->
+          <table:Column width="9rem" hAlign="Center">
+            <Label text="Bonus %"/>
+            <table:template>
+              <StepInput id="bonusInput"
+                value="{hr>targetBonus}"
+                min="0" max="30" step="5"
+                displayValuePrecision="0"
+                change=".onFieldChange"/>
+            </table:template>
+          </table:Column>
+
+          <!-- 14. Annual Leave — StepInput · change → dirty -->
+          <table:Column width="9rem" hAlign="Center">
+            <Label text="Leave Days"/>
+            <table:template>
+              <StepInput id="leaveInput"
+                value="{hr>annualLeave}"
+                min="15" max="35" step="1"
+                displayValuePrecision="0"
+                change=".onFieldChange"/>
+            </table:template>
+          </table:Column>
+
+          <!-- 15. Weekly Hours — Select · change → dirty -->
+          <table:Column width="9rem">
+            <Label text="Weekly Hrs"/>
+            <table:template>
+              <Select id="hoursSelect"
+                selectedKey="{hr>weeklyHours}"
+                change=".onFieldChange">
+                <core:Item key="20" text="20 h"/>
+                <core:Item key="32" text="32 h"/>
+                <core:Item key="40" text="40 h"/>
+                <core:Item key="45" text="45 h"/>
+              </Select>
+            </table:template>
+          </table:Column>
+
+          <!-- 16. Review Score — RatingIndicator · change → dirty -->
+          <table:Column width="9rem" hAlign="Center">
+            <Label text="Review"/>
+            <table:template>
+              <RatingIndicator id="reviewRating"
+                value="{hr>reviewScore}"
+                maxValue="5"
+                change=".onFieldChange"/>
+            </table:template>
+          </table:Column>
+
+          <!-- 17. Cost Center — Input + showValueHelp (F4) → dirty -->
+          <table:Column width="9rem">
+            <Label text="Cost Center"/>
+            <table:template>
+              <Input id="costCenterInput"
+                value="{hr>costCenter}"
+                showValueHelp="true"
+                valueHelpIconSrc="sap-icon://value-help"
+                liveChange=".onFieldChange"
+                valueHelpRequest=".onCostCenterVH"/>
+            </table:template>
+          </table:Column>
+
+          <!-- 18. Project — Select · change → dirty -->
+          <table:Column width="10rem">
+            <Label text="Project"/>
+            <table:template>
+              <Select id="projectSelect"
+                selectedKey="{hr>project}"
+                change=".onFieldChange">
+                <core:Item key="proj-tf"  text="TestForge"/>
+                <core:Item key="proj-erp" text="ERP Migration"/>
+                <core:Item key="proj-int" text="Integration Hub"/>
+                <core:Item key="proj-mig" text="Cloud Migration"/>
+                <core:Item key="proj-inf" text="Infra Modernization"/>
+              </Select>
+            </table:template>
+          </table:Column>
+
+          <!-- 19. Languages — Text + value-help Button → SelectDialog (multi) -->
+          <table:Column width="13rem">
+            <Label text="Languages"/>
+            <table:template>
+              <HBox alignItems="Center">
+                <Text id="languagesText"
+                  text="{path:'hr>languages', formatter:'.formatArrayLabel'}"
+                  wrapping="false" class="sapUiSmallMarginEnd"/>
+                <Button id="languagesVHBtn" icon="sap-icon://value-help" type="Transparent"
+                  tooltip="Open language picker" press=".onValueHelpOpen">
+                  <customData><core:CustomData key="field" value="languages"/></customData>
+                </Button>
+              </HBox>
+            </table:template>
+          </table:Column>
+
+          <!-- 20. Notes — Input · liveChange → dirty -->
+          <table:Column width="13rem">
+            <Label text="Notes"/>
+            <table:template>
+              <Input id="notesInput"
+                value="{hr>notes}"
+                placeholder="Add note..."
+                liveChange=".onFieldChange"/>
+            </table:template>
+          </table:Column>
+
+        </table:columns>
+      </table:Table>
+
+      <!-- Save summary -->
+      <Panel id="hrSummaryPanel" visible="{hr>/showSummary}"
+        headerText="Last Save Summary" class="sapUiSmallMargin">
+        <content>
+          <VBox class="sapUiSmallMargin">
+            <Text id="hrSummaryText" text="{hr>/summaryText}"/>
+          </VBox>
+        </content>
+      </Panel>
+
+    </content>
+  </Page>
+
+</mvc:View>

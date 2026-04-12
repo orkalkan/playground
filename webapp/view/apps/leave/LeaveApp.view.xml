@@ -15,8 +15,8 @@
         <Page id="leaveDashPage" title="Leave Management" class="fira-app-page"
           showNavButton="true" navButtonPress=".onNavBackToLaunchpad">
           <headerContent>
-            <Button text="New Request" type="Emphasized" icon="sap-icon://add" press=".onNewRequestPress"/>
-            <Button text="Team Calendar" icon="sap-icon://calendar" press=".onTeamCalendarPress"/>
+            <Button id="newLeaveBtn" text="New Request" type="Emphasized" icon="sap-icon://add" press=".onNewRequestPress"/>
+            <Button id="teamCalendarBtn" text="Team Calendar" icon="sap-icon://calendar" press=".onTeamCalendarPress"/>
           </headerContent>
           <content>
             <VBox class="sapUiMediumMargin">
@@ -85,8 +85,8 @@
           <footer>
             <Bar>
               <contentRight>
-                <Button text="Cancel" press=".onNavBack"/>
-                <Button text="Submit Request" type="Emphasized" press=".onSubmitRequest" icon="sap-icon://paper-plane"/>
+                <Button id="cancelNewLeaveBtn" text="Cancel" press=".onNavBack"/>
+                <Button id="submitLeaveBtn" text="Submit Request" type="Emphasized" press=".onSubmitRequest" icon="sap-icon://paper-plane"/>
               </contentRight>
             </Bar>
           </footer>
@@ -130,11 +130,11 @@
                   <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
                     <f:content>
                       <Label text="Return Time"/>
-                      <TimePicker valueFormat="HH:mm" displayFormat="HH:mm" placeholder="HH:mm"/>
+                      <TimePicker id="newLeaveReturnTime" valueFormat="HH:mm" displayFormat="HH:mm" placeholder="HH:mm"/>
                       <Label text="Number of Days Requested"/>
-                      <StepInput value="1" min="1" max="30" step="1" width="8rem"/>
+                      <StepInput id="newLeaveDaysInput" value="1" min="1" max="30" step="1" width="8rem"/>
                       <Label text="Location During Leave"/>
-                      <ComboBox placeholder="Select or type location...">
+                      <ComboBox id="newLeaveLocation" placeholder="Select or type location...">
                         <core:Item key="home" text="Home"/>
                         <core:Item key="abroad" text="Abroad"/>
                         <core:Item key="domestic" text="Domestic travel"/>
@@ -142,10 +142,10 @@
                         <core:Item key="other" text="Other"/>
                       </ComboBox>
                       <Label text="Work Coverage"/>
-                      <RadioButtonGroup columns="3">
-                        <RadioButton text="Substitute"/>
-                        <RadioButton text="Manager Handles"/>
-                        <RadioButton text="Remote Work"/>
+                      <RadioButtonGroup id="newLeaveCoverage" columns="3">
+                        <RadioButton id="newLeaveSubstituteOpt" text="Substitute"/>
+                        <RadioButton id="newLeaveManagerOpt" text="Manager Handles"/>
+                        <RadioButton id="newLeaveRemoteOpt" text="Remote Work"/>
                       </RadioButtonGroup>
                     </f:content>
                   </f:SimpleForm>
@@ -156,11 +156,11 @@
                   <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
                     <f:content>
                       <Label text="Notify Substitute Automatically"/>
-                      <Switch customTextOn="Yes" customTextOff="No"/>
+                      <Switch id="newLeaveNotifySwitch" customTextOn="Yes" customTextOff="No"/>
                       <Label text="Requires Transport Reimbursement"/>
-                      <CheckBox text="Claim transport reimbursement for this leave"/>
+                      <CheckBox id="newLeaveTransportCheck" text="Claim transport reimbursement for this leave"/>
                       <Label text="Notify Colleagues"/>
-                      <MultiComboBox placeholder="Select colleagues to notify...">
+                      <MultiComboBox id="newLeaveNotifyColleagues" placeholder="Select colleagues to notify...">
                         <core:Item key="jmayer" text="Julia Mayer"/>
                         <core:Item key="tschmidt" text="Thomas Schmidt"/>
                         <core:Item key="awagner" text="Anna Wagner"/>
@@ -168,7 +168,7 @@
                         <core:Item key="swolf" text="Sandra Wolf"/>
                       </MultiComboBox>
                       <Label text="Attached Documents"/>
-                      <MultiInput showValueHelp="false" placeholder="Add document references as tags..."/>
+                      <MultiInput id="newLeaveDocuments" showValueHelp="false" placeholder="Add document references as tags..."/>
                     </f:content>
                   </f:SimpleForm>
                 </content>
@@ -178,9 +178,9 @@
                   <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
                     <f:content>
                       <Label text="Days Advance Notice"/>
-                      <Slider min="0" max="30" step="1" showAdvancedTooltip="true" enableTickmarks="true" value="5"/>
+                      <Slider id="newLeaveAdvanceNoticeSlider" min="0" max="30" step="1" showAdvancedTooltip="true" enableTickmarks="true" value="5"/>
                       <Label text="Request Urgency"/>
-                      <RatingIndicator maxValue="5" value="2"/>
+                      <RatingIndicator id="newLeaveUrgencyRating" maxValue="5" value="2"/>
                     </f:content>
                   </f:SimpleForm>
                 </content>
@@ -203,8 +203,8 @@
           <footer>
             <Bar>
               <contentRight>
-                <Button text="Cancel" press=".onNavBack"/>
-                <Button text="Save Changes" type="Emphasized" press=".onSaveRequest" icon="sap-icon://accept"/>
+                <Button id="cancelEditLeaveBtn" text="Cancel" press=".onNavBack"/>
+                <Button id="saveLeaveBtn" text="Save Changes" type="Emphasized" press=".onSaveRequest" icon="sap-icon://accept"/>
               </contentRight>
             </Bar>
           </footer>
@@ -244,11 +244,11 @@
                   <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
                     <f:content>
                       <Label text="Return Time"/>
-                      <TimePicker valueFormat="HH:mm" displayFormat="HH:mm" placeholder="HH:mm"/>
+                      <TimePicker id="editLeaveReturnTime" valueFormat="HH:mm" displayFormat="HH:mm" placeholder="HH:mm"/>
                       <Label text="Number of Days Requested"/>
-                      <StepInput value="1" min="1" max="30" step="1" width="8rem"/>
+                      <StepInput id="editLeaveDaysStep" value="1" min="1" max="30" step="1" width="8rem"/>
                       <Label text="Location During Leave"/>
-                      <ComboBox placeholder="Select or type location...">
+                      <ComboBox id="editLeaveLocation" placeholder="Select or type location...">
                         <core:Item key="home" text="Home"/>
                         <core:Item key="abroad" text="Abroad"/>
                         <core:Item key="domestic" text="Domestic travel"/>
@@ -256,10 +256,10 @@
                         <core:Item key="other" text="Other"/>
                       </ComboBox>
                       <Label text="Work Coverage"/>
-                      <RadioButtonGroup columns="3">
-                        <RadioButton text="Substitute"/>
-                        <RadioButton text="Manager Handles"/>
-                        <RadioButton text="Remote Work"/>
+                      <RadioButtonGroup id="editLeaveCoverage" columns="3">
+                        <RadioButton id="editLeaveSubstituteOpt" text="Substitute"/>
+                        <RadioButton id="editLeaveManagerOpt" text="Manager Handles"/>
+                        <RadioButton id="editLeaveRemoteOpt" text="Remote Work"/>
                       </RadioButtonGroup>
                     </f:content>
                   </f:SimpleForm>
@@ -270,13 +270,13 @@
                   <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
                     <f:content>
                       <Label text="Notify Substitute Automatically"/>
-                      <Switch customTextOn="Yes" customTextOff="No"/>
+                      <Switch id="editLeaveNotifySwitch" customTextOn="Yes" customTextOff="No"/>
                       <Label text="Half Day"/>
-                      <CheckBox text="First day is a half day"/>
+                      <CheckBox id="editLeaveHalfDay" text="First day is a half day"/>
                       <Label text="Requires Transport Reimbursement"/>
-                      <CheckBox text="Claim transport reimbursement for this leave"/>
+                      <CheckBox id="editLeaveTransportCheck" text="Claim transport reimbursement for this leave"/>
                       <Label text="Notify Colleagues"/>
-                      <MultiComboBox placeholder="Select colleagues to notify...">
+                      <MultiComboBox id="editLeaveNotifyColleagues" placeholder="Select colleagues to notify...">
                         <core:Item key="jmayer" text="Julia Mayer"/>
                         <core:Item key="tschmidt" text="Thomas Schmidt"/>
                         <core:Item key="awagner" text="Anna Wagner"/>
@@ -284,7 +284,7 @@
                         <core:Item key="swolf" text="Sandra Wolf"/>
                       </MultiComboBox>
                       <Label text="Attached Documents"/>
-                      <MultiInput showValueHelp="false" placeholder="Add document references as tags..."/>
+                      <MultiInput id="editLeaveDocuments" showValueHelp="false" placeholder="Add document references as tags..."/>
                     </f:content>
                   </f:SimpleForm>
                 </content>
@@ -294,9 +294,9 @@
                   <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
                     <f:content>
                       <Label text="Days Advance Notice"/>
-                      <Slider min="0" max="30" step="1" showAdvancedTooltip="true" enableTickmarks="true" value="5"/>
+                      <Slider id="editLeaveAdvanceNoticeSlider" min="0" max="30" step="1" showAdvancedTooltip="true" enableTickmarks="true" value="5"/>
                       <Label text="Request Urgency"/>
-                      <RatingIndicator maxValue="5" value="2"/>
+                      <RatingIndicator id="editLeaveUrgencyRating" maxValue="5" value="2"/>
                     </f:content>
                   </f:SimpleForm>
                 </content>

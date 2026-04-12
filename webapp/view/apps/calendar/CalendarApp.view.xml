@@ -1,0 +1,100 @@
+<mvc:View
+  controllerName="ui5.fira.demos.controller.apps.calendar.CalendarApp"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:core="sap.ui.core"
+  xmlns:unified="sap.ui.unified"
+  displayBlock="true">
+
+  <Page id="calendarPage" title="Team Planning Calendar"
+    showNavButton="true" navButtonPress=".navBackToLaunchpad"
+    class="fira-app-page">
+
+    <headerContent>
+      <Select id="calViewSelect" change=".onViewChange">
+        <core:Item key="Hour"        text="Day"/>
+        <core:Item key="Day"         text="Week"/>
+        <core:Item key="Month"       text="Month"/>
+      </Select>
+      <Button id="addApptBtn" icon="sap-icon://add" text="Add Appointment"
+        type="Emphasized" press=".onAddAppointment" class="sapUiSmallMarginBegin"/>
+      <Button id="calTodayBtn" icon="sap-icon://today" text="Today"
+        type="Transparent" press=".onToday" class="sapUiSmallMarginBegin"/>
+    </headerContent>
+
+    <content>
+
+      <MessageStrip id="calInfoStrip"
+        text="Click an empty slot to add an appointment. Click an existing appointment to view or delete it. Drag appointments to reschedule."
+        type="Information" showCloseButton="false" class="sapUiSmallMargin"/>
+
+      <!-- ── Planning Calendar ─────────────────────────────────── -->
+      <PlanningCalendar id="planningCalendar"
+        startDate="{cal>/startDate}"
+        viewKey="{cal>/viewKey}"
+        rows="{cal>/rows}"
+        enableAppointmentsDragAndDrop="true"
+        showDayNamesLine="true"
+        showWeekNumbers="true"
+        singleSelection="false"
+        appointmentSelect=".onAppointmentSelect"
+        intervalSelect=".onIntervalSelect"
+        appointmentDrop=".onAppointmentDrop"
+        class="sapUiSmallMargin">
+
+        <rows>
+          <PlanningCalendarRow
+            key="{cal>id}"
+            title="{cal>name}"
+            text="{cal>role}"
+            icon="{cal>icon}"
+            appointments="{cal>appointments}"
+            intervalHeaders="{cal>headers}">
+
+            <appointments>
+              <unified:CalendarAppointment
+                startDate="{cal>start}"
+                endDate="{cal>end}"
+                title="{cal>title}"
+                text="{cal>text}"
+                type="{cal>type}"
+                tentative="{cal>tentative}"
+                key="{cal>key}"/>
+            </appointments>
+
+            <intervalHeaders>
+              <unified:CalendarAppointment
+                startDate="{cal>start}"
+                endDate="{cal>end}"
+                title="{cal>title}"
+                type="{cal>type}"/>
+            </intervalHeaders>
+
+          </PlanningCalendarRow>
+        </rows>
+
+        <views>
+          <PlanningCalendarView key="Hour"  intervalType="Hour"  description="Day"   intervalsS="8"  intervalsM="12" intervalsL="24"/>
+          <PlanningCalendarView key="Day"   intervalType="Day"   description="Week"  intervalsS="5"  intervalsM="7"  intervalsL="7"/>
+          <PlanningCalendarView key="Month" intervalType="Month" description="Month" intervalsS="3"  intervalsM="6"  intervalsL="12"/>
+        </views>
+
+      </PlanningCalendar>
+
+      <!-- ── Add Appointment Dialog (defined in controller, shown on demand) ── -->
+      <!-- ── Event Log ──────────────────────────────────────────── -->
+      <Panel id="calEventLog"
+        visible="{= ${cal>/eventLog}.length > 0}"
+        headerText="Activity Log" expandable="true" expanded="false"
+        class="sapUiSmallMargin">
+        <content>
+          <List id="calEventLogList" items="{cal>/eventLog}" showNoData="false">
+            <StandardListItem title="{cal>text}" info="{cal>time}" infoState="None"/>
+          </List>
+        </content>
+      </Panel>
+
+    </content>
+  </Page>
+
+</mvc:View>

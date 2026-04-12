@@ -57,7 +57,14 @@
         { "name": "quality",     "pattern": "quality",     "target": "quality"     },
         { "name": "budget",      "pattern": "budget",      "target": "budget"      },
         { "name": "warehouse",   "pattern": "warehouse",   "target": "warehouse"   },
-        { "name": "playground",  "pattern": "playground",  "target": "playground"  }
+        { "name": "playground",  "pattern": "playground",  "target": "playground"  },
+        { "name": "kanban",      "pattern": "kanban",      "target": "kanban"      },
+        { "name": "filtertable", "pattern": "filtertable", "target": "filtertable" },
+        { "name": "empform",        "pattern": "empform",        "target": "empform"        },
+        { "name": "stepinputtable", "pattern": "stepinputtable", "target": "stepinputtable" },
+        { "name": "inputevents",    "pattern": "inputevents",    "target": "inputevents"    },
+        { "name": "hrgrid",         "pattern": "hrgrid",         "target": "hrgrid"         },
+        { "name": "calendar",       "pattern": "calendar",       "target": "calendar"       }
       ],
       "targets": {
         "login":      { "viewId": "login",      "viewName": "Login"                           },
@@ -72,7 +79,14 @@
         "quality":    { "viewId": "quality",    "viewName": "apps.quality.QualityApp"        },
         "budget":     { "viewId": "budget",     "viewName": "apps.budget.BudgetApp"          },
         "warehouse":  { "viewId": "warehouse",  "viewName": "apps.warehouse.WarehouseApp"    },
-        "playground": { "viewId": "playground", "viewName": "apps.playground.PlaygroundApp"  }
+        "playground":  { "viewId": "playground",  "viewName": "apps.playground.PlaygroundApp"          },
+        "kanban":      { "viewId": "kanban",      "viewName": "apps.kanban.KanbanApp"                  },
+        "filtertable": { "viewId": "filtertable", "viewName": "apps.filtertable.FilterTableApp"        },
+        "empform":        { "viewId": "empform",        "viewName": "apps.empform.EmpFormApp"                       },
+        "stepinputtable": { "viewId": "stepinputtable", "viewName": "apps.stepinputtable.StepInputTableApp"    },
+        "inputevents":    { "viewId": "inputevents",    "viewName": "apps.inputevents.InputEventsApp"          },
+        "hrgrid":         { "viewId": "hrgrid",         "viewName": "apps.hrgrid.HRGridApp"                    },
+        "calendar":       { "viewId": "calendar",       "viewName": "apps.calendar.CalendarApp"                }
       }
     }
   }

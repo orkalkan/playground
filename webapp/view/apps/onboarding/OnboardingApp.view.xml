@@ -14,7 +14,7 @@
         <Page id="onboardingListPage" title="Employee Onboarding" class="fira-app-page"
           showNavButton="true" navButtonPress=".onNavBackToLaunchpad">
           <headerContent>
-            <Button text="Add New Hire" type="Emphasized" icon="sap-icon://add" press=".onAddNewHirePress"/>
+            <Button id="addNewHireBtn" text="Add New Hire" type="Emphasized" icon="sap-icon://add" press=".onAddNewHirePress"/>
           </headerContent>
           <content>
             <VBox class="sapUiMediumMargin">
@@ -118,7 +118,7 @@
           <footer>
             <Bar>
               <contentRight>
-                <Button text="Save &amp; Continue" type="Emphasized" press=".onSavePersonalData" icon="sap-icon://accept"/>
+                <Button id="savePersonalBtn" text="Save &amp; Continue" type="Emphasized" press=".onSavePersonalData" icon="sap-icon://accept"/>
               </contentRight>
             </Bar>
           </footer>
@@ -128,26 +128,26 @@
                 <content>
                   <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
                     <f:content>
-                      <Label text="Employee ID"/>    <Input value="{onboarding>/selectedHire/empId}" enabled="false"/>
-                      <Label text="First Name" required="true"/>  <Input value="{onboarding>/selectedHire/firstName}"/>
-                      <Label text="Last Name" required="true"/>   <Input value="{onboarding>/selectedHire/lastName}"/>
+                      <Label text="Employee ID"/>    <Input id="personalEmpId" value="{onboarding>/selectedHire/empId}" enabled="false"/>
+                      <Label text="First Name" required="true"/>  <Input id="personalFirstName" value="{onboarding>/selectedHire/firstName}"/>
+                      <Label text="Last Name" required="true"/>   <Input id="personalLastName" value="{onboarding>/selectedHire/lastName}"/>
                       <Label text="Date of Birth" required="true"/>
-                      <DatePicker value="{onboarding>/selectedHire/dob}" valueFormat="yyyy-MM-dd" displayFormat="dd.MM.yyyy"/>
+                      <DatePicker id="personalDob" value="{onboarding>/selectedHire/dob}" valueFormat="yyyy-MM-dd" displayFormat="dd.MM.yyyy"/>
                       <Label text="Nationality"/>
-                      <Select selectedKey="{onboarding>/selectedHire/nationality}">
+                      <Select id="personalNationality" selectedKey="{onboarding>/selectedHire/nationality}">
                         <core:ListItem key="DE" text="German"/>
                         <core:ListItem key="AT" text="Austrian"/>
                         <core:ListItem key="CH" text="Swiss"/>
                         <core:ListItem key="OTHER" text="Other"/>
                       </Select>
                       <Label text="Personal Email" required="true"/>
-                      <Input value="{onboarding>/selectedHire/personalEmail}" type="Email"/>
+                      <Input id="personalEmail" value="{onboarding>/selectedHire/personalEmail}" type="Email"/>
                       <Label text="Mobile Phone"/>
-                      <Input value="{onboarding>/selectedHire/phone}" type="Tel"/>
+                      <Input id="personalPhone" value="{onboarding>/selectedHire/phone}" type="Tel"/>
                       <Label text="Emergency Contact"/>
-                      <Input value="{onboarding>/selectedHire/emergencyContact}"/>
+                      <Input id="personalEmergency" value="{onboarding>/selectedHire/emergencyContact}"/>
                       <Label text="Home Address" required="true"/>
-                      <TextArea value="{onboarding>/selectedHire/address}" rows="2" width="100%"/>
+                      <TextArea id="personalAddress" value="{onboarding>/selectedHire/address}" rows="2" width="100%"/>
                     </f:content>
                   </f:SimpleForm>
                 </content>
@@ -157,11 +157,11 @@
                   <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
                     <f:content>
                       <Label text="Start Time on First Day"/>
-                      <TimePicker valueFormat="HH:mm" displayFormat="HH:mm" placeholder="HH:mm"/>
+                      <TimePicker id="personalStartTime" valueFormat="HH:mm" displayFormat="HH:mm" placeholder="HH:mm"/>
                       <Label text="Years of Experience"/>
-                      <StepInput value="0" min="0" max="50" step="1" width="8rem"/>
+                      <StepInput id="personalYearsExp" value="0" min="0" max="50" step="1" width="8rem"/>
                       <Label text="Office Location"/>
-                      <ComboBox placeholder="Select or type office location...">
+                      <ComboBox id="personalOfficeLocation" placeholder="Select or type office location...">
                         <core:Item key="HQ-MUC" text="HQ Munich"/>
                         <core:Item key="HQ-BER" text="HQ Berlin"/>
                         <core:Item key="HQ-HAM" text="Hamburg Office"/>
@@ -169,11 +169,11 @@
                         <core:Item key="REMOTE" text="Fully Remote"/>
                       </ComboBox>
                       <Label text="Employment Type"/>
-                      <RadioButtonGroup columns="4">
-                        <RadioButton text="Full-Time"/>
-                        <RadioButton text="Part-Time"/>
-                        <RadioButton text="Freelance"/>
-                        <RadioButton text="Intern"/>
+                      <RadioButtonGroup id="personalEmploymentType" columns="4">
+                        <RadioButton id="personalEmpTypeFullTime" text="Full-Time"/>
+                        <RadioButton id="personalEmpTypePartTime" text="Part-Time"/>
+                        <RadioButton id="personalEmpTypeFreelance" text="Freelance"/>
+                        <RadioButton id="personalEmpTypeIntern" text="Intern"/>
                       </RadioButtonGroup>
                     </f:content>
                   </f:SimpleForm>
@@ -184,15 +184,15 @@
                   <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
                     <f:content>
                       <Label text="Remote Work Eligible"/>
-                      <Switch customTextOn="Yes" customTextOff="No"/>
+                      <Switch id="personalRemoteSwitch" customTextOn="Yes" customTextOff="No"/>
                       <Label text="Has Valid Work Permit"/>
-                      <CheckBox text="Employee holds a valid work permit for this country"/>
+                      <CheckBox id="personalPermitCheck" text="Employee holds a valid work permit for this country"/>
                       <Label text="Relocation Assistance Required"/>
-                      <CheckBox text="Employee requires relocation support package"/>
+                      <CheckBox id="personalRelocationCheck" text="Employee requires relocation support package"/>
                       <Label text="Company Car Eligible"/>
-                      <CheckBox text="Position qualifies for company car policy"/>
+                      <CheckBox id="personalCarCheck" text="Position qualifies for company car policy"/>
                       <Label text="Skills / Competencies"/>
-                      <MultiComboBox placeholder="Select relevant skills...">
+                      <MultiComboBox id="personalSkills" placeholder="Select relevant skills...">
                         <core:Item key="sap" text="SAP"/>
                         <core:Item key="pm" text="Project Management"/>
                         <core:Item key="dev" text="Software Development"/>
@@ -202,7 +202,7 @@
                         <core:Item key="fin" text="Finance &amp; Controlling"/>
                       </MultiComboBox>
                       <Label text="Previous Employers"/>
-                      <MultiInput showValueHelp="false" placeholder="Add previous employer names as tags..."/>
+                      <MultiInput id="personalPreviousEmployers" showValueHelp="false" placeholder="Add previous employer names as tags..."/>
                     </f:content>
                   </f:SimpleForm>
                 </content>
@@ -212,9 +212,9 @@
                   <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
                     <f:content>
                       <Label text="Salary Band Level (1–10)"/>
-                      <Slider min="1" max="10" step="1" showAdvancedTooltip="true" enableTickmarks="true" value="5"/>
+                      <Slider id="personalSalaryBandSlider" min="1" max="10" step="1" showAdvancedTooltip="true" enableTickmarks="true" value="5"/>
                       <Label text="Interview Score"/>
-                      <RatingIndicator maxValue="5" value="4"/>
+                      <RatingIndicator id="personalInterviewScore" maxValue="5" value="4"/>
                     </f:content>
                   </f:SimpleForm>
                 </content>
@@ -229,7 +229,7 @@
           <footer>
             <Bar>
               <contentRight>
-                <Button text="Confirm &amp; Submit" type="Emphasized" press=".onConfirmDocs" icon="sap-icon://accept"/>
+                <Button id="confirmDocsBtn" text="Confirm &amp; Submit" type="Emphasized" press=".onConfirmDocs" icon="sap-icon://accept"/>
               </contentRight>
             </Bar>
           </footer>
@@ -283,8 +283,8 @@
           <footer>
             <Bar>
               <contentRight>
-                <Button text="Cancel" press=".onNavBack"/>
-                <Button text="Create Onboarding Case" type="Emphasized" press=".onSaveNewHire" icon="sap-icon://accept"/>
+                <Button id="cancelNewHireBtn" text="Cancel" press=".onNavBack"/>
+                <Button id="saveNewHireBtn" text="Create Onboarding Case" type="Emphasized" press=".onSaveNewHire" icon="sap-icon://accept"/>
               </contentRight>
             </Bar>
           </footer>
@@ -326,11 +326,11 @@
                   <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
                     <f:content>
                       <Label text="Start Time on First Day"/>
-                      <TimePicker valueFormat="HH:mm" displayFormat="HH:mm" placeholder="HH:mm"/>
+                      <TimePicker id="newHireStartTime" valueFormat="HH:mm" displayFormat="HH:mm" placeholder="HH:mm"/>
                       <Label text="Years of Experience"/>
-                      <StepInput value="0" min="0" max="50" step="1" width="8rem"/>
+                      <StepInput id="newHireYearsExp" value="0" min="0" max="50" step="1" width="8rem"/>
                       <Label text="Office Location"/>
-                      <ComboBox placeholder="Select or type office location...">
+                      <ComboBox id="newHireOfficeLocation" placeholder="Select or type office location...">
                         <core:Item key="HQ-MUC" text="HQ Munich"/>
                         <core:Item key="HQ-BER" text="HQ Berlin"/>
                         <core:Item key="HQ-HAM" text="Hamburg Office"/>
@@ -338,11 +338,11 @@
                         <core:Item key="REMOTE" text="Fully Remote"/>
                       </ComboBox>
                       <Label text="Employment Type"/>
-                      <RadioButtonGroup columns="4">
-                        <RadioButton text="Full-Time"/>
-                        <RadioButton text="Part-Time"/>
-                        <RadioButton text="Freelance"/>
-                        <RadioButton text="Intern"/>
+                      <RadioButtonGroup id="newHireEmploymentType" columns="4">
+                        <RadioButton id="newHireEmpTypeFullTime" text="Full-Time"/>
+                        <RadioButton id="newHireEmpTypePartTime" text="Part-Time"/>
+                        <RadioButton id="newHireEmpTypeFreelance" text="Freelance"/>
+                        <RadioButton id="newHireEmpTypeIntern" text="Intern"/>
                       </RadioButtonGroup>
                     </f:content>
                   </f:SimpleForm>
@@ -353,15 +353,15 @@
                   <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
                     <f:content>
                       <Label text="Remote Work Eligible"/>
-                      <Switch customTextOn="Yes" customTextOff="No"/>
+                      <Switch id="newHireRemoteSwitch" customTextOn="Yes" customTextOff="No"/>
                       <Label text="Has Valid Work Permit"/>
-                      <CheckBox text="Employee holds a valid work permit for this country"/>
+                      <CheckBox id="newHirePermitCheck" text="Employee holds a valid work permit for this country"/>
                       <Label text="Relocation Assistance Required"/>
-                      <CheckBox text="Employee requires relocation support package"/>
+                      <CheckBox id="newHireRelocationCheck" text="Employee requires relocation support package"/>
                       <Label text="Company Car Eligible"/>
-                      <CheckBox text="Position qualifies for company car policy"/>
+                      <CheckBox id="newHireCarCheck" text="Position qualifies for company car policy"/>
                       <Label text="Skills / Competencies"/>
-                      <MultiComboBox placeholder="Select relevant skills...">
+                      <MultiComboBox id="newHireSkills" placeholder="Select relevant skills...">
                         <core:Item key="sap" text="SAP"/>
                         <core:Item key="pm" text="Project Management"/>
                         <core:Item key="dev" text="Software Development"/>
@@ -371,7 +371,7 @@
                         <core:Item key="fin" text="Finance &amp; Controlling"/>
                       </MultiComboBox>
                       <Label text="Previous Employers"/>
-                      <MultiInput showValueHelp="false" placeholder="Add previous employer names as tags..."/>
+                      <MultiInput id="newHirePreviousEmployers" showValueHelp="false" placeholder="Add previous employer names as tags..."/>
                     </f:content>
                   </f:SimpleForm>
                 </content>
@@ -381,11 +381,11 @@
                   <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
                     <f:content>
                       <Label text="Salary Band Level (1–10)"/>
-                      <Slider min="1" max="10" step="1" showAdvancedTooltip="true" enableTickmarks="true" value="5"/>
+                      <Slider id="newHireSalaryBandSlider" min="1" max="10" step="1" showAdvancedTooltip="true" enableTickmarks="true" value="5"/>
                       <Label text="Interview Score"/>
-                      <RatingIndicator maxValue="5" value="4"/>
+                      <RatingIndicator id="newHireInterviewScore" maxValue="5" value="4"/>
                       <Label text="Onboarding Notes"/>
-                      <TextArea rows="3" width="100%" placeholder="Additional notes for the HR team or hiring manager..."/>
+                      <TextArea id="newHireOnboardingNotes" rows="3" width="100%" placeholder="Additional notes for the HR team or hiring manager..."/>
                     </f:content>
                   </f:SimpleForm>
                 </content>

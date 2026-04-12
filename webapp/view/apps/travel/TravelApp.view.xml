@@ -14,7 +14,7 @@
         <Page id="travelListPage" title="Travel &amp; Expenses" class="fira-app-page"
           showNavButton="true" navButtonPress=".onNavBackToLaunchpad">
           <headerContent>
-            <Button text="New Trip Request" type="Emphasized" icon="sap-icon://add" press=".onNewTripPress"/>
+            <Button id="newTripBtn" text="New Trip Request" type="Emphasized" icon="sap-icon://add" press=".onNewTripPress"/>
           </headerContent>
           <subHeader>
             <Bar>
@@ -69,8 +69,8 @@
           <footer>
             <Bar>
               <contentRight>
-                <Button text="Cancel" press=".onNavBack"/>
-                <Button text="Submit Request" type="Emphasized" press=".onSubmitTripRequest" icon="sap-icon://paper-plane"/>
+                <Button id="cancelNewTripBtn" text="Cancel" press=".onNavBack"/>
+                <Button id="submitTripBtn" text="Submit Request" type="Emphasized" press=".onSubmitTripRequest" icon="sap-icon://paper-plane"/>
               </contentRight>
             </Bar>
           </footer>
@@ -117,11 +117,11 @@
                   <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
                     <f:content>
                       <Label text="Departure Time"/>
-                      <TimePicker valueFormat="HH:mm" displayFormat="HH:mm" placeholder="HH:mm"/>
+                      <TimePicker id="newTripDepartureTime" valueFormat="HH:mm" displayFormat="HH:mm" placeholder="HH:mm"/>
                       <Label text="Number of Travelers"/>
-                      <StepInput value="1" min="1" max="20" step="1" width="8rem"/>
+                      <StepInput id="newTripTravelers" value="1" min="1" max="20" step="1" width="8rem"/>
                       <Label text="Preferred Airline"/>
-                      <ComboBox placeholder="Select or type preferred airline...">
+                      <ComboBox id="newTripAirline" placeholder="Select or type preferred airline...">
                         <core:Item key="LH" text="Lufthansa"/>
                         <core:Item key="BA" text="British Airways"/>
                         <core:Item key="AF" text="Air France"/>
@@ -130,10 +130,10 @@
                         <core:Item key="EK" text="Emirates"/>
                       </ComboBox>
                       <Label text="Travel Class"/>
-                      <RadioButtonGroup columns="3">
-                        <RadioButton text="Economy"/>
-                        <RadioButton text="Business"/>
-                        <RadioButton text="First Class"/>
+                      <RadioButtonGroup id="newTripTravelClass" columns="3">
+                        <RadioButton id="newTripClassEconomy" text="Economy"/>
+                        <RadioButton id="newTripClassBusiness" text="Business"/>
+                        <RadioButton id="newTripClassFirst" text="First Class"/>
                       </RadioButtonGroup>
                     </f:content>
                   </f:SimpleForm>
@@ -144,15 +144,15 @@
                   <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
                     <f:content>
                       <Label text="Business Trip"/>
-                      <Switch customTextOn="Yes" customTextOff="No" state="true"/>
+                      <Switch id="newTripBusinessSwitch" customTextOn="Yes" customTextOff="No" state="true"/>
                       <Label text="Hotel Required"/>
-                      <CheckBox text="Include hotel booking in request"/>
+                      <CheckBox id="newTripHotelCheck" text="Include hotel booking in request"/>
                       <Label text="Car Rental Required"/>
-                      <CheckBox text="Include car rental in request"/>
+                      <CheckBox id="newTripCarCheck" text="Include car rental in request"/>
                       <Label text="Flight Required"/>
-                      <CheckBox text="Include flight booking in request"/>
+                      <CheckBox id="newTripFlightCheck" text="Include flight booking in request"/>
                       <Label text="Expense Categories to Pre-Approve"/>
-                      <MultiComboBox placeholder="Select expense categories...">
+                      <MultiComboBox id="newTripExpenseCategories" placeholder="Select expense categories...">
                         <core:Item key="flight" text="Flights"/>
                         <core:Item key="hotel" text="Hotel"/>
                         <core:Item key="meals" text="Meals &amp; Entertainment"/>
@@ -161,7 +161,7 @@
                         <core:Item key="other" text="Other"/>
                       </MultiComboBox>
                       <Label text="Booking References"/>
-                      <MultiInput showValueHelp="false" placeholder="Add booking confirmation numbers as tags..."/>
+                      <MultiInput id="newTripBookingRefs" showValueHelp="false" placeholder="Add booking confirmation numbers as tags..."/>
                     </f:content>
                   </f:SimpleForm>
                 </content>
@@ -171,11 +171,11 @@
                   <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
                     <f:content>
                       <Label text="Per Diem Budget (%)"/>
-                      <Slider min="0" max="100" step="5" showAdvancedTooltip="true" enableTickmarks="true" value="75"/>
+                      <Slider id="newTripPerDiemSlider" min="0" max="100" step="5" showAdvancedTooltip="true" enableTickmarks="true" value="75"/>
                       <Label text="Preferred Hotel Rating"/>
-                      <RatingIndicator maxValue="5" value="3"/>
+                      <RatingIndicator id="newTripHotelRating" maxValue="5" value="3"/>
                       <Label text="Trip Notes"/>
-                      <TextArea rows="3" width="100%" placeholder="Additional notes, visa requirements, or special arrangements..."/>
+                      <TextArea id="newTripNotes" rows="3" width="100%" placeholder="Additional notes, visa requirements, or special arrangements..."/>
                     </f:content>
                   </f:SimpleForm>
                 </content>
@@ -193,8 +193,8 @@
                 <ObjectNumber id="expenseTotalNumber" number="0" unit="EUR" emphasized="true"/>
               </contentLeft>
               <contentRight>
-                <Button text="Save Draft" press=".onSaveDraft"/>
-                <Button text="Submit for Approval" type="Emphasized" press=".onSubmitExpenses" icon="sap-icon://paper-plane"/>
+                <Button id="saveDraftBtn" text="Save Draft" press=".onSaveDraft"/>
+                <Button id="submitExpensesBtn" text="Submit for Approval" type="Emphasized" press=".onSubmitExpenses" icon="sap-icon://paper-plane"/>
               </contentRight>
             </Bar>
           </footer>
@@ -217,7 +217,7 @@
                   <Toolbar>
                     <Title text="Expense Items" level="H5"/>
                     <ToolbarSpacer/>
-                    <Button icon="sap-icon://add" text="Add Expense" press=".onAddExpense"/>
+                    <Button id="addExpenseBtn" icon="sap-icon://add" text="Add Expense" press=".onAddExpense"/>
                   </Toolbar>
                 </headerToolbar>
                 <content>
@@ -259,8 +259,8 @@
           <footer>
             <Bar>
               <contentRight>
-                <Button text="Cancel" press=".onNavBack"/>
-                <Button text="Save Changes" type="Emphasized" press=".onSaveTrip" icon="sap-icon://accept"/>
+                <Button id="cancelEditTripBtn" text="Cancel" press=".onNavBack"/>
+                <Button id="saveTripBtn" text="Save Changes" type="Emphasized" press=".onSaveTrip" icon="sap-icon://accept"/>
               </contentRight>
             </Bar>
           </footer>
@@ -307,11 +307,11 @@
                   <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
                     <f:content>
                       <Label text="Departure Time"/>
-                      <TimePicker valueFormat="HH:mm" displayFormat="HH:mm" placeholder="HH:mm"/>
+                      <TimePicker id="editTripDepartureTime" valueFormat="HH:mm" displayFormat="HH:mm" placeholder="HH:mm"/>
                       <Label text="Number of Travelers"/>
-                      <StepInput value="1" min="1" max="20" step="1" width="8rem"/>
+                      <StepInput id="editTripTravelers" value="1" min="1" max="20" step="1" width="8rem"/>
                       <Label text="Preferred Airline"/>
-                      <ComboBox placeholder="Select or type preferred airline...">
+                      <ComboBox id="editTripAirline" placeholder="Select or type preferred airline...">
                         <core:Item key="LH" text="Lufthansa"/>
                         <core:Item key="BA" text="British Airways"/>
                         <core:Item key="AF" text="Air France"/>
@@ -320,10 +320,10 @@
                         <core:Item key="EK" text="Emirates"/>
                       </ComboBox>
                       <Label text="Travel Class"/>
-                      <RadioButtonGroup columns="3">
-                        <RadioButton text="Economy"/>
-                        <RadioButton text="Business"/>
-                        <RadioButton text="First Class"/>
+                      <RadioButtonGroup id="editTripTravelClass" columns="3">
+                        <RadioButton id="editTripClassEconomy" text="Economy"/>
+                        <RadioButton id="editTripClassBusiness" text="Business"/>
+                        <RadioButton id="editTripClassFirst" text="First Class"/>
                       </RadioButtonGroup>
                     </f:content>
                   </f:SimpleForm>
@@ -334,15 +334,15 @@
                   <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
                     <f:content>
                       <Label text="Business Trip"/>
-                      <Switch customTextOn="Yes" customTextOff="No" state="true"/>
+                      <Switch id="editTripBusinessSwitch" customTextOn="Yes" customTextOff="No" state="true"/>
                       <Label text="Hotel Required"/>
-                      <CheckBox text="Include hotel booking in request"/>
+                      <CheckBox id="editTripHotelCheck" text="Include hotel booking in request"/>
                       <Label text="Car Rental Required"/>
-                      <CheckBox text="Include car rental in request"/>
+                      <CheckBox id="editTripCarCheck" text="Include car rental in request"/>
                       <Label text="Flight Required"/>
-                      <CheckBox text="Include flight booking in request"/>
+                      <CheckBox id="editTripFlightCheck" text="Include flight booking in request"/>
                       <Label text="Expense Categories to Pre-Approve"/>
-                      <MultiComboBox placeholder="Select expense categories...">
+                      <MultiComboBox id="editTripExpenseCategories" placeholder="Select expense categories...">
                         <core:Item key="flight" text="Flights"/>
                         <core:Item key="hotel" text="Hotel"/>
                         <core:Item key="meals" text="Meals &amp; Entertainment"/>
@@ -351,7 +351,7 @@
                         <core:Item key="other" text="Other"/>
                       </MultiComboBox>
                       <Label text="Booking References"/>
-                      <MultiInput showValueHelp="false" placeholder="Add booking confirmation numbers as tags..."/>
+                      <MultiInput id="editTripBookingRefs" showValueHelp="false" placeholder="Add booking confirmation numbers as tags..."/>
                     </f:content>
                   </f:SimpleForm>
                 </content>
@@ -361,11 +361,11 @@
                   <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
                     <f:content>
                       <Label text="Per Diem Budget (%)"/>
-                      <Slider min="0" max="100" step="5" showAdvancedTooltip="true" enableTickmarks="true" value="75"/>
+                      <Slider id="editTripPerDiemSlider" min="0" max="100" step="5" showAdvancedTooltip="true" enableTickmarks="true" value="75"/>
                       <Label text="Preferred Hotel Rating"/>
-                      <RatingIndicator maxValue="5" value="3"/>
+                      <RatingIndicator id="editTripHotelRating" maxValue="5" value="3"/>
                       <Label text="Trip Notes"/>
-                      <TextArea rows="3" width="100%" placeholder="Additional notes, visa requirements, or special arrangements..."/>
+                      <TextArea id="editTripNotes" rows="3" width="100%" placeholder="Additional notes, visa requirements, or special arrangements..."/>
                     </f:content>
                   </f:SimpleForm>
                 </content>

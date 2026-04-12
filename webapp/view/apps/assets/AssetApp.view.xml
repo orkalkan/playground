@@ -15,7 +15,7 @@
         <Page id="assetListPage" title="Asset Management" class="fira-app-page"
           showNavButton="true" navButtonPress=".onNavBackToLaunchpad">
           <headerContent>
-            <Button text="Register Asset" type="Emphasized" icon="sap-icon://add" press=".onRegisterPress"/>
+            <Button id="registerAssetBtn" text="Register Asset" type="Emphasized" icon="sap-icon://add" press=".onRegisterPress"/>
           </headerContent>
           <subHeader>
             <Bar>
@@ -71,8 +71,8 @@
         <Page id="assetDetailPage" title="Asset Detail" class="fira-app-page"
           showNavButton="true" navButtonPress=".onNavBack">
           <headerContent>
-            <Button text="Edit" icon="sap-icon://edit" press=".onEditSelectedAssetPress"/>
-            <Button text="Maintenance Request" icon="sap-icon://wrench" press=".onMaintenanceRequestPress"/>
+            <Button id="editSelectedAssetBtn" text="Edit" icon="sap-icon://edit" press=".onEditSelectedAssetPress"/>
+            <Button id="maintenanceRequestBtn" text="Maintenance Request" icon="sap-icon://wrench" press=".onMaintenanceRequestPress"/>
           </headerContent>
           <content>
             <uxap:ObjectPageLayout showTitleInHeaderContent="false" alwaysShowContentHeader="false" headerContentPinnable="false" isChildPage="false">
@@ -155,8 +155,8 @@
           <footer>
             <Bar>
               <contentRight>
-                <Button text="Cancel" press=".onNavBack"/>
-                <Button text="Save Asset" type="Emphasized" press=".onSaveAsset" icon="sap-icon://accept"/>
+                <Button id="cancelAssetBtn" text="Cancel" press=".onNavBack"/>
+                <Button id="saveAssetBtn" text="Save Asset" type="Emphasized" press=".onSaveAsset" icon="sap-icon://accept"/>
               </contentRight>
             </Bar>
           </footer>
@@ -207,11 +207,11 @@
                   <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
                     <f:content>
                       <Label text="Last Maintenance Time"/>
-                      <TimePicker valueFormat="HH:mm" displayFormat="HH:mm" placeholder="HH:mm"/>
+                      <TimePicker id="assetMaintenanceTime" valueFormat="HH:mm" displayFormat="HH:mm" placeholder="HH:mm"/>
                       <Label text="Quantity / Units"/>
-                      <StepInput value="1" min="1" max="1000" step="1" width="8rem"/>
+                      <StepInput id="assetQuantity" value="1" min="1" max="1000" step="1" width="8rem"/>
                       <Label text="Manufacturer"/>
-                      <ComboBox placeholder="Select or type manufacturer...">
+                      <ComboBox id="assetManufacturer" placeholder="Select or type manufacturer...">
                         <core:Item key="hp" text="HP"/>
                         <core:Item key="dell" text="Dell"/>
                         <core:Item key="lenovo" text="Lenovo"/>
@@ -221,10 +221,10 @@
                         <core:Item key="other" text="Other"/>
                       </ComboBox>
                       <Label text="Depreciation Method"/>
-                      <RadioButtonGroup columns="3">
-                        <RadioButton text="Linear"/>
-                        <RadioButton text="Declining"/>
-                        <RadioButton text="Units of Production"/>
+                      <RadioButtonGroup id="assetDeprecMethodGroup" columns="3">
+                        <RadioButton id="assetDeprecLinear" text="Linear"/>
+                        <RadioButton id="assetDeprecDeclining" text="Declining"/>
+                        <RadioButton id="assetDeprecUnits" text="Units of Production"/>
                       </RadioButtonGroup>
                     </f:content>
                   </f:SimpleForm>
@@ -235,15 +235,15 @@
                   <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
                     <f:content>
                       <Label text="Under Warranty"/>
-                      <Switch customTextOn="Yes" customTextOff="No"/>
+                      <Switch id="assetWarrantySwitch" customTextOn="Yes" customTextOff="No"/>
                       <Label text="Leased Asset"/>
-                      <CheckBox text="Asset is leased (not owned)"/>
+                      <CheckBox id="assetLeasedCheck" text="Asset is leased (not owned)"/>
                       <Label text="Critical Asset"/>
-                      <CheckBox text="Asset is business-critical — flag for priority maintenance"/>
+                      <CheckBox id="assetCriticalCheck" text="Asset is business-critical — flag for priority maintenance"/>
                       <Label text="Insurance Required"/>
-                      <CheckBox text="Asset must be covered by insurance policy"/>
+                      <CheckBox id="assetInsuranceCheck" text="Asset must be covered by insurance policy"/>
                       <Label text="Linked Cost Centers"/>
-                      <MultiComboBox placeholder="Select linked cost centers...">
+                      <MultiComboBox id="assetLinkedCostCenters" placeholder="Select linked cost centers...">
                         <core:Item key="CC-1001" text="CC-1001 — Sales Germany"/>
                         <core:Item key="CC-1002" text="CC-1002 — IT Department"/>
                         <core:Item key="CC-1003" text="CC-1003 — R&amp;D"/>
@@ -251,7 +251,7 @@
                         <core:Item key="CC-1005" text="CC-1005 — Logistics"/>
                       </MultiComboBox>
                       <Label text="License / Certificate Numbers"/>
-                      <MultiInput showValueHelp="false" placeholder="Add license or certificate numbers as tags..."/>
+                      <MultiInput id="assetLicenseNumbers" showValueHelp="false" placeholder="Add license or certificate numbers as tags..."/>
                     </f:content>
                   </f:SimpleForm>
                 </content>
@@ -261,11 +261,11 @@
                   <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
                     <f:content>
                       <Label text="Condition Score (%)"/>
-                      <Slider min="0" max="100" step="5" showAdvancedTooltip="true" enableTickmarks="true" value="80"/>
+                      <Slider id="assetConditionSlider" min="0" max="100" step="5" showAdvancedTooltip="true" enableTickmarks="true" value="80"/>
                       <Label text="Asset Criticality"/>
-                      <RatingIndicator maxValue="5" value="3"/>
+                      <RatingIndicator id="assetCriticalityRating" maxValue="5" value="3"/>
                       <Label text="Notes"/>
-                      <TextArea rows="3" width="100%" placeholder="Additional notes about the asset condition, history, or special requirements..."/>
+                      <TextArea id="assetNotes" rows="3" width="100%" placeholder="Additional notes about the asset condition, history, or special requirements..."/>
                     </f:content>
                   </f:SimpleForm>
                 </content>
@@ -280,8 +280,8 @@
           <footer>
             <Bar>
               <contentRight>
-                <Button text="Cancel" press=".onNavBack"/>
-                <Button text="Submit Request" type="Emphasized" press=".onSubmitMaintenance" icon="sap-icon://paper-plane"/>
+                <Button id="cancelMaintenanceBtn" text="Cancel" press=".onNavBack"/>
+                <Button id="submitMaintenanceBtn" text="Submit Request" type="Emphasized" press=".onSubmitMaintenance" icon="sap-icon://paper-plane"/>
               </contentRight>
             </Bar>
           </footer>
@@ -332,11 +332,11 @@
                   <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
                     <f:content>
                       <Label text="Last Maintenance Time"/>
-                      <TimePicker valueFormat="HH:mm" displayFormat="HH:mm" placeholder="HH:mm"/>
+                      <TimePicker id="maintenanceLastTime" valueFormat="HH:mm" displayFormat="HH:mm" placeholder="HH:mm"/>
                       <Label text="Quantity / Units Affected"/>
-                      <StepInput value="1" min="1" max="100" step="1" width="8rem"/>
+                      <StepInput id="maintenanceUnitsAffected" value="1" min="1" max="100" step="1" width="8rem"/>
                       <Label text="Manufacturer"/>
-                      <ComboBox placeholder="Select or type manufacturer...">
+                      <ComboBox id="maintenanceManufacturer" placeholder="Select or type manufacturer...">
                         <core:Item key="hp" text="HP"/>
                         <core:Item key="dell" text="Dell"/>
                         <core:Item key="lenovo" text="Lenovo"/>
@@ -345,10 +345,10 @@
                         <core:Item key="other" text="Other"/>
                       </ComboBox>
                       <Label text="Depreciation Method"/>
-                      <RadioButtonGroup columns="3">
-                        <RadioButton text="Linear"/>
-                        <RadioButton text="Declining"/>
-                        <RadioButton text="Units of Production"/>
+                      <RadioButtonGroup id="maintenanceDeprecMethodGroup" columns="3">
+                        <RadioButton id="maintenanceDeprecLinear" text="Linear"/>
+                        <RadioButton id="maintenanceDeprecDeclining" text="Declining"/>
+                        <RadioButton id="maintenanceDeprecUnits" text="Units of Production"/>
                       </RadioButtonGroup>
                     </f:content>
                   </f:SimpleForm>
@@ -359,15 +359,15 @@
                   <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
                     <f:content>
                       <Label text="Under Warranty"/>
-                      <Switch customTextOn="Yes" customTextOff="No"/>
+                      <Switch id="maintenanceWarrantySwitch" customTextOn="Yes" customTextOff="No"/>
                       <Label text="Leased Asset"/>
-                      <CheckBox text="Asset is leased — notify leasing company"/>
+                      <CheckBox id="maintenanceLeasedCheck" text="Asset is leased — notify leasing company"/>
                       <Label text="Critical Asset"/>
-                      <CheckBox text="Asset is business-critical — expedite repair"/>
+                      <CheckBox id="maintenanceCriticalCheck" text="Asset is business-critical — expedite repair"/>
                       <Label text="Insurance Required"/>
-                      <CheckBox text="Notify insurance provider about maintenance"/>
+                      <CheckBox id="maintenanceInsuranceCheck" text="Notify insurance provider about maintenance"/>
                       <Label text="Linked Cost Centers"/>
-                      <MultiComboBox placeholder="Select cost centers to charge...">
+                      <MultiComboBox id="maintenanceLinkedCostCenters" placeholder="Select cost centers to charge...">
                         <core:Item key="CC-1001" text="CC-1001 — Sales Germany"/>
                         <core:Item key="CC-1002" text="CC-1002 — IT Department"/>
                         <core:Item key="CC-1003" text="CC-1003 — R&amp;D"/>
@@ -375,7 +375,7 @@
                         <core:Item key="CC-1005" text="CC-1005 — Logistics"/>
                       </MultiComboBox>
                       <Label text="License / Certificate Numbers"/>
-                      <MultiInput showValueHelp="false" placeholder="Add service certificate numbers as tags..."/>
+                      <MultiInput id="maintenanceLicenseNumbers" showValueHelp="false" placeholder="Add service certificate numbers as tags..."/>
                     </f:content>
                   </f:SimpleForm>
                 </content>
@@ -385,9 +385,9 @@
                   <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
                     <f:content>
                       <Label text="Condition Score (%)"/>
-                      <Slider min="0" max="100" step="5" showAdvancedTooltip="true" enableTickmarks="true" value="60"/>
+                      <Slider id="maintenanceConditionSlider" min="0" max="100" step="5" showAdvancedTooltip="true" enableTickmarks="true" value="60"/>
                       <Label text="Asset Criticality"/>
-                      <RatingIndicator maxValue="5" value="3"/>
+                      <RatingIndicator id="maintenanceCriticalityRating" maxValue="5" value="3"/>
                     </f:content>
                   </f:SimpleForm>
                 </content>

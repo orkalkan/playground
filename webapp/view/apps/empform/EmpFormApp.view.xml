@@ -1,0 +1,234 @@
+<mvc:View
+  controllerName="ui5.fira.demos.controller.apps.empform.EmpFormApp"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:core="sap.ui.core"
+  xmlns:f="sap.ui.layout.form"
+  displayBlock="true">
+
+  <Page showHeader="false" enableScrolling="true" class="sapUiNoContentPadding">
+    <content>
+      <Page title="New Employee Onboarding" class="fira-app-page"
+        showNavButton="true" navButtonPress=".onNavBackToLaunchpad">
+        <content>
+          <VBox class="sapUiMediumMargin">
+
+            <Wizard id="onboardingWizard" validate="true" complete=".onWizardComplete" class="sapUiSmallMarginBottom">
+
+              <!-- Step 1: Personal Info -->
+              <WizardStep id="step1Personal" title="Personal Info" icon="sap-icon://person-placeholder"
+                validated="{empform>/step1Valid}">
+                <Panel headerText="Personal Information" expandable="false" class="sapUiSmallMarginBottom">
+                  <content>
+                    <f:SimpleForm editable="true" layout="ResponsiveGridLayout"
+                      labelSpanL="4" labelSpanM="4" columnsL="2" columnsM="1">
+                      <f:content>
+
+                        <Label text="First Name" required="true"/>
+                        <Input id="firstName" placeholder="Enter first name..."
+                          liveChange=".onStep1Change" maxLength="50"/>
+
+                        <Label text="Last Name" required="true"/>
+                        <Input id="lastName" placeholder="Enter last name..."
+                          liveChange=".onStep1Change" maxLength="50"/>
+
+                        <Label text="Date of Birth"/>
+                        <DatePicker id="dateOfBirth" displayFormat="dd.MM.yyyy" valueFormat="yyyy-MM-dd"
+                          placeholder="DD.MM.YYYY" change=".onStep1Change"/>
+
+                        <Label text="Salutation"/>
+                        <Select id="salutation">
+                          <core:ListItem key="mr"  text="Mr."/>
+                          <core:ListItem key="ms"  text="Ms."/>
+                          <core:ListItem key="mx"  text="Mx."/>
+                          <core:ListItem key="dr"  text="Dr."/>
+                        </Select>
+
+                        <Label text="Nationality"/>
+                        <Input id="nationalityInput" placeholder="Type or use value help..."
+                          showSuggestion="true" showValueHelp="true"
+                          suggest=".onNationalitySuggest"
+                          valueHelpRequest=".onNationalityValueHelp"
+                          liveChange=".onStep1Change">
+                          <suggestionItems>
+                            <core:Item text="German"/>
+                            <core:Item text="Turkish"/>
+                            <core:Item text="French"/>
+                            <core:Item text="British"/>
+                            <core:Item text="American"/>
+                            <core:Item text="Dutch"/>
+                            <core:Item text="Spanish"/>
+                            <core:Item text="Italian"/>
+                            <core:Item text="Polish"/>
+                            <core:Item text="Portuguese"/>
+                            <core:Item text="Swedish"/>
+                            <core:Item text="Norwegian"/>
+                          </suggestionItems>
+                        </Input>
+
+                        <Label text="Email" required="true"/>
+                        <Input id="email" type="Email" placeholder="name@company.com"
+                          liveChange=".onStep1Change" maxLength="100"/>
+
+                        <Label text="Phone"/>
+                        <Input id="phone" type="Tel" placeholder="+49 000 00000000" maxLength="30"/>
+
+                      </f:content>
+                    </f:SimpleForm>
+                  </content>
+                </Panel>
+              </WizardStep>
+
+              <!-- Step 2: Position Details -->
+              <WizardStep id="step2Position" title="Position Details" icon="sap-icon://org-chart"
+                validated="{empform>/step2Valid}">
+                <Panel headerText="Position &amp; Employment" expandable="false" class="sapUiSmallMarginBottom">
+                  <content>
+                    <f:SimpleForm editable="true" layout="ResponsiveGridLayout"
+                      labelSpanL="4" labelSpanM="4" columnsL="2" columnsM="1">
+                      <f:content>
+
+                        <Label text="Department" required="true"/>
+                        <ComboBox id="department" placeholder="Type or select department..."
+                          selectionChange=".onDepartmentChange" change=".onStep2Change">
+                          <core:Item key="Engineering"  text="Engineering"/>
+                          <core:Item key="Marketing"    text="Marketing"/>
+                          <core:Item key="Finance"      text="Finance"/>
+                          <core:Item key="HR"           text="HR"/>
+                          <core:Item key="Operations"   text="Operations"/>
+                          <core:Item key="Legal"        text="Legal"/>
+                          <core:Item key="IT"           text="IT"/>
+                          <core:Item key="Sales"        text="Sales"/>
+                        </ComboBox>
+
+                        <Label text="Employment Type" required="true"/>
+                        <Select id="employmentType" change=".onStep2Change">
+                          <core:ListItem key="FullTime"    text="Full-Time"/>
+                          <core:ListItem key="PartTime"    text="Part-Time"/>
+                          <core:ListItem key="Contract"    text="Contract"/>
+                          <core:ListItem key="Internship"  text="Internship"/>
+                        </Select>
+
+                        <Label text="Job Title" required="true"/>
+                        <Input id="jobTitle" placeholder="Type or select job title..."
+                          showSuggestion="true" liveChange=".onStep2Change"
+                          suggest=".onJobTitleSuggest" maxLength="80"/>
+
+                        <Label text="Start Date" required="true"/>
+                        <DatePicker id="startDate" displayFormat="dd.MM.yyyy" valueFormat="yyyy-MM-dd"
+                          placeholder="DD.MM.YYYY" change=".onStep2Change"/>
+
+                        <Label text="Office Location" required="true"/>
+                        <Input id="officeLocation" placeholder="Select office location..."
+                          showValueHelp="true" valueHelpRequest=".onOfficeValueHelp"
+                          liveChange=".onStep2Change" maxLength="60"/>
+
+                        <Label text="Seniority Level" required="true"/>
+                        <Select id="seniorityLevel" change=".onStep2Change">
+                          <core:ListItem key="Junior"    text="Junior"/>
+                          <core:ListItem key="Mid"       text="Mid"/>
+                          <core:ListItem key="Senior"    text="Senior"/>
+                          <core:ListItem key="Lead"      text="Lead"/>
+                          <core:ListItem key="Principal" text="Principal"/>
+                        </Select>
+
+                        <Label text="Required Skills"/>
+                        <MultiComboBox id="requiredSkills" placeholder="Select skills...">
+                          <core:Item key="java"       text="Java"/>
+                          <core:Item key="python"     text="Python"/>
+                          <core:Item key="abap"       text="SAP ABAP"/>
+                          <core:Item key="ui5"        text="UI5"/>
+                          <core:Item key="react"      text="React"/>
+                          <core:Item key="sql"        text="SQL"/>
+                          <core:Item key="excel"      text="Excel"/>
+                          <core:Item key="leadership" text="Leadership"/>
+                          <core:Item key="agile"      text="Agile"/>
+                          <core:Item key="docker"     text="Docker"/>
+                          <core:Item key="kubernetes" text="Kubernetes"/>
+                          <core:Item key="typescript" text="TypeScript"/>
+                        </MultiComboBox>
+
+                        <Label text="Annual Salary (EUR)" required="true"/>
+                        <StepInput id="annualSalary" value="50000" min="1000" max="500000"
+                          step="1000" width="12rem" displayValuePrecision="0"
+                          change=".onStep2Change"/>
+
+                      </f:content>
+                    </f:SimpleForm>
+                  </content>
+                </Panel>
+              </WizardStep>
+
+              <!-- Step 3: Review & Submit -->
+              <WizardStep id="step3Review" title="Review &amp; Submit" icon="sap-icon://complete">
+                <Panel headerText="Review — Personal Information" expandable="false" class="sapUiSmallMarginBottom">
+                  <content>
+                    <f:SimpleForm layout="ResponsiveGridLayout"
+                      labelSpanL="4" labelSpanM="4" columnsL="2" columnsM="1">
+                      <f:content>
+                        <Label text="First Name"/>  <Text text="{empform>/firstName}"/>
+                        <Label text="Last Name"/>   <Text text="{empform>/lastName}"/>
+                        <Label text="Date of Birth"/><Text text="{empform>/dateOfBirth}"/>
+                        <Label text="Salutation"/>  <Text text="{empform>/salutation}"/>
+                        <Label text="Nationality"/> <Text text="{empform>/nationality}"/>
+                        <Label text="Email"/>       <Text text="{empform>/email}"/>
+                        <Label text="Phone"/>       <Text text="{empform>/phone}"/>
+                      </f:content>
+                    </f:SimpleForm>
+                  </content>
+                </Panel>
+                <Panel headerText="Review — Position Details" expandable="false" class="sapUiSmallMarginBottom">
+                  <content>
+                    <f:SimpleForm layout="ResponsiveGridLayout"
+                      labelSpanL="4" labelSpanM="4" columnsL="2" columnsM="1">
+                      <f:content>
+                        <Label text="Department"/>       <Text text="{empform>/department}"/>
+                        <Label text="Employment Type"/>  <Text text="{empform>/employmentType}"/>
+                        <Label text="Job Title"/>        <Text text="{empform>/jobTitle}"/>
+                        <Label text="Start Date"/>       <Text text="{empform>/startDate}"/>
+                        <Label text="Office Location"/>  <Text text="{empform>/officeLocation}"/>
+                        <Label text="Seniority Level"/>  <Text text="{empform>/seniorityLevel}"/>
+                        <Label text="Required Skills"/>  <Text text="{empform>/requiredSkillsText}"/>
+                        <Label text="Annual Salary"/>    <Text text="{empform>/annualSalaryText}"/>
+                      </f:content>
+                    </f:SimpleForm>
+                  </content>
+                </Panel>
+                <Panel headerText="Confirmation" expandable="false">
+                  <content>
+                    <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginTopBottom">
+                      <CheckBox id="confirmCheck" text="I confirm that all information provided is accurate and complete."
+                        select=".onConfirmCheck"/>
+                      <Button id="submitButton" text="Submit Onboarding Request" type="Emphasized"
+                        icon="sap-icon://paper-plane" enabled="{empform>/submitEnabled}"
+                        press=".onSubmit" class="sapUiSmallMarginTop"/>
+                    </VBox>
+                  </content>
+                </Panel>
+              </WizardStep>
+
+            </Wizard>
+
+          </VBox>
+        </content>
+      </Page>
+    </content>
+
+    <!-- Nationality SelectDialog -->
+    <dependents>
+      <SelectDialog id="nationalityDialog" title="Select Nationality"
+        search=".onNationalitySearch" confirm=".onNationalityConfirm" cancel=".onSelectDialogCancel"
+        items="{empform>/nationalities}">
+        <StandardListItem title="{empform>name}" type="Active"/>
+      </SelectDialog>
+
+      <SelectDialog id="officeDialog" title="Select Office Location"
+        search=".onOfficeSearch" confirm=".onOfficeConfirm" cancel=".onSelectDialogCancel"
+        items="{empform>/offices}">
+        <StandardListItem title="{empform>name}" description="{empform>address}" type="Active"/>
+      </SelectDialog>
+    </dependents>
+
+  </Page>
+
+</mvc:View>

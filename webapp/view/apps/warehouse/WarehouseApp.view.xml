@@ -17,21 +17,21 @@
             <VBox class="sapUiMediumMargin">
 
               <HBox wrap="Wrap" class="sapUiSmallMarginBottom">
-                <GenericTile header="Goods Receipts" subheader="Today" press=".onGoodsReceiptPress" class="sapUiSmallMarginEnd sapUiSmallMarginBottom">
+                <GenericTile id="grDashTile" header="Goods Receipts" subheader="Today" press=".onGoodsReceiptPress" class="sapUiSmallMarginEnd sapUiSmallMarginBottom">
                   <tileContent>
                     <TileContent footer="3 pending putaway">
                       <content><NumericContent value="8" indicator="Up" valueColor="Good" withMargin="false"/></content>
                     </TileContent>
                   </tileContent>
                 </GenericTile>
-                <GenericTile header="Open Pick Lists" subheader="In progress" press=".onPickListPress" class="sapUiSmallMarginEnd sapUiSmallMarginBottom">
+                <GenericTile id="pickDashTile" header="Open Pick Lists" subheader="In progress" press=".onPickListPress" class="sapUiSmallMarginEnd sapUiSmallMarginBottom">
                   <tileContent>
                     <TileContent footer="2 delayed · 1 priority">
                       <content><NumericContent value="6" indicator="None" valueColor="Critical" withMargin="false"/></content>
                     </TileContent>
                   </tileContent>
                 </GenericTile>
-                <GenericTile header="Outbound Shipments" subheader="Ready to ship" press=".onShipmentPress" class="sapUiSmallMarginBottom">
+                <GenericTile id="shipDashTile" header="Outbound Shipments" subheader="Ready to ship" press=".onShipmentPress" class="sapUiSmallMarginBottom">
                   <tileContent>
                     <TileContent footer="4 pending confirmation">
                       <content><NumericContent value="4" indicator="None" valueColor="None" withMargin="false"/></content>
@@ -80,8 +80,8 @@
           <footer>
             <Bar>
               <contentRight>
-                <Button text="Cancel" press=".onNavBack"/>
-                <Button text="Post GR" type="Emphasized" press=".onPostGR" icon="sap-icon://accept"/>
+                <Button id="cancelGRBtn" text="Cancel" press=".onNavBack"/>
+                <Button id="postGRBtn" text="Post GR" type="Emphasized" press=".onPostGR" icon="sap-icon://accept"/>
               </contentRight>
             </Bar>
           </footer>
@@ -99,7 +99,7 @@
                       </Select>
                       <Label text="Purchase Order"/>
                       <Input id="grPONumber" placeholder="Enter PO number..." value="PO-2025-0150"/>
-                      <Button text="Load Items" press=".onLoadPOItems" icon="sap-icon://download"/>
+                      <Button id="loadPOItemsBtn" text="Load Items" press=".onLoadPOItems" icon="sap-icon://download"/>
                       <Label text="Delivery Note No."/>
                       <Input id="grDeliveryNote" placeholder="Vendor delivery note number"/>
                       <Label text="Bill of Lading"/>
@@ -144,11 +144,11 @@
                   <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
                     <f:content>
                       <Label text="Delivery Time"/>
-                      <TimePicker valueFormat="HH:mm" displayFormat="HH:mm" placeholder="HH:mm"/>
+                      <TimePicker id="grDeliveryTime" valueFormat="HH:mm" displayFormat="HH:mm" placeholder="HH:mm"/>
                       <Label text="Number of Pallets"/>
-                      <StepInput value="1" min="1" max="200" step="1" width="8rem"/>
+                      <StepInput id="grPallets" value="1" min="1" max="200" step="1" width="8rem"/>
                       <Label text="Carrier Name"/>
-                      <ComboBox placeholder="Select or type carrier...">
+                      <ComboBox id="grCarrier" placeholder="Select or type carrier...">
                         <core:Item key="dhl" text="DHL Freight"/>
                         <core:Item key="db" text="DB Schenker"/>
                         <core:Item key="dpd" text="DPD"/>
@@ -157,10 +157,10 @@
                         <core:Item key="other" text="Other"/>
                       </ComboBox>
                       <Label text="Delivery Condition"/>
-                      <RadioButtonGroup columns="3">
-                        <RadioButton text="Good"/>
-                        <RadioButton text="Damaged"/>
-                        <RadioButton text="Partial"/>
+                      <RadioButtonGroup id="grConditionGroup" columns="3">
+                        <RadioButton id="grConditionGood" text="Good"/>
+                        <RadioButton id="grConditionDamaged" text="Damaged"/>
+                        <RadioButton id="grConditionPartial" text="Partial"/>
                       </RadioButtonGroup>
                     </f:content>
                   </f:SimpleForm>
@@ -171,22 +171,22 @@
                   <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
                     <f:content>
                       <Label text="Quality Inspection Required"/>
-                      <Switch customTextOn="Yes" customTextOff="No"/>
+                      <Switch id="grQualitySwitch" customTextOn="Yes" customTextOff="No"/>
                       <Label text="Partial Delivery"/>
-                      <CheckBox text="This is a partial delivery against the PO"/>
+                      <CheckBox id="grPartialCheck" text="This is a partial delivery against the PO"/>
                       <Label text="Overdelivery Accepted"/>
-                      <CheckBox text="Accept quantities above PO amount"/>
+                      <CheckBox id="grOverdeliveryCheck" text="Accept quantities above PO amount"/>
                       <Label text="Hazardous Material"/>
-                      <CheckBox text="Delivery contains hazardous materials"/>
+                      <CheckBox id="grHazardousCheck" text="Delivery contains hazardous materials"/>
                       <Label text="Notify Departments"/>
-                      <MultiComboBox placeholder="Select departments to notify...">
+                      <MultiComboBox id="grNotifyDepts" placeholder="Select departments to notify...">
                         <core:Item key="proc" text="Procurement"/>
                         <core:Item key="qual" text="Quality"/>
                         <core:Item key="prod" text="Production"/>
                         <core:Item key="fin" text="Finance"/>
                       </MultiComboBox>
                       <Label text="Serial Numbers"/>
-                      <MultiInput showValueHelp="false" placeholder="Add serial numbers as tags..."/>
+                      <MultiInput id="grSerialNumbers" showValueHelp="false" placeholder="Add serial numbers as tags..."/>
                     </f:content>
                   </f:SimpleForm>
                 </content>
@@ -196,11 +196,11 @@
                   <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
                     <f:content>
                       <Label text="Acceptance Rate (%)"/>
-                      <Slider min="0" max="100" step="5" showAdvancedTooltip="true" enableTickmarks="true" value="100"/>
+                      <Slider id="grAcceptanceSlider" min="0" max="100" step="5" showAdvancedTooltip="true" enableTickmarks="true" value="100"/>
                       <Label text="Delivery Quality Rating"/>
-                      <RatingIndicator maxValue="5" value="4"/>
+                      <RatingIndicator id="grDeliveryRating" maxValue="5" value="4"/>
                       <Label text="GR Notes"/>
-                      <TextArea rows="3" width="100%" placeholder="Additional notes about the goods receipt..."/>
+                      <TextArea id="grNotes" rows="3" width="100%" placeholder="Additional notes about the goods receipt..."/>
                     </f:content>
                   </f:SimpleForm>
                 </content>
@@ -213,7 +213,7 @@
         <Page id="warehousePickPage" title="Pick Lists" class="fira-app-page"
           showNavButton="true" navButtonPress=".onNavBack">
           <headerContent>
-            <Button text="New Pick List" type="Emphasized" icon="sap-icon://add" press=".onNewPickListPress"/>
+            <Button id="newPickListBtn" text="New Pick List" type="Emphasized" icon="sap-icon://add" press=".onNewPickListPress"/>
           </headerContent>
           <content>
             <List id="pickList" items="{warehouse>/pickLists}" noDataText="No active pick lists" mode="None">
@@ -247,8 +247,8 @@
           <footer>
             <Bar>
               <contentRight>
-                <Button text="Cancel" press=".onNavBack"/>
-                <Button text="Confirm &amp; Post GI" type="Emphasized" press=".onConfirmShipment" icon="sap-icon://paper-plane"/>
+                <Button id="cancelShipBtn" text="Cancel" press=".onNavBack"/>
+                <Button id="confirmShipBtn" text="Confirm &amp; Post GI" type="Emphasized" press=".onConfirmShipment" icon="sap-icon://paper-plane"/>
               </contentRight>
             </Bar>
           </footer>
@@ -283,16 +283,16 @@
                   </Table>
                 </content>
               </Panel>
-              <Panel headerText="Shipment Details" class="sapUiSmallMarginTop" expandable="true">
+              <Panel headerText="Shipment Details" class="sapUiSmallMarginTop" expandable="true" expanded="true">
                 <content>
                   <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
                     <f:content>
                       <Label text="Carrier Reference"/>
                       <Input id="shipCarrierRef" placeholder="Carrier booking / tracking number"/>
                       <Label text="Actual Ship Date"/>
-                      <DatePicker valueFormat="yyyy-MM-dd" displayFormat="dd.MM.yyyy"/>
+                      <DatePicker id="shipActualDate" valueFormat="yyyy-MM-dd" displayFormat="dd.MM.yyyy"/>
                       <Label text="Shipping Notes"/>
-                      <TextArea rows="2" width="100%" placeholder="Special handling instructions, notes for carrier..."/>
+                      <TextArea id="shipNotes" rows="2" width="100%" placeholder="Special handling instructions, notes for carrier..."/>
                     </f:content>
                   </f:SimpleForm>
                 </content>

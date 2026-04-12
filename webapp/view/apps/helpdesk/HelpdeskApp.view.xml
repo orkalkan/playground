@@ -14,7 +14,7 @@
         <Page id="ticketListPage" title="IT Helpdesk" class="fira-app-page"
           showNavButton="true" navButtonPress=".onNavBackToLaunchpad">
           <headerContent>
-            <Button text="New Ticket" type="Emphasized" icon="sap-icon://add" press=".onNewTicketPress"/>
+            <Button id="newTicketBtn" text="New Ticket" type="Emphasized" icon="sap-icon://add" press=".onNewTicketPress"/>
           </headerContent>
           <subHeader>
             <Bar>
@@ -63,8 +63,8 @@
           <footer>
             <Bar>
               <contentRight>
-                <Button text="Cancel" press=".onNavBack"/>
-                <Button text="Submit Ticket" type="Emphasized" press=".onSubmitTicket" icon="sap-icon://paper-plane"/>
+                <Button id="cancelNewTicketBtn" text="Cancel" press=".onNavBack"/>
+                <Button id="submitTicketBtn" text="Submit Ticket" type="Emphasized" press=".onSubmitTicket" icon="sap-icon://paper-plane"/>
               </contentRight>
             </Bar>
           </footer>
@@ -108,11 +108,11 @@
                   <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
                     <f:content>
                       <Label text="Incident Time (when it started)"/>
-                      <TimePicker valueFormat="HH:mm" displayFormat="HH:mm" placeholder="HH:mm"/>
+                      <TimePicker id="newTicketIncidentTime" valueFormat="HH:mm" displayFormat="HH:mm" placeholder="HH:mm"/>
                       <Label text="Number of Users Affected"/>
-                      <StepInput value="1" min="1" max="500" step="1" width="8rem"/>
+                      <StepInput id="newTicketUsersAffected" value="1" min="1" max="500" step="1" width="8rem"/>
                       <Label text="Location / Building"/>
-                      <ComboBox placeholder="Select or type location...">
+                      <ComboBox id="newTicketLocation" placeholder="Select or type location...">
                         <core:Item key="HQ-F1" text="HQ · Floor 1"/>
                         <core:Item key="HQ-F2" text="HQ · Floor 2"/>
                         <core:Item key="WH" text="Warehouse"/>
@@ -120,10 +120,10 @@
                         <core:Item key="REMOTE" text="Remote / Home Office"/>
                       </ComboBox>
                       <Label text="Contact Preference"/>
-                      <RadioButtonGroup columns="3">
-                        <RadioButton text="Email"/>
-                        <RadioButton text="Phone"/>
-                        <RadioButton text="Remote Session"/>
+                      <RadioButtonGroup id="newTicketContactPref" columns="3">
+                        <RadioButton id="newTicketContactEmail" text="Email"/>
+                        <RadioButton id="newTicketContactPhone" text="Phone"/>
+                        <RadioButton id="newTicketContactRemote" text="Remote Session"/>
                       </RadioButtonGroup>
                     </f:content>
                   </f:SimpleForm>
@@ -134,15 +134,15 @@
                   <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
                     <f:content>
                       <Label text="VIP User"/>
-                      <Switch customTextOn="Yes" customTextOff="No"/>
+                      <Switch id="newTicketVipSwitch" customTextOn="Yes" customTextOff="No"/>
                       <Label text="Data Loss Involved"/>
-                      <CheckBox text="Incident involves data loss or corruption"/>
+                      <CheckBox id="newTicketDataLoss" text="Incident involves data loss or corruption"/>
                       <Label text="Security Incident"/>
-                      <CheckBox text="Incident has security implications"/>
+                      <CheckBox id="newTicketSecurityFlag" text="Incident has security implications"/>
                       <Label text="Recurring Issue"/>
-                      <CheckBox text="This issue has occurred before"/>
+                      <CheckBox id="newTicketRecurring" text="This issue has occurred before"/>
                       <Label text="Affected Services"/>
-                      <MultiComboBox placeholder="Select affected services...">
+                      <MultiComboBox id="newTicketServices" placeholder="Select affected services...">
                         <core:Item key="sap" text="SAP ERP"/>
                         <core:Item key="email" text="Email / Exchange"/>
                         <core:Item key="vpn" text="VPN"/>
@@ -151,7 +151,7 @@
                         <core:Item key="printing" text="Printing"/>
                       </MultiComboBox>
                       <Label text="Related Ticket Numbers"/>
-                      <MultiInput showValueHelp="false" placeholder="Add related ticket IDs as tags..."/>
+                      <MultiInput id="newTicketRelated" showValueHelp="false" placeholder="Add related ticket IDs as tags..."/>
                     </f:content>
                   </f:SimpleForm>
                 </content>
@@ -161,9 +161,9 @@
                   <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
                     <f:content>
                       <Label text="Business Impact Score (0–10)"/>
-                      <Slider min="0" max="10" step="1" showAdvancedTooltip="true" enableTickmarks="true" value="5"/>
+                      <Slider id="newTicketImpactSlider" min="0" max="10" step="1" showAdvancedTooltip="true" enableTickmarks="true" value="5"/>
                       <Label text="Current Customer Satisfaction"/>
-                      <RatingIndicator maxValue="5" value="3"/>
+                      <RatingIndicator id="newTicketSatisfaction" maxValue="5" value="3"/>
                     </f:content>
                   </f:SimpleForm>
                 </content>
@@ -176,8 +176,8 @@
         <Page id="ticketDetailPage" title="Ticket Detail" class="fira-app-page"
           showNavButton="true" navButtonPress=".onNavBack">
           <headerContent>
-            <Button text="Edit" icon="sap-icon://edit" press=".onEditTicketPress"/>
-            <Button text="Close Ticket" type="Accept" icon="sap-icon://accept" press=".onCloseTicket"/>
+            <Button id="editTicketBtn" text="Edit" icon="sap-icon://edit" press=".onEditTicketPress"/>
+            <Button id="closeTicketBtn" text="Close Ticket" type="Accept" icon="sap-icon://accept" press=".onCloseTicket"/>
           </headerContent>
           <content>
             <VBox class="sapUiMediumMargin">
@@ -214,7 +214,7 @@
                 <content>
                   <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginTopBottom">
                     <TextArea id="workNoteText" rows="3" width="100%" placeholder="Add an update or note..."/>
-                    <Button text="Post Note" type="Emphasized" press=".onPostNote" class="sapUiSmallMarginTop" icon="sap-icon://comment"/>
+                    <Button id="postNoteBtn" text="Post Note" type="Emphasized" press=".onPostNote" class="sapUiSmallMarginTop" icon="sap-icon://comment"/>
                   </VBox>
                 </content>
               </Panel>
@@ -228,8 +228,8 @@
           <footer>
             <Bar>
               <contentRight>
-                <Button text="Cancel" press=".onNavBack"/>
-                <Button text="Save Changes" type="Emphasized" press=".onSaveTicket" icon="sap-icon://accept"/>
+                <Button id="cancelEditTicketBtn" text="Cancel" press=".onNavBack"/>
+                <Button id="saveTicketBtn" text="Save Changes" type="Emphasized" press=".onSaveTicket" icon="sap-icon://accept"/>
               </contentRight>
             </Bar>
           </footer>
@@ -282,11 +282,11 @@
                   <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
                     <f:content>
                       <Label text="Incident Time (when it started)"/>
-                      <TimePicker valueFormat="HH:mm" displayFormat="HH:mm" placeholder="HH:mm"/>
+                      <TimePicker id="editTicketIncidentTime" valueFormat="HH:mm" displayFormat="HH:mm" placeholder="HH:mm"/>
                       <Label text="Number of Users Affected"/>
-                      <StepInput value="1" min="1" max="500" step="1" width="8rem"/>
+                      <StepInput id="editTicketUsersAffected" value="1" min="1" max="500" step="1" width="8rem"/>
                       <Label text="Location / Building"/>
-                      <ComboBox placeholder="Select or type location...">
+                      <ComboBox id="editTicketLocation" placeholder="Select or type location...">
                         <core:Item key="HQ-F1" text="HQ · Floor 1"/>
                         <core:Item key="HQ-F2" text="HQ · Floor 2"/>
                         <core:Item key="WH" text="Warehouse"/>
@@ -294,10 +294,10 @@
                         <core:Item key="REMOTE" text="Remote / Home Office"/>
                       </ComboBox>
                       <Label text="Contact Preference"/>
-                      <RadioButtonGroup columns="3">
-                        <RadioButton text="Email"/>
-                        <RadioButton text="Phone"/>
-                        <RadioButton text="Remote Session"/>
+                      <RadioButtonGroup id="editTicketContactPref" columns="3">
+                        <RadioButton id="editTicketContactEmail" text="Email"/>
+                        <RadioButton id="editTicketContactPhone" text="Phone"/>
+                        <RadioButton id="editTicketContactRemote" text="Remote Session"/>
                       </RadioButtonGroup>
                     </f:content>
                   </f:SimpleForm>
@@ -308,15 +308,15 @@
                   <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
                     <f:content>
                       <Label text="VIP User"/>
-                      <Switch customTextOn="Yes" customTextOff="No"/>
+                      <Switch id="editTicketVipSwitch" customTextOn="Yes" customTextOff="No"/>
                       <Label text="Data Loss Involved"/>
-                      <CheckBox text="Incident involves data loss or corruption"/>
+                      <CheckBox id="editTicketDataLoss" text="Incident involves data loss or corruption"/>
                       <Label text="Security Incident"/>
-                      <CheckBox text="Incident has security implications"/>
+                      <CheckBox id="editTicketSecurityFlag" text="Incident has security implications"/>
                       <Label text="Recurring Issue"/>
-                      <CheckBox text="This issue has occurred before"/>
+                      <CheckBox id="editTicketRecurring" text="This issue has occurred before"/>
                       <Label text="Affected Services"/>
-                      <MultiComboBox placeholder="Select affected services...">
+                      <MultiComboBox id="editTicketServices" placeholder="Select affected services...">
                         <core:Item key="sap" text="SAP ERP"/>
                         <core:Item key="email" text="Email / Exchange"/>
                         <core:Item key="vpn" text="VPN"/>
@@ -325,7 +325,7 @@
                         <core:Item key="printing" text="Printing"/>
                       </MultiComboBox>
                       <Label text="Related Ticket Numbers"/>
-                      <MultiInput showValueHelp="false" placeholder="Add related ticket IDs as tags..."/>
+                      <MultiInput id="editTicketRelated" showValueHelp="false" placeholder="Add related ticket IDs as tags..."/>
                     </f:content>
                   </f:SimpleForm>
                 </content>
@@ -335,11 +335,11 @@
                   <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
                     <f:content>
                       <Label text="Business Impact Score (0–10)"/>
-                      <Slider min="0" max="10" step="1" showAdvancedTooltip="true" enableTickmarks="true" value="5"/>
+                      <Slider id="editTicketImpactSlider" min="0" max="10" step="1" showAdvancedTooltip="true" enableTickmarks="true" value="5"/>
                       <Label text="Current Customer Satisfaction"/>
-                      <RatingIndicator maxValue="5" value="3"/>
+                      <RatingIndicator id="editTicketSatisfaction" maxValue="5" value="3"/>
                       <Label text="Resolution Notes"/>
-                      <TextArea rows="3" width="100%" placeholder="Add resolution steps, workarounds, or notes for the user..."/>
+                      <TextArea id="editTicketResolution" rows="3" width="100%" placeholder="Add resolution steps, workarounds, or notes for the user..."/>
                     </f:content>
                   </f:SimpleForm>
                 </content>
