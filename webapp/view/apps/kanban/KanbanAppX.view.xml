@@ -1,0 +1,207 @@
+<mvc:View
+  controllerName="ui5.fira.demos.controller.apps.kanban.KanbanApp"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:core="sap.ui.core"
+  xmlns:dnd="sap.ui.core.dnd"
+  displayBlock="true">
+
+  <Page id="kanbanPage" title="Sprint Board" showHeader="false" enableScrolling="false" class="sapUiNoContentPadding">
+    <content>
+      <Page title="Sprint Board" class="fira-app-page"
+        showNavButton="true" navButtonPress=".onNavBackToLaunchpad">
+        <headerContent>
+          <Button text="Add Task" type="Emphasized" icon="sap-icon://add" press=".onAddTaskPress"/>
+        </headerContent>
+        <subHeader>
+          <Bar>
+            <contentLeft>
+              <Select change=".onFilterChange">
+                <core:ListItem key="sprint1" text="Sprint 1"/>
+                <core:ListItem key="sprint2" text="Sprint 2"/>
+                <core:ListItem key="sprint3" text="Sprint 3"/>
+              </Select>
+              <Select change=".onFilterChange" class="sapUiSmallMarginBegin">
+                <core:ListItem key="all"    text="All Priorities"/>
+                <core:ListItem key="High"   text="High"/>
+                <core:ListItem key="Medium" text="Medium"/>
+                <core:ListItem key="Low"    text="Low"/>
+              </Select>
+            </contentLeft>
+            <contentRight>
+              <SearchField width="16rem" placeholder="Search tasks..." liveChange=".onSearchChange"/>
+            </contentRight>
+          </Bar>
+        </subHeader>
+        <content>
+          <HBox height="100%" alignItems="Stretch" class="sapUiSmallMargin">
+
+            <!-- Backlog Column -->
+            <VBox width="25%" class="sapUiSmallMarginEnd">
+              <Title text="Backlog" level="H4" class="sapUiSmallMarginBottom"/>
+              <Text text="{kanban>/backlogCount} items" class="sapUiTinyMarginBottom"/>
+              <List id="backlogList" items="{kanban>/backlog}" noDataText="No tasks" class="kanban-column-list">
+                <dragDropConfig>
+                  <dnd:DragDropInfo sourceAggregation="items" targetAggregation="items"
+                    targetElement="inProgressList" drop=".onDrop"/>
+                  <dnd:DragDropInfo sourceAggregation="items" targetAggregation="items"
+                    targetElement="reviewList" drop=".onDrop"/>
+                  <dnd:DragDropInfo sourceAggregation="items" targetAggregation="items"
+                    targetElement="doneList" drop=".onDrop"/>
+                </dragDropConfig>
+                <CustomListItem type="Inactive">
+                  <content>
+                    <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginTopBottom">
+                      <Text text="{kanban>title}" wrapping="true" class="sapUiSmallMarginBottom"/>
+                      <HBox justifyContent="SpaceBetween" alignItems="Center">
+                        <ObjectStatus
+                          text="{kanban>priority}"
+                          state="{path:'kanban>priority', formatter:'.formatPriorityState'}"/>
+                        <Text text="{kanban>points} pts" class="sapThemeNeutralElement"/>
+                      </HBox>
+                      <Text text="{kanban>assignee}" class="sapUiTinyMarginTop"/>
+                    </VBox>
+                  </content>
+                </CustomListItem>
+              </List>
+            </VBox>
+
+            <!-- In Progress Column -->
+            <VBox width="25%" class="sapUiSmallMarginEnd">
+              <Title text="In Progress" level="H4" class="sapUiSmallMarginBottom"/>
+              <Text text="{kanban>/inProgressCount} items" class="sapUiTinyMarginBottom"/>
+              <List id="inProgressList" items="{kanban>/inProgress}" noDataText="No tasks" class="kanban-column-list">
+                <dragDropConfig>
+                  <dnd:DragDropInfo sourceAggregation="items" targetAggregation="items"
+                    targetElement="backlogList" drop=".onDrop"/>
+                  <dnd:DragDropInfo sourceAggregation="items" targetAggregation="items"
+                    targetElement="reviewList" drop=".onDrop"/>
+                  <dnd:DragDropInfo sourceAggregation="items" targetAggregation="items"
+                    targetElement="doneList" drop=".onDrop"/>
+                </dragDropConfig>
+                <CustomListItem type="Inactive">
+                  <content>
+                    <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginTopBottom">
+                      <Text text="{kanban>title}" wrapping="true" class="sapUiSmallMarginBottom"/>
+                      <HBox justifyContent="SpaceBetween" alignItems="Center">
+                        <ObjectStatus
+                          text="{kanban>priority}"
+                          state="{path:'kanban>priority', formatter:'.formatPriorityState'}"/>
+                        <Text text="{kanban>points} pts"/>
+                      </HBox>
+                      <Text text="{kanban>assignee}" class="sapUiTinyMarginTop"/>
+                    </VBox>
+                  </content>
+                </CustomListItem>
+              </List>
+            </VBox>
+
+            <!-- Review Column -->
+            <VBox width="25%" class="sapUiSmallMarginEnd">
+              <Title text="Review" level="H4" class="sapUiSmallMarginBottom"/>
+              <Text text="{kanban>/reviewCount} items" class="sapUiTinyMarginBottom"/>
+              <List id="reviewList" items="{kanban>/review}" noDataText="No tasks" class="kanban-column-list">
+                <dragDropConfig>
+                  <dnd:DragDropInfo sourceAggregation="items" targetAggregation="items"
+                    targetElement="backlogList" drop=".onDrop"/>
+                  <dnd:DragDropInfo sourceAggregation="items" targetAggregation="items"
+                    targetElement="inProgressList" drop=".onDrop"/>
+                  <dnd:DragDropInfo sourceAggregation="items" targetAggregation="items"
+                    targetElement="doneList" drop=".onDrop"/>
+                </dragDropConfig>
+                <CustomListItem type="Inactive">
+                  <content>
+                    <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginTopBottom">
+                      <Text text="{kanban>title}" wrapping="true" class="sapUiSmallMarginBottom"/>
+                      <HBox justifyContent="SpaceBetween" alignItems="Center">
+                        <ObjectStatus
+                          text="{kanban>priority}"
+                          state="{path:'kanban>priority', formatter:'.formatPriorityState'}"/>
+                        <Text text="{kanban>points} pts"/>
+                      </HBox>
+                      <Text text="{kanban>assignee}" class="sapUiTinyMarginTop"/>
+                    </VBox>
+                  </content>
+                </CustomListItem>
+              </List>
+            </VBox>
+
+            <!-- Done Column -->
+            <VBox width="25%">
+              <Title text="Done" level="H4" class="sapUiSmallMarginBottom"/>
+              <Text text="{kanban>/doneCount} items" class="sapUiTinyMarginBottom"/>
+              <List id="doneList" items="{kanban>/done}" noDataText="No tasks" class="kanban-column-list">
+                <dragDropConfig>
+                  <dnd:DragDropInfo sourceAggregation="items" targetAggregation="items"
+                    targetElement="backlogList" drop=".onDrop"/>
+                  <dnd:DragDropInfo sourceAggregation="items" targetAggregation="items"
+                    targetElement="inProgressList" drop=".onDrop"/>
+                  <dnd:DragDropInfo sourceAggregation="items" targetAggregation="items"
+                    targetElement="reviewList" drop=".onDrop"/>
+                </dragDropConfig>
+                <CustomListItem type="Inactive">
+                  <content>
+                    <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginTopBottom">
+                      <Text text="{kanban>title}" wrapping="true" class="sapUiSmallMarginBottom"/>
+                      <HBox justifyContent="SpaceBetween" alignItems="Center">
+                        <ObjectStatus
+                          text="{kanban>priority}"
+                          state="{path:'kanban>priority', formatter:'.formatPriorityState'}"/>
+                        <Text text="{kanban>points} pts"/>
+                      </HBox>
+                      <Text text="{kanban>assignee}" class="sapUiTinyMarginTop"/>
+                    </VBox>
+                  </content>
+                </CustomListItem>
+              </List>
+            </VBox>
+
+          </HBox>
+        </content>
+      </Page>
+    </content>
+
+    <!-- Add Task Dialog -->
+    <dependents>
+      <Dialog id="addTaskDialog" title="Add Task" contentWidth="30rem">
+        <content>
+          <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginTopBottom">
+            <Label text="Task Title" required="true" class="sapUiSmallMarginTop"/>
+            <Input placeholder="Enter task title..." width="100%"/>
+
+            <Label text="Assignee" class="sapUiSmallMarginTop"/>
+            <Input placeholder="Type assignee name..." width="100%"
+              showSuggestion="true" suggest=".onAssigneeSuggest">
+              <suggestionItems>
+                <core:Item text="Anna Weber"/>
+                <core:Item text="Ben Schulz"/>
+                <core:Item text="Clara Fischer"/>
+                <core:Item text="David Müller"/>
+                <core:Item text="Eva Braun"/>
+                <core:Item text="Felix Keller"/>
+              </suggestionItems>
+            </Input>
+
+            <Label text="Priority" class="sapUiSmallMarginTop"/>
+            <Select width="100%">
+              <core:ListItem key="High"   text="High"/>
+              <core:ListItem key="Medium" text="Medium"/>
+              <core:ListItem key="Low"    text="Low"/>
+            </Select>
+
+            <Label text="Story Points" class="sapUiSmallMarginTop"/>
+            <StepInput value="3" min="1" max="21" step="1" width="8rem"/>
+          </VBox>
+        </content>
+        <beginButton>
+          <Button text="Add" type="Emphasized" press=".onAddTaskConfirm"/>
+        </beginButton>
+        <endButton>
+          <Button text="Cancel" press=".onAddTaskCancel"/>
+        </endButton>
+      </Dialog>
+    </dependents>
+
+  </Page>
+
+</mvc:View>

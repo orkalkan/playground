@@ -1,0 +1,365 @@
+<mvc:View
+  controllerName="ui5.fira.demos.controller.apps.leave.LeaveApp"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:core="sap.ui.core"
+  xmlns:f="sap.ui.layout.form"
+  xmlns:unified="sap.ui.unified"
+  displayBlock="true">
+
+  <Page showHeader="false" enableScrolling="false" class="sapUiNoContentPadding">
+    <content>
+      <NavContainer id="leaveNav" height="100%">
+
+        <!-- ── Page 1: My Leave Dashboard ──────────────── -->
+        <Page id="leaveDashPage" title="Leave Management" class="fira-app-page"
+          showNavButton="true" navButtonPress=".onNavBackToLaunchpad">
+          <headerContent>
+            <Button text="New Request" type="Emphasized" icon="sap-icon://add" press=".onNewRequestPress"/>
+            <Button text="Team Calendar" icon="sap-icon://calendar" press=".onTeamCalendarPress"/>
+          </headerContent>
+          <content>
+            <VBox class="sapUiMediumMargin">
+              <Text text="MY LEAVE BALANCE" class="fira-section-title sapUiNoMarginBegin"/>
+              <HBox wrap="Wrap" class="sapUiSmallMarginTop sapUiSmallMarginBottom">
+                <GenericTile header="Annual Leave" subheader="Remaining days" class="sapUiSmallMarginEnd sapUiSmallMarginBottom">
+                  <tileContent>
+                    <TileContent footer="Used: 8 days">
+                      <content><NumericContent value="15" indicator="None" valueColor="Good" withMargin="false"/></content>
+                    </TileContent>
+                  </tileContent>
+                </GenericTile>
+                <GenericTile header="Sick Leave" subheader="Remaining days" class="sapUiSmallMarginEnd sapUiSmallMarginBottom">
+                  <tileContent>
+                    <TileContent footer="Used: 2 days">
+                      <content><NumericContent value="8" indicator="None" valueColor="Good" withMargin="false"/></content>
+                    </TileContent>
+                  </tileContent>
+                </GenericTile>
+                <GenericTile header="Remote Work" subheader="Days this month" class="sapUiSmallMarginEnd sapUiSmallMarginBottom">
+                  <tileContent>
+                    <TileContent footer="Limit: 10 days/month">
+                      <content><NumericContent value="6" indicator="None" valueColor="None" withMargin="false"/></content>
+                    </TileContent>
+                  </tileContent>
+                </GenericTile>
+                <GenericTile header="Compensatory" subheader="Accrued overtime" class="sapUiSmallMarginBottom">
+                  <tileContent>
+                    <TileContent footer="Valid until: 31.12.2025">
+                      <content><NumericContent value="3" indicator="Up" valueColor="Critical" withMargin="false"/></content>
+                    </TileContent>
+                  </tileContent>
+                </GenericTile>
+              </HBox>
+
+              <Text text="MY REQUESTS" class="fira-section-title sapUiNoMarginBegin sapUiSmallMarginTop"/>
+              <List id="leaveList" items="{leave>/requests}" noDataText="No leave requests found" class="sapUiSmallMarginTop">
+                <CustomListItem press=".onRequestPress" type="Navigation">
+                  <content>
+                    <HBox alignItems="Center" class="sapUiSmallMarginBeginEnd sapUiSmallMarginTopBottom">
+                      <core:Icon src="{path:'leave>type', formatter:'.formatLeaveTypeIcon'}" size="1.5rem" color="{path:'leave>type', formatter:'.formatLeaveTypeColor'}" class="sapUiSmallMarginEnd"/>
+                      <VBox class="sapUiSmallMarginEnd" width="12rem">
+                        <Text text="{leave>type}" renderWhitespace="false"/>
+                        <Text text="{leave>dateRange}" class="sapUiTinyMarginTop"/>
+                      </VBox>
+                      <VBox class="sapUiSmallMarginEnd" width="6rem">
+                        <Text text="{leave>days} day(s)"/>
+                        <Text text="{leave>substitute}" class="sapUiTinyMarginTop"/>
+                      </VBox>
+                      <ObjectStatus text="{leave>status}" state="{path:'leave>status', formatter:'.formatStatusState'}" class="sapUiSmallMarginEnd"/>
+                      <HBox>
+                        <Button icon="sap-icon://edit" tooltip="Edit" type="Transparent" press=".onEditRequestPress"/>
+                        <Button icon="sap-icon://delete" tooltip="Cancel request" type="Transparent" press=".onDeleteRequestPress"/>
+                      </HBox>
+                    </HBox>
+                  </content>
+                </CustomListItem>
+              </List>
+            </VBox>
+          </content>
+        </Page>
+
+        <!-- ── Page 2: New Leave Request ───────────────── -->
+        <Page id="leaveRequestPage" title="New Leave Request" class="fira-app-page"
+          showNavButton="true" navButtonPress=".onNavBack">
+          <footer>
+            <Bar>
+              <contentRight>
+                <Button text="Cancel" press=".onNavBack"/>
+                <Button text="Submit Request" type="Emphasized" press=".onSubmitRequest" icon="sap-icon://paper-plane"/>
+              </contentRight>
+            </Bar>
+          </footer>
+          <content>
+            <VBox class="sapUiMediumMargin">
+              <Panel headerText="Request Details" expandable="false">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Leave Type" required="true"/>
+                      <Select selectedKey="annual">
+                        <core:ListItem key="annual"        text="Annual Leave"/>
+                        <core:ListItem key="sick"          text="Sick Leave"/>
+                        <core:ListItem key="remote"        text="Remote Work"/>
+                        <core:ListItem key="compensatory"  text="Compensatory Leave"/>
+                        <core:ListItem key="maternity"     text="Maternity / Paternity"/>
+                        <core:ListItem key="special"       text="Special Leave"/>
+                      </Select>
+                      <Label text="From Date" required="true"/>
+                      <DatePicker valueFormat="yyyy-MM-dd" displayFormat="dd.MM.yyyy" placeholder="Select start date"/>
+                      <Label text="To Date" required="true"/>
+                      <DatePicker valueFormat="yyyy-MM-dd" displayFormat="dd.MM.yyyy" placeholder="Select end date"/>
+                      <Label text="Half Day"/>
+                      <CheckBox text="First day is a half day"/>
+                      <Label text="Substitute"/>
+                      <Select>
+                        <core:ListItem key="" text="— No substitute —"/>
+                        <core:ListItem key="jmayer" text="Julia Mayer"/>
+                        <core:ListItem key="tschmidt" text="Thomas Schmidt"/>
+                        <core:ListItem key="awagner" text="Anna Wagner"/>
+                        <core:ListItem key="mbraun" text="Michael Braun"/>
+                      </Select>
+                      <Label text="Reason"/>
+                      <TextArea rows="3" width="100%" placeholder="Optional: describe the reason for your leave request..."/>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+              <Panel headerText="Scheduling &amp; Coverage" class="sapUiSmallMarginTop" expandable="true" expanded="true">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Return Time"/>
+                      <TimePicker valueFormat="HH:mm" displayFormat="HH:mm" placeholder="HH:mm"/>
+                      <Label text="Number of Days Requested"/>
+                      <StepInput value="1" min="1" max="30" step="1" width="8rem"/>
+                      <Label text="Location During Leave"/>
+                      <ComboBox placeholder="Select or type location...">
+                        <core:Item key="home" text="Home"/>
+                        <core:Item key="abroad" text="Abroad"/>
+                        <core:Item key="domestic" text="Domestic travel"/>
+                        <core:Item key="hospital" text="Hospital"/>
+                        <core:Item key="other" text="Other"/>
+                      </ComboBox>
+                      <Label text="Work Coverage"/>
+                      <RadioButtonGroup columns="3">
+                        <RadioButton text="Substitute"/>
+                        <RadioButton text="Manager Handles"/>
+                        <RadioButton text="Remote Work"/>
+                      </RadioButtonGroup>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+              <Panel headerText="Options" class="sapUiSmallMarginTop" expandable="true" expanded="true">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Notify Substitute Automatically"/>
+                      <Switch customTextOn="Yes" customTextOff="No"/>
+                      <Label text="Requires Transport Reimbursement"/>
+                      <CheckBox text="Claim transport reimbursement for this leave"/>
+                      <Label text="Notify Colleagues"/>
+                      <MultiComboBox placeholder="Select colleagues to notify...">
+                        <core:Item key="jmayer" text="Julia Mayer"/>
+                        <core:Item key="tschmidt" text="Thomas Schmidt"/>
+                        <core:Item key="awagner" text="Anna Wagner"/>
+                        <core:Item key="mbraun" text="Michael Braun"/>
+                        <core:Item key="swolf" text="Sandra Wolf"/>
+                      </MultiComboBox>
+                      <Label text="Attached Documents"/>
+                      <MultiInput showValueHelp="false" placeholder="Add document references as tags..."/>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+              <Panel headerText="Assessment" class="sapUiSmallMarginTop" expandable="true" expanded="true">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Days Advance Notice"/>
+                      <Slider min="0" max="30" step="1" showAdvancedTooltip="true" enableTickmarks="true" value="5"/>
+                      <Label text="Request Urgency"/>
+                      <RatingIndicator maxValue="5" value="2"/>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+              <Panel headerText="Approval Chain" class="sapUiSmallMarginTop" expandable="true" expanded="true">
+                <content>
+                  <List>
+                    <StandardListItem title="Line Manager" description="Thomas Schmidt · t.schmidt@company.com" icon="sap-icon://person-placeholder" info="Step 1 — Auto-assigned"/>
+                    <StandardListItem title="HR Business Partner" description="Sarah Hoffmann · s.hoffmann@company.com" icon="sap-icon://employee" info="Step 2 — If > 5 days"/>
+                  </List>
+                </content>
+              </Panel>
+            </VBox>
+          </content>
+        </Page>
+
+        <!-- ── Page 3: Edit Leave Request ──────────────── -->
+        <Page id="leaveEditPage" title="Edit Leave Request" class="fira-app-page"
+          showNavButton="true" navButtonPress=".onNavBack">
+          <footer>
+            <Bar>
+              <contentRight>
+                <Button text="Cancel" press=".onNavBack"/>
+                <Button text="Save Changes" type="Emphasized" press=".onSaveRequest" icon="sap-icon://accept"/>
+              </contentRight>
+            </Bar>
+          </footer>
+          <content>
+            <VBox class="sapUiMediumMargin">
+              <Panel headerText="Edit Request" expandable="false">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Leave Type" required="true"/>
+                      <Select selectedKey="{leave>/editRequest/typeKey}">
+                        <core:ListItem key="annual"        text="Annual Leave"/>
+                        <core:ListItem key="sick"          text="Sick Leave"/>
+                        <core:ListItem key="remote"        text="Remote Work"/>
+                        <core:ListItem key="compensatory"  text="Compensatory Leave"/>
+                        <core:ListItem key="maternity"     text="Maternity / Paternity"/>
+                        <core:ListItem key="special"       text="Special Leave"/>
+                      </Select>
+                      <Label text="Date Range" required="true"/>
+                      <Input value="{leave>/editRequest/dateRange}" placeholder="e.g. 24–28 Mar 2025"/>
+                      <Label text="Days"/>
+                      <Input value="{leave>/editRequest/days}" type="Number" width="5rem" textAlign="End" placeholder="0"/>
+                      <Label text="Substitute"/>
+                      <Select selectedKey="{leave>/editRequest/substituteKey}">
+                        <core:ListItem key="" text="— No substitute —"/>
+                        <core:ListItem key="jmayer" text="Julia Mayer"/>
+                        <core:ListItem key="tschmidt" text="Thomas Schmidt"/>
+                        <core:ListItem key="awagner" text="Anna Wagner"/>
+                        <core:ListItem key="mbraun" text="Michael Braun"/>
+                      </Select>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+              <Panel headerText="Scheduling &amp; Coverage" class="sapUiSmallMarginTop" expandable="true" expanded="true">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Return Time"/>
+                      <TimePicker valueFormat="HH:mm" displayFormat="HH:mm" placeholder="HH:mm"/>
+                      <Label text="Number of Days Requested"/>
+                      <StepInput value="1" min="1" max="30" step="1" width="8rem"/>
+                      <Label text="Location During Leave"/>
+                      <ComboBox placeholder="Select or type location...">
+                        <core:Item key="home" text="Home"/>
+                        <core:Item key="abroad" text="Abroad"/>
+                        <core:Item key="domestic" text="Domestic travel"/>
+                        <core:Item key="hospital" text="Hospital"/>
+                        <core:Item key="other" text="Other"/>
+                      </ComboBox>
+                      <Label text="Work Coverage"/>
+                      <RadioButtonGroup columns="3">
+                        <RadioButton text="Substitute"/>
+                        <RadioButton text="Manager Handles"/>
+                        <RadioButton text="Remote Work"/>
+                      </RadioButtonGroup>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+              <Panel headerText="Options" class="sapUiSmallMarginTop" expandable="true" expanded="true">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Notify Substitute Automatically"/>
+                      <Switch customTextOn="Yes" customTextOff="No"/>
+                      <Label text="Half Day"/>
+                      <CheckBox text="First day is a half day"/>
+                      <Label text="Requires Transport Reimbursement"/>
+                      <CheckBox text="Claim transport reimbursement for this leave"/>
+                      <Label text="Notify Colleagues"/>
+                      <MultiComboBox placeholder="Select colleagues to notify...">
+                        <core:Item key="jmayer" text="Julia Mayer"/>
+                        <core:Item key="tschmidt" text="Thomas Schmidt"/>
+                        <core:Item key="awagner" text="Anna Wagner"/>
+                        <core:Item key="mbraun" text="Michael Braun"/>
+                        <core:Item key="swolf" text="Sandra Wolf"/>
+                      </MultiComboBox>
+                      <Label text="Attached Documents"/>
+                      <MultiInput showValueHelp="false" placeholder="Add document references as tags..."/>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+              <Panel headerText="Assessment" class="sapUiSmallMarginTop" expandable="true" expanded="true">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Days Advance Notice"/>
+                      <Slider min="0" max="30" step="1" showAdvancedTooltip="true" enableTickmarks="true" value="5"/>
+                      <Label text="Request Urgency"/>
+                      <RatingIndicator maxValue="5" value="2"/>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+            </VBox>
+          </content>
+        </Page>
+
+        <!-- ── Page 4: Team Calendar ────────────────────── -->
+        <Page id="leaveCalendarPage" title="Team Calendar — March 2025" class="fira-app-page"
+          showNavButton="true" navButtonPress=".onNavBack">
+          <content>
+            <VBox class="sapUiMediumMargin">
+              <unified:Calendar id="leaveCalendar" intervalSelection="false"/>
+              <Panel headerText="Team Absences This Month" class="sapUiSmallMarginTop">
+                <content>
+                  <List>
+                    <StandardListItem title="Julia Mayer" description="Annual Leave · 17–21 Mar 2025" info="5 days" icon="sap-icon://person-placeholder" infoState="Warning"/>
+                    <StandardListItem title="Thomas Schmidt" description="Sick Leave · 24–26 Mar 2025" info="3 days" icon="sap-icon://person-placeholder" infoState="Error"/>
+                    <StandardListItem title="Anna Wagner" description="Remote Work · 10–12 Mar 2025" info="3 days" icon="sap-icon://person-placeholder" infoState="None"/>
+                    <StandardListItem title="Michael Braun" description="Annual Leave · 28 Mar – 1 Apr 2025" info="5 days" icon="sap-icon://person-placeholder" infoState="Warning"/>
+                    <StandardListItem title="Sandra Wolf" description="Compensatory · 25 Mar 2025" info="1 day" icon="sap-icon://person-placeholder" infoState="None"/>
+                    <StandardListItem title="David Krause" description="Remote Work · 31 Mar – 2 Apr 2025" info="3 days" icon="sap-icon://person-placeholder" infoState="None"/>
+                  </List>
+                </content>
+              </Panel>
+            </VBox>
+          </content>
+        </Page>
+
+        <!-- ── Page 5: Approval Inbox (Manager) ─────────── -->
+        <Page id="leaveApprovalPage" title="Approval Inbox" class="fira-app-page"
+          showNavButton="true" navButtonPress=".onNavBack">
+          <subHeader>
+            <Bar>
+              <contentLeft><Title text="{leave>/pendingApprovals/length} requests pending your approval" level="H6"/></contentLeft>
+            </Bar>
+          </subHeader>
+          <content>
+            <List id="approvalList" items="{leave>/pendingApprovals}" noDataText="No pending approvals">
+              <CustomListItem>
+                <content>
+                  <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginTopBottom">
+                    <HBox alignItems="Center" justifyContent="SpaceBetween">
+                      <VBox>
+                        <Text text="{leave>employee}" renderWhitespace="false"/>
+                        <Text text="{leave>type} · {leave>dateRange} · {leave>days} day(s)" class="sapUiTinyMarginTop"/>
+                        <Text text="Reason: {leave>reason}" class="sapUiTinyMarginTop"/>
+                      </VBox>
+                      <HBox>
+                        <Button text="Approve" type="Accept"  icon="sap-icon://accept"  press=".onApproveRequest" class="sapUiSmallMarginEnd"/>
+                        <Button text="Reject"  type="Reject"  icon="sap-icon://decline" press=".onRejectRequest"/>
+                      </HBox>
+                    </HBox>
+                  </VBox>
+                </content>
+              </CustomListItem>
+            </List>
+          </content>
+        </Page>
+
+      </NavContainer>
+    </content>
+  </Page>
+
+</mvc:View>

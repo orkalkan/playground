@@ -1,0 +1,346 @@
+<mvc:View
+  controllerName="ui5.fira.demos.controller.apps.sales.SalesApp"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:core="sap.ui.core"
+  xmlns:f="sap.ui.layout.form"
+  displayBlock="true">
+
+  <Page showHeader="false" enableScrolling="false" class="sapUiNoContentPadding">
+    <content>
+      <NavContainer id="salesNav" height="100%">
+
+        <!-- ── Page 1: Sales Order List ─────────────────── -->
+        <Page id="salesListPage" title="Sales Orders" class="fira-app-page"
+          showNavButton="true" navButtonPress=".onNavBackToLaunchpad">
+          <headerContent>
+            <Button text="New Order" type="Emphasized" icon="sap-icon://add" press=".onNewOrderPress"/>
+          </headerContent>
+          <subHeader>
+            <Bar>
+              <contentLeft>
+                <SearchField width="20rem" placeholder="Search by order number or customer..." search=".onSearch"/>
+              </contentLeft>
+              <contentRight>
+                <Select change=".onStatusFilterChange">
+                  <core:ListItem key="all"         text="All Orders"/>
+                  <core:ListItem key="New"          text="New"/>
+                  <core:ListItem key="In Progress"  text="In Progress"/>
+                  <core:ListItem key="Delivered"    text="Delivered"/>
+                  <core:ListItem key="On Hold"      text="On Hold"/>
+                  <core:ListItem key="Cancelled"    text="Cancelled"/>
+                </Select>
+              </contentRight>
+            </Bar>
+          </subHeader>
+          <content>
+            <Table id="salesTable" items="{sales>/orders}" noDataText="No sales orders found">
+              <columns>
+                <Column><Text text="Order No."/></Column>
+                <Column><Text text="Customer"/></Column>
+                <Column><Text text="Material"/></Column>
+                <Column hAlign="End"><Text text="Net Value"/></Column>
+                <Column><Text text="Requested Date"/></Column>
+                <Column><Text text="Status"/></Column>
+                <Column><Text text="Actions"/></Column>
+              </columns>
+              <items>
+                <ColumnListItem press=".onOrderPress" type="Navigation">
+                  <cells>
+                    <ObjectIdentifier title="{sales>id}" text="{sales>orderType}"/>
+                    <VBox>
+                      <Text text="{sales>customer}"/>
+                      <Text text="{sales>customerId}" class="sapUiTinyMarginTop"/>
+                    </VBox>
+                    <Text text="{sales>mainMaterial}"/>
+                    <ObjectNumber number="{sales>netValue}" unit="{sales>currency}"/>
+                    <Text text="{path:'sales>requestedDate', formatter:'.formatDate'}"/>
+                    <ObjectStatus text="{sales>status}" state="{path:'sales>status', formatter:'.formatStatusState'}"/>
+                    <HBox>
+                      <Button icon="sap-icon://edit" tooltip="Edit" type="Transparent" press=".onEditOrderPress"/>
+                      <Button icon="sap-icon://delete" tooltip="Delete" type="Transparent" press=".onDeleteOrderPress"/>
+                    </HBox>
+                  </cells>
+                </ColumnListItem>
+              </items>
+            </Table>
+          </content>
+        </Page>
+
+        <!-- ── Page 2: Create / Edit Sales Order ────────── -->
+        <Page id="salesCreatePage" title="New Sales Order" class="fira-app-page"
+          showNavButton="true" navButtonPress=".onNavBack">
+          <footer>
+            <Bar>
+              <contentRight>
+                <Button text="Cancel" press=".onNavBack"/>
+                <Button text="Review Order" type="Emphasized" press=".onReviewPress" icon="sap-icon://arrow-right"/>
+              </contentRight>
+            </Bar>
+          </footer>
+          <content>
+            <VBox class="sapUiMediumMargin">
+              <Panel headerText="Order Header" expandable="false">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Customer" required="true"/>
+                      <Select items="{sales>/customers}">
+                        <core:ListItem key="{sales>id}" text="{sales>name}"/>
+                      </Select>
+                      <Label text="Order Type"/>
+                      <Select selectedKey="OR">
+                        <core:ListItem key="OR" text="OR — Standard Order"/>
+                        <core:ListItem key="RO" text="RO — Rush Order"/>
+                        <core:ListItem key="CR" text="CR — Credit Memo Request"/>
+                      </Select>
+                      <Label text="Requested Delivery" required="true"/>
+                      <DatePicker valueFormat="yyyy-MM-dd" displayFormat="dd.MM.yyyy"/>
+                      <Label text="Sales Organization"/>
+                      <Select selectedKey="1000">
+                        <core:ListItem key="1000" text="1000 — Germany South"/>
+                        <core:ListItem key="2000" text="2000 — Germany North"/>
+                        <core:ListItem key="3000" text="3000 — Export"/>
+                      </Select>
+                      <Label text="Incoterms"/>
+                      <Select selectedKey="DDP">
+                        <core:ListItem key="DDP" text="DDP — Delivered Duty Paid"/>
+                        <core:ListItem key="EXW" text="EXW — Ex Works"/>
+                        <core:ListItem key="CIF" text="CIF — Cost, Insurance, Freight"/>
+                        <core:ListItem key="FOB" text="FOB — Free On Board"/>
+                      </Select>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+              <Panel headerText="Order Items" class="sapUiSmallMarginTop" expandable="false">
+                <headerToolbar>
+                  <Toolbar>
+                    <Title text="Order Items" level="H5"/>
+                    <ToolbarSpacer/>
+                    <Button icon="sap-icon://add" text="Add Item" press=".onAddItem"/>
+                  </Toolbar>
+                </headerToolbar>
+                <content>
+                  <Table id="soItemsTable" items="{sales>/newOrder/items}" noDataText="No items added">
+                    <columns>
+                      <Column><Text text="Material No."/></Column>
+                      <Column><Text text="Description"/></Column>
+                      <Column hAlign="End"><Text text="Quantity"/></Column>
+                      <Column><Text text="UoM"/></Column>
+                      <Column hAlign="End"><Text text="Unit Price"/></Column>
+                      <Column><Text text="Plant"/></Column>
+                    </columns>
+                    <items>
+                      <ColumnListItem>
+                        <cells>
+                          <Input value="{sales>materialId}" placeholder="FG-XXXX" width="8rem"/>
+                          <Input value="{sales>description}" placeholder="Material description"/>
+                          <Input value="{sales>qty}" type="Number" width="5rem" textAlign="End"/>
+                          <Select selectedKey="{sales>uom}">
+                            <core:ListItem key="EA" text="EA"/>
+                            <core:ListItem key="PC" text="PC"/>
+                            <core:ListItem key="KG" text="KG"/>
+                          </Select>
+                          <Input value="{sales>price}" type="Number" width="7rem" textAlign="End"/>
+                          <Select selectedKey="{sales>plant}">
+                            <core:ListItem key="1000" text="1000 — Hamburg"/>
+                            <core:ListItem key="1100" text="1100 — Berlin"/>
+                            <core:ListItem key="1200" text="1200 — Munich"/>
+                          </Select>
+                        </cells>
+                      </ColumnListItem>
+                    </items>
+                  </Table>
+                </content>
+              </Panel>
+              <Panel headerText="Scheduling &amp; Delivery" class="sapUiSmallMarginTop" expandable="true" expanded="true">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Promised Delivery Time"/>
+                      <TimePicker valueFormat="HH:mm" displayFormat="HH:mm" placeholder="HH:mm"/>
+                      <Label text="Number of Positions"/>
+                      <StepInput value="1" min="1" max="50" step="1" width="8rem"/>
+                      <Label text="Ship-To Address"/>
+                      <ComboBox placeholder="Select or type ship-to address...">
+                        <core:Item key="A1" text="Hauptstraße 12, 80331 Munich"/>
+                        <core:Item key="A2" text="Industrieweg 5, 20095 Hamburg"/>
+                        <core:Item key="A3" text="Berliner Allee 88, 40212 Düsseldorf"/>
+                        <core:Item key="A4" text="Römerstraße 3, 50667 Cologne"/>
+                      </ComboBox>
+                      <Label text="Billing Type"/>
+                      <RadioButtonGroup columns="3">
+                        <RadioButton text="Monthly"/>
+                        <RadioButton text="Per Delivery"/>
+                        <RadioButton text="Advance"/>
+                      </RadioButtonGroup>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+              <Panel headerText="Options" class="sapUiSmallMarginTop" expandable="true" expanded="true">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Rush Order"/>
+                      <Switch customTextOn="Yes" customTextOff="No"/>
+                      <Label text="Partial Delivery Allowed"/>
+                      <CheckBox text="Allow partial deliveries"/>
+                      <Label text="Complete Delivery Required"/>
+                      <CheckBox text="Require complete delivery in one shipment"/>
+                      <Label text="Notify Teams"/>
+                      <MultiComboBox placeholder="Select teams to notify...">
+                        <core:Item key="sales" text="Sales"/>
+                        <core:Item key="fin" text="Finance"/>
+                        <core:Item key="log" text="Logistics"/>
+                        <core:Item key="cs" text="Customer Service"/>
+                      </MultiComboBox>
+                      <Label text="Customer PO References"/>
+                      <MultiInput showValueHelp="false" placeholder="Add customer PO numbers as tags..."/>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+              <Panel headerText="Assessment" class="sapUiSmallMarginTop" expandable="true" expanded="true">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Discount (%)"/>
+                      <Slider min="0" max="30" step="1" showAdvancedTooltip="true" enableTickmarks="true" value="0"/>
+                      <Label text="Customer Priority"/>
+                      <RatingIndicator maxValue="5" value="3"/>
+                      <Label text="Order Notes"/>
+                      <TextArea rows="3" width="100%" placeholder="Internal notes or special instructions for this order..."/>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+            </VBox>
+          </content>
+        </Page>
+
+        <!-- ── Page 3: Order Detail ──────────────────────── -->
+        <Page id="salesDetailPage" title="Order Detail" class="fira-app-page"
+          showNavButton="true" navButtonPress=".onNavBack">
+          <headerContent>
+            <Button text="Edit" icon="sap-icon://edit" press=".onEditSelectedOrderPress"/>
+            <Button text="Delete" icon="sap-icon://delete" type="Reject" press=".onDeleteSelectedOrderPress"/>
+          </headerContent>
+          <content>
+            <VBox class="sapUiMediumMargin">
+              <Panel expandable="false">
+                <content>
+                  <f:SimpleForm layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Order No."/>      <Text text="{sales>/selectedOrder/id}"/>
+                      <Label text="Customer"/>       <Text text="{sales>/selectedOrder/customer} ({sales>/selectedOrder/customerId})"/>
+                      <Label text="Order Type"/>     <Text text="{sales>/selectedOrder/orderType}"/>
+                      <Label text="Material"/>       <Text text="{sales>/selectedOrder/mainMaterial}"/>
+                      <Label text="Net Value"/>      <ObjectNumber number="{sales>/selectedOrder/netValue}" unit="{sales>/selectedOrder/currency}"/>
+                      <Label text="Requested Date"/> <Text text="{path:'sales>/selectedOrder/requestedDate', formatter:'.formatDate'}"/>
+                      <Label text="Status"/>
+                      <ObjectStatus text="{sales>/selectedOrder/status}" state="{path:'sales>/selectedOrder/status', formatter:'.formatStatusState'}"/>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+            </VBox>
+          </content>
+        </Page>
+
+        <!-- ── Page 4: Order Review / Edit ──────────────── -->
+        <Page id="salesReviewPage" title="Review Sales Order" class="fira-app-page"
+          showNavButton="true" navButtonPress=".onNavBack">
+          <footer>
+            <Bar>
+              <contentRight>
+                <Button text="Back to Edit" press=".onNavBack"/>
+                <Button text="Confirm Order" type="Emphasized" press=".onConfirmOrder" icon="sap-icon://accept"/>
+              </contentRight>
+            </Bar>
+          </footer>
+          <content>
+            <VBox class="sapUiMediumMargin">
+              <Panel headerText="Order Summary" expandable="false">
+                <content>
+                  <f:SimpleForm layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Customer"/>       <Text text="Müller Automotive GmbH (C-10042)"/>
+                      <Label text="Order Type"/>     <Text text="OR — Standard Order"/>
+                      <Label text="Delivery Date"/>  <Text text="15.04.2025"/>
+                      <Label text="Sales Org."/>     <Text text="1000 — Germany South"/>
+                      <Label text="Net Value"/>      <Text text="€ 28,400.00"/>
+                      <Label text="Tax (19%)"/>      <Text text="€ 5,396.00"/>
+                      <Label text="Gross Total"/>    <Text text="€ 33,796.00" class="sapUiStrongText"/>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+              <Panel headerText="Items (3)" class="sapUiSmallMarginTop" expandable="false">
+                <content>
+                  <Table noDataText="No items">
+                    <columns>
+                      <Column><Text text="Material"/></Column>
+                      <Column hAlign="End"><Text text="Qty"/></Column>
+                      <Column hAlign="End"><Text text="Net Value"/></Column>
+                    </columns>
+                    <items>
+                      <ColumnListItem>
+                        <cells>
+                          <ObjectIdentifier title="FG-4521" text="Industrial Motor 22kW"/>
+                          <Text text="4 EA"/>
+                          <ObjectNumber number="18400" unit="EUR"/>
+                        </cells>
+                      </ColumnListItem>
+                      <ColumnListItem>
+                        <cells>
+                          <ObjectIdentifier title="FG-2210" text="Control Cabinet Type-3"/>
+                          <Text text="2 PC"/>
+                          <ObjectNumber number="7200" unit="EUR"/>
+                        </cells>
+                      </ColumnListItem>
+                      <ColumnListItem>
+                        <cells>
+                          <ObjectIdentifier title="FG-0089" text="Cable Harness Set"/>
+                          <Text text="10 SET"/>
+                          <ObjectNumber number="2800" unit="EUR"/>
+                        </cells>
+                      </ColumnListItem>
+                    </items>
+                  </Table>
+                </content>
+              </Panel>
+            </VBox>
+          </content>
+        </Page>
+
+        <!-- ── Page 5: Order Confirmation ───────────────── -->
+        <Page id="salesConfirmPage" title="Order Confirmed" class="fira-app-page" showNavButton="false">
+          <footer>
+            <Bar>
+              <contentRight>
+                <Button text="New Order" press=".onNewOrderAfterConfirm"/>
+                <Button text="Back to List" type="Emphasized" press=".onBackToList"/>
+              </contentRight>
+            </Bar>
+          </footer>
+          <content>
+            <VBox class="fira-success-box" alignItems="Center" justifyContent="Center" height="100%">
+              <core:Icon src="sap-icon://accept" size="4rem" class="fira-success-icon"/>
+              <Title text="Sales Order Confirmed" level="H2" class="sapUiMediumMarginTop"/>
+              <Text text="{sales>/confirmedOrderId}" class="sapUiSmallMarginTop"/>
+              <Text text="Delivery date: 15 April 2025 · Net value: € 28,400.00" class="sapUiSmallMarginTop" textAlign="Center"/>
+              <HBox class="sapUiLargeMarginTop" justifyContent="Center">
+                <Button text="Print Order Confirmation" icon="sap-icon://print" press=".onPrint" class="sapUiSmallMarginEnd"/>
+                <Button text="Track Delivery" icon="sap-icon://shipping-status"/>
+              </HBox>
+            </VBox>
+          </content>
+        </Page>
+
+      </NavContainer>
+    </content>
+  </Page>
+
+</mvc:View>

@@ -1,0 +1,284 @@
+<mvc:View
+  controllerName="ui5.fira.demos.controller.apps.budget.BudgetApp"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:core="sap.ui.core"
+  xmlns:f="sap.ui.layout.form"
+  displayBlock="true">
+
+  <Page showHeader="false" enableScrolling="false" class="sapUiNoContentPadding">
+    <content>
+      <NavContainer id="budgetNav" height="100%">
+
+        <!-- ── Page 1: Budget Overview ───────────────────── -->
+        <Page id="budgetOverviewPage" title="Budget Planning — Q1 2025" class="fira-app-page"
+          showNavButton="true" navButtonPress=".onNavBackToLaunchpad">
+          <headerContent>
+            <Button text="Request Supplement" type="Emphasized" icon="sap-icon://add" press=".onRequestSupplementPress"/>
+          </headerContent>
+          <subHeader>
+            <Bar>
+              <contentLeft>
+                <HBox alignItems="Center">
+                  <ObjectNumber number="4,640,000" unit="EUR" class="sapUiSmallMarginEnd" emphasized="true"/>
+                  <Text text="Total approved budget Q1 2025"/>
+                </HBox>
+              </contentLeft>
+              <contentRight>
+                <ObjectStatus text="3 cost centers over budget" state="Error"/>
+              </contentRight>
+            </Bar>
+          </subHeader>
+          <content>
+            <VBox class="sapUiMediumMargin">
+              <Text text="BUDGET BY DEPARTMENT" class="fira-section-title sapUiNoMarginBegin sapUiSmallMarginBottom"/>
+              <Table id="budgetTable" items="{budget>/departments}" noDataText="No budget data">
+                <columns>
+                  <Column><Text text="Department"/></Column>
+                  <Column><Text text="Cost Center"/></Column>
+                  <Column hAlign="End"><Text text="Budget Q1"/></Column>
+                  <Column hAlign="End"><Text text="Actual Spend"/></Column>
+                  <Column hAlign="End"><Text text="Remaining"/></Column>
+                  <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Utilization"/></Column>
+                  <Column><Text text="Status"/></Column>
+                  <Column><Text text="Actions"/></Column>
+                </columns>
+                <items>
+                  <ColumnListItem press=".onDepartmentPress" type="Navigation">
+                    <cells>
+                      <ObjectIdentifier title="{budget>name}" text="{budget>manager}"/>
+                      <Text text="{budget>costCenter}"/>
+                      <ObjectNumber number="{budget>budgetQ1}" unit="EUR"/>
+                      <ObjectNumber number="{budget>actualSpend}" unit="EUR"/>
+                      <ObjectNumber number="{budget>remaining}" unit="EUR" state="{path:'budget>remaining', formatter:'.formatRemainingState'}"/>
+                      <HBox alignItems="Center">
+                        <ProgressIndicator
+                          percentValue="{budget>utilization}"
+                          state="{path:'budget>utilization', formatter:'.formatBarState'}"
+                          showValue="false"
+                          width="6rem"
+                          height="0.5rem"/>
+                        <Text text="{budget>utilization}%" class="sapUiSmallMarginBegin"/>
+                      </HBox>
+                      <ObjectStatus text="{budget>status}" state="{path:'budget>status', formatter:'.formatStatusState'}"/>
+                      <HBox>
+                        <Button icon="sap-icon://edit" tooltip="Edit" type="Transparent" press=".onEditDepartmentPress"/>
+                        <Button icon="sap-icon://delete" tooltip="Delete" type="Transparent" press=".onDeleteDepartmentPress"/>
+                      </HBox>
+                    </cells>
+                  </ColumnListItem>
+                </items>
+              </Table>
+            </VBox>
+          </content>
+        </Page>
+
+        <!-- ── Page 2: Department Budget Detail ─────────── -->
+        <Page id="budgetDetailPage" title="Department Budget Detail" class="fira-app-page"
+          showNavButton="true" navButtonPress=".onNavBack">
+          <headerContent>
+            <Button text="Edit" icon="sap-icon://edit" press=".onEditSelectedDeptPress"/>
+            <Button text="Request Supplement" icon="sap-icon://add" press=".onRequestSupplementPress"/>
+          </headerContent>
+          <content>
+            <VBox class="sapUiMediumMargin">
+              <Panel expandable="false">
+                <content>
+                  <f:SimpleForm layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Department"/>    <Text text="{budget>/selectedDept/name}"/>
+                      <Label text="Cost Center"/>   <Text text="{budget>/selectedDept/costCenter}"/>
+                      <Label text="Manager"/>       <Text text="{budget>/selectedDept/manager}"/>
+                      <Label text="Budget Q1"/>     <ObjectNumber number="{budget>/selectedDept/budgetQ1}" unit="EUR"/>
+                      <Label text="Actual Spend"/>  <ObjectNumber number="{budget>/selectedDept/actualSpend}" unit="EUR"/>
+                      <Label text="Remaining"/>     <ObjectNumber number="{budget>/selectedDept/remaining}" unit="EUR" state="{path:'budget>/selectedDept/remaining', formatter:'.formatRemainingState'}"/>
+                      <Label text="Status"/>        <ObjectStatus text="{budget>/selectedDept/status}" state="{path:'budget>/selectedDept/status', formatter:'.formatStatusState'}"/>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+              <Panel headerText="Cost Breakdown" class="sapUiSmallMarginTop" expandable="true" expanded="true">
+                <content>
+                  <Table items="{budget>/selectedDept/breakdown}" noDataText="No data">
+                    <columns>
+                      <Column><Text text="Category"/></Column>
+                      <Column hAlign="End"><Text text="Budget"/></Column>
+                      <Column hAlign="End"><Text text="Actual"/></Column>
+                      <Column hAlign="End"><Text text="Variance"/></Column>
+                    </columns>
+                    <items>
+                      <ColumnListItem>
+                        <cells>
+                          <Text text="{budget>category}"/>
+                          <ObjectNumber number="{budget>budget}" unit="EUR"/>
+                          <ObjectNumber number="{budget>actual}" unit="EUR"/>
+                          <ObjectNumber number="{budget>variance}" unit="EUR" state="{path:'budget>variance', formatter:'.formatVarianceState'}"/>
+                        </cells>
+                      </ColumnListItem>
+                    </items>
+                  </Table>
+                </content>
+              </Panel>
+            </VBox>
+          </content>
+        </Page>
+
+        <!-- ── Page 3: Create / Edit Budget Supplement ───── -->
+        <Page id="budgetRequestPage" title="Request Budget Supplement" class="fira-app-page"
+          showNavButton="true" navButtonPress=".onNavBack">
+          <footer>
+            <Bar>
+              <contentRight>
+                <Button text="Cancel" press=".onNavBack"/>
+                <Button text="Submit Request" type="Emphasized" press=".onSubmitRequest" icon="sap-icon://paper-plane"/>
+              </contentRight>
+            </Bar>
+          </footer>
+          <content>
+            <VBox class="sapUiMediumMargin">
+              <Panel headerText="Supplement Request" expandable="false">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Department"/>
+                      <Select selectedKey="CC-1001">
+                        <core:ListItem key="CC-1001" text="CC-1001 — Sales Germany"/>
+                        <core:ListItem key="CC-1002" text="CC-1002 — IT Department"/>
+                        <core:ListItem key="CC-1003" text="CC-1003 — R&amp;D"/>
+                        <core:ListItem key="CC-1004" text="CC-1004 — Management"/>
+                        <core:ListItem key="CC-1005" text="CC-1005 — Logistics"/>
+                        <core:ListItem key="CC-1006" text="CC-1006 — Production"/>
+                        <core:ListItem key="CC-1007" text="CC-1007 — Marketing"/>
+                        <core:ListItem key="CC-1008" text="CC-1008 — HR"/>
+                      </Select>
+                      <Label text="Request Type"/>
+                      <Select selectedKey="supplement">
+                        <core:ListItem key="supplement"   text="Budget Supplement (increase)"/>
+                        <core:ListItem key="reallocation" text="Budget Reallocation (move between categories)"/>
+                        <core:ListItem key="reserve"      text="Unblock Reserve Budget"/>
+                      </Select>
+                      <Label text="Amount Requested" required="true"/>
+                      <Input type="Number" placeholder="EUR" textAlign="End"/>
+                      <Label text="Period"/>
+                      <Select selectedKey="Q1">
+                        <core:ListItem key="Q1" text="Q1 2025 (Jan — Mar)"/>
+                        <core:ListItem key="Q2" text="Q2 2025 (Apr — Jun)"/>
+                        <core:ListItem key="Q3" text="Q3 2025 (Jul — Sep)"/>
+                        <core:ListItem key="Q4" text="Q4 2025 (Oct — Dec)"/>
+                      </Select>
+                      <Label text="Business Justification" required="true"/>
+                      <TextArea rows="5" width="100%" placeholder="Explain why additional budget is needed..."/>
+                      <Label text="Supporting Documents"/>
+                      <Input placeholder="Attach file name(s), e.g. cost_estimate_Q1.pdf"/>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+              <Panel headerText="Scheduling &amp; Approver" class="sapUiSmallMarginTop" expandable="true" expanded="true">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Deadline Time for Approval"/>
+                      <TimePicker valueFormat="HH:mm" displayFormat="HH:mm" placeholder="HH:mm"/>
+                      <Label text="Number of Sub-Items"/>
+                      <StepInput value="1" min="1" max="20" step="1" width="8rem"/>
+                      <Label text="Approver"/>
+                      <ComboBox placeholder="Select or type approver name...">
+                        <core:Item key="cfo" text="CFO — Dr. Klaus Werner"/>
+                        <core:Item key="coo" text="COO — Sandra Berger"/>
+                        <core:Item key="findir" text="Finance Director — Michael Braun"/>
+                        <core:Item key="controller" text="Controller — Anna Huber"/>
+                      </ComboBox>
+                      <Label text="Priority"/>
+                      <RadioButtonGroup columns="4">
+                        <RadioButton text="Low"/>
+                        <RadioButton text="Medium"/>
+                        <RadioButton text="High"/>
+                        <RadioButton text="Critical"/>
+                      </RadioButtonGroup>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+              <Panel headerText="Options" class="sapUiSmallMarginTop" expandable="true" expanded="true">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Recurring Request"/>
+                      <Switch customTextOn="Yes" customTextOff="No"/>
+                      <Label text="CFO Approval Required"/>
+                      <CheckBox text="This request requires CFO sign-off"/>
+                      <Label text="Reserve Budget Available"/>
+                      <CheckBox text="Reserve budget can cover part of the request"/>
+                      <Label text="Already Committed"/>
+                      <CheckBox text="Expenditure already committed / in progress"/>
+                      <Label text="Budget Categories Affected"/>
+                      <MultiComboBox placeholder="Select budget categories...">
+                        <core:Item key="opex" text="Operating Expenses"/>
+                        <core:Item key="capex" text="Capital Expenditure"/>
+                        <core:Item key="personnel" text="Personnel Costs"/>
+                        <core:Item key="travel" text="Travel &amp; Entertainment"/>
+                        <core:Item key="it" text="IT &amp; Software"/>
+                        <core:Item key="marketing" text="Marketing"/>
+                      </MultiComboBox>
+                      <Label text="Supporting References"/>
+                      <MultiInput showValueHelp="false" placeholder="Add reference document IDs as tags..."/>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+              <Panel headerText="Assessment" class="sapUiSmallMarginTop" expandable="true" expanded="true">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Confidence Level (%)"/>
+                      <Slider min="0" max="100" step="5" showAdvancedTooltip="true" enableTickmarks="true" value="80"/>
+                      <Label text="Business Impact"/>
+                      <RatingIndicator maxValue="5" value="3"/>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+            </VBox>
+          </content>
+        </Page>
+
+        <!-- ── Page 4: Supplement Requests List ──────────── -->
+        <Page id="budgetRequestsListPage" title="Supplement Requests" class="fira-app-page"
+          showNavButton="true" navButtonPress=".onNavBack">
+          <headerContent>
+            <Button text="New Request" type="Emphasized" icon="sap-icon://add" press=".onRequestSupplementPress"/>
+          </headerContent>
+          <content>
+            <Table id="supplementTable" items="{budget>/supplementRequests}" noDataText="No supplement requests">
+              <columns>
+                <Column><Text text="Request ID"/></Column>
+                <Column><Text text="Department"/></Column>
+                <Column hAlign="End"><Text text="Amount"/></Column>
+                <Column><Text text="Type"/></Column>
+                <Column><Text text="Submitted"/></Column>
+                <Column><Text text="Status"/></Column>
+                <Column><Text text="Actions"/></Column>
+              </columns>
+              <items>
+                <ColumnListItem>
+                  <cells>
+                    <Text text="{budget>id}"/>
+                    <Text text="{budget>department}"/>
+                    <ObjectNumber number="{budget>amount}" unit="EUR"/>
+                    <Text text="{budget>type}"/>
+                    <Text text="{path:'budget>submittedAt', formatter:'.formatDate'}"/>
+                    <ObjectStatus text="{budget>status}" state="{path:'budget>status', formatter:'.formatSupplementState'}"/>
+                    <Button icon="sap-icon://delete" tooltip="Delete request" type="Transparent" press=".onDeleteSupplementPress"/>
+                  </cells>
+                </ColumnListItem>
+              </items>
+            </Table>
+          </content>
+        </Page>
+
+      </NavContainer>
+    </content>
+  </Page>
+
+</mvc:View>

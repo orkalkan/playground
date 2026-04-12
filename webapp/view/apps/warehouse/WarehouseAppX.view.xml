@@ -1,0 +1,308 @@
+<mvc:View
+  controllerName="ui5.fira.demos.controller.apps.warehouse.WarehouseApp"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:core="sap.ui.core"
+  xmlns:f="sap.ui.layout.form"
+  displayBlock="true">
+
+  <Page showHeader="false" enableScrolling="false" class="sapUiNoContentPadding">
+    <content>
+      <NavContainer id="warehouseNav" height="100%">
+
+        <!-- ── Page 1: Warehouse Dashboard ──────────────── -->
+        <Page id="warehouseDashPage" title="Warehouse Operations" class="fira-app-page"
+          showNavButton="true" navButtonPress=".onNavBackToLaunchpad">
+          <content>
+            <VBox class="sapUiMediumMargin">
+
+              <HBox wrap="Wrap" class="sapUiSmallMarginBottom">
+                <GenericTile header="Goods Receipts" subheader="Today" press=".onGoodsReceiptPress" class="sapUiSmallMarginEnd sapUiSmallMarginBottom">
+                  <tileContent>
+                    <TileContent footer="3 pending putaway">
+                      <content><NumericContent value="8" indicator="Up" valueColor="Good" withMargin="false"/></content>
+                    </TileContent>
+                  </tileContent>
+                </GenericTile>
+                <GenericTile header="Open Pick Lists" subheader="In progress" press=".onPickListPress" class="sapUiSmallMarginEnd sapUiSmallMarginBottom">
+                  <tileContent>
+                    <TileContent footer="2 delayed · 1 priority">
+                      <content><NumericContent value="6" indicator="None" valueColor="Critical" withMargin="false"/></content>
+                    </TileContent>
+                  </tileContent>
+                </GenericTile>
+                <GenericTile header="Outbound Shipments" subheader="Ready to ship" press=".onShipmentPress" class="sapUiSmallMarginBottom">
+                  <tileContent>
+                    <TileContent footer="4 pending confirmation">
+                      <content><NumericContent value="4" indicator="None" valueColor="None" withMargin="false"/></content>
+                    </TileContent>
+                  </tileContent>
+                </GenericTile>
+              </HBox>
+
+              <Text text="STOCK OVERVIEW — TOP LOCATIONS" class="fira-section-title sapUiNoMarginBegin sapUiSmallMarginTop"/>
+              <Table id="stockTable" items="{warehouse>/stockOverview}" noDataText="No stock data" class="sapUiSmallMarginTop">
+                <columns>
+                  <Column><Text text="Material"/></Column>
+                  <Column><Text text="Storage Location"/></Column>
+                  <Column hAlign="End"><Text text="Unrestricted"/></Column>
+                  <Column hAlign="End"><Text text="In Quality"/></Column>
+                  <Column hAlign="End"><Text text="In Transit"/></Column>
+                  <Column hAlign="End"><Text text="Min Stock"/></Column>
+                  <Column><Text text="Alert"/></Column>
+                  <Column><Text text="Actions"/></Column>
+                </columns>
+                <items>
+                  <ColumnListItem>
+                    <cells>
+                      <ObjectIdentifier title="{warehouse>materialId}" text="{warehouse>description}"/>
+                      <Text text="{warehouse>location}"/>
+                      <ObjectNumber number="{warehouse>unrestricted}" unit="{warehouse>uom}"/>
+                      <ObjectNumber number="{warehouse>inQuality}" unit="{warehouse>uom}"/>
+                      <ObjectNumber number="{warehouse>inTransit}" unit="{warehouse>uom}"/>
+                      <Text text="{warehouse>minStock} {warehouse>uom}"/>
+                      <ObjectStatus text="{parts:[{path:'warehouse>unrestricted'},{path:'warehouse>minStock'}], formatter:'.formatStockAlert'}" state="{parts:[{path:'warehouse>unrestricted'},{path:'warehouse>minStock'}], formatter:'.formatStockState'}"/>
+                      <HBox>
+                        <Button icon="sap-icon://edit" tooltip="Edit stock entry" type="Transparent" press=".onEditStockPress"/>
+                        <Button icon="sap-icon://delete" tooltip="Remove entry" type="Transparent" press=".onDeleteStockPress"/>
+                      </HBox>
+                    </cells>
+                  </ColumnListItem>
+                </items>
+              </Table>
+            </VBox>
+          </content>
+        </Page>
+
+        <!-- ── Page 2: Goods Receipt ─────────────────────── -->
+        <Page id="warehouseGRPage" title="Post Goods Receipt" class="fira-app-page"
+          showNavButton="true" navButtonPress=".onNavBack">
+          <footer>
+            <Bar>
+              <contentRight>
+                <Button text="Cancel" press=".onNavBack"/>
+                <Button text="Post GR" type="Emphasized" press=".onPostGR" icon="sap-icon://accept"/>
+              </contentRight>
+            </Bar>
+          </footer>
+          <content>
+            <VBox class="sapUiMediumMargin">
+              <Panel headerText="Reference Document" expandable="false">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Movement Type"/>
+                      <Select selectedKey="101">
+                        <core:ListItem key="101" text="101 — GR for Purchase Order"/>
+                        <core:ListItem key="501" text="501 — GR without Reference"/>
+                        <core:ListItem key="561" text="561 — Initial Stock Entry"/>
+                      </Select>
+                      <Label text="Purchase Order"/>
+                      <Input placeholder="Enter PO number..." value="PO-2025-0150"/>
+                      <Button text="Load Items" press=".onLoadPOItems" icon="sap-icon://download"/>
+                      <Label text="Delivery Note No."/>
+                      <Input placeholder="Vendor delivery note number"/>
+                      <Label text="Bill of Lading"/>
+                      <Input placeholder="Bill of lading / CMR number"/>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+              <Panel headerText="Delivery Items" class="sapUiSmallMarginTop" expandable="false">
+                <content>
+                  <Table id="grItemsTable" items="{warehouse>/grItems}" noDataText="Load a PO to see expected items">
+                    <columns>
+                      <Column><Text text="Item"/></Column>
+                      <Column><Text text="Material"/></Column>
+                      <Column><Text text="Description"/></Column>
+                      <Column hAlign="End"><Text text="PO Qty"/></Column>
+                      <Column hAlign="End"><Text text="Delivered Qty"/></Column>
+                      <Column><Text text="Storage Loc."/></Column>
+                    </columns>
+                    <items>
+                      <ColumnListItem>
+                        <cells>
+                          <Text text="{warehouse>item}"/>
+                          <Text text="{warehouse>materialId}"/>
+                          <Text text="{warehouse>description}"/>
+                          <ObjectNumber number="{warehouse>poQty}" unit="{warehouse>uom}"/>
+                          <Input value="{warehouse>deliveredQty}" type="Number" width="5rem" textAlign="End"/>
+                          <Select selectedKey="{warehouse>storeLoc}">
+                            <core:ListItem key="0001" text="0001 — Raw Materials"/>
+                            <core:ListItem key="0002" text="0002 — Finished Goods"/>
+                            <core:ListItem key="0003" text="0003 — Quality Hold"/>
+                            <core:ListItem key="0004" text="0004 — Returns"/>
+                          </Select>
+                        </cells>
+                      </ColumnListItem>
+                    </items>
+                  </Table>
+                </content>
+              </Panel>
+              <Panel headerText="Scheduling &amp; Carrier" class="sapUiSmallMarginTop" expandable="true" expanded="true">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Delivery Time"/>
+                      <TimePicker valueFormat="HH:mm" displayFormat="HH:mm" placeholder="HH:mm"/>
+                      <Label text="Number of Pallets"/>
+                      <StepInput value="1" min="1" max="200" step="1" width="8rem"/>
+                      <Label text="Carrier Name"/>
+                      <ComboBox placeholder="Select or type carrier...">
+                        <core:Item key="dhl" text="DHL Freight"/>
+                        <core:Item key="db" text="DB Schenker"/>
+                        <core:Item key="dpd" text="DPD"/>
+                        <core:Item key="ups" text="UPS"/>
+                        <core:Item key="fedex" text="FedEx"/>
+                        <core:Item key="other" text="Other"/>
+                      </ComboBox>
+                      <Label text="Delivery Condition"/>
+                      <RadioButtonGroup columns="3">
+                        <RadioButton text="Good"/>
+                        <RadioButton text="Damaged"/>
+                        <RadioButton text="Partial"/>
+                      </RadioButtonGroup>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+              <Panel headerText="Options" class="sapUiSmallMarginTop" expandable="true" expanded="true">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Quality Inspection Required"/>
+                      <Switch customTextOn="Yes" customTextOff="No"/>
+                      <Label text="Partial Delivery"/>
+                      <CheckBox text="This is a partial delivery against the PO"/>
+                      <Label text="Overdelivery Accepted"/>
+                      <CheckBox text="Accept quantities above PO amount"/>
+                      <Label text="Hazardous Material"/>
+                      <CheckBox text="Delivery contains hazardous materials"/>
+                      <Label text="Notify Departments"/>
+                      <MultiComboBox placeholder="Select departments to notify...">
+                        <core:Item key="proc" text="Procurement"/>
+                        <core:Item key="qual" text="Quality"/>
+                        <core:Item key="prod" text="Production"/>
+                        <core:Item key="fin" text="Finance"/>
+                      </MultiComboBox>
+                      <Label text="Serial Numbers"/>
+                      <MultiInput showValueHelp="false" placeholder="Add serial numbers as tags..."/>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+              <Panel headerText="Assessment" class="sapUiSmallMarginTop" expandable="true" expanded="true">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Acceptance Rate (%)"/>
+                      <Slider min="0" max="100" step="5" showAdvancedTooltip="true" enableTickmarks="true" value="100"/>
+                      <Label text="Delivery Quality Rating"/>
+                      <RatingIndicator maxValue="5" value="4"/>
+                      <Label text="GR Notes"/>
+                      <TextArea rows="3" width="100%" placeholder="Additional notes about the goods receipt..."/>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+            </VBox>
+          </content>
+        </Page>
+
+        <!-- ── Page 3: Pick List ─────────────────────────── -->
+        <Page id="warehousePickPage" title="Pick Lists" class="fira-app-page"
+          showNavButton="true" navButtonPress=".onNavBack">
+          <headerContent>
+            <Button text="New Pick List" type="Emphasized" icon="sap-icon://add" press=".onNewPickListPress"/>
+          </headerContent>
+          <content>
+            <List id="pickList" items="{warehouse>/pickLists}" noDataText="No active pick lists" mode="None">
+              <CustomListItem press=".onPickListItemPress" type="Navigation">
+                <content>
+                  <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginTopBottom">
+                    <HBox alignItems="Center" justifyContent="SpaceBetween">
+                      <HBox alignItems="Center">
+                        <core:Icon src="{path:'warehouse>status', formatter:'.formatPickIcon'}" size="1.25rem" color="{path:'warehouse>status', formatter:'.formatPickColor'}" class="sapUiSmallMarginEnd"/>
+                        <VBox>
+                          <Text text="{warehouse>id} — {warehouse>deliveryId}" renderWhitespace="false"/>
+                          <Text text="Customer: {warehouse>customer} · {warehouse>items} items · {warehouse>totalWeight} kg" class="sapUiTinyMarginTop"/>
+                        </VBox>
+                      </HBox>
+                      <HBox alignItems="Center">
+                        <ObjectStatus text="{warehouse>status}" state="{path:'warehouse>status', formatter:'.formatPickState'}" class="sapUiSmallMarginEnd"/>
+                        <Button text="Start Pick" press=".onStartPick" type="{path:'warehouse>status', formatter:'.formatPickButtonType'}" class="sapUiSmallMarginEnd"/>
+                        <Button icon="sap-icon://delete" tooltip="Cancel pick list" type="Transparent" press=".onCancelPickListPress"/>
+                      </HBox>
+                    </HBox>
+                  </VBox>
+                </content>
+              </CustomListItem>
+            </List>
+          </content>
+        </Page>
+
+        <!-- ── Page 4: Shipment Confirmation ─────────────── -->
+        <Page id="warehouseShipPage" title="Confirm Shipment" class="fira-app-page"
+          showNavButton="true" navButtonPress=".onNavBack">
+          <footer>
+            <Bar>
+              <contentRight>
+                <Button text="Cancel" press=".onNavBack"/>
+                <Button text="Confirm &amp; Post GI" type="Emphasized" press=".onConfirmShipment" icon="sap-icon://paper-plane"/>
+              </contentRight>
+            </Bar>
+          </footer>
+          <content>
+            <VBox class="sapUiMediumMargin">
+              <Panel headerText="Outbound Deliveries Ready to Ship" expandable="false">
+                <content>
+                  <Table id="shipmentTable" items="{warehouse>/outboundDeliveries}" noDataText="No pending shipments" mode="MultiSelect">
+                    <columns>
+                      <Column><Text text="Delivery No."/></Column>
+                      <Column><Text text="Ship-To"/></Column>
+                      <Column><Text text="Carrier"/></Column>
+                      <Column hAlign="End"><Text text="Weight"/></Column>
+                      <Column><Text text="Shipping Date"/></Column>
+                      <Column><Text text="Status"/></Column>
+                    </columns>
+                    <items>
+                      <ColumnListItem selected="{warehouse>selected}">
+                        <cells>
+                          <ObjectIdentifier title="{warehouse>id}" text="{warehouse>salesOrderId}"/>
+                          <VBox>
+                            <Text text="{warehouse>shipTo}"/>
+                            <Text text="{warehouse>shipToCity}" class="sapUiTinyMarginTop"/>
+                          </VBox>
+                          <Text text="{warehouse>carrier}"/>
+                          <ObjectNumber number="{warehouse>weight}" unit="kg"/>
+                          <Text text="{path:'warehouse>shippingDate', formatter:'.formatDate'}"/>
+                          <ObjectStatus text="{warehouse>status}" state="{path:'warehouse>status', formatter:'.formatShipState'}"/>
+                        </cells>
+                      </ColumnListItem>
+                    </items>
+                  </Table>
+                </content>
+              </Panel>
+              <Panel headerText="Shipment Details" class="sapUiSmallMarginTop" expandable="true" expanded="true">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Carrier Reference"/>
+                      <Input placeholder="Carrier booking / tracking number"/>
+                      <Label text="Actual Ship Date"/>
+                      <DatePicker valueFormat="yyyy-MM-dd" displayFormat="dd.MM.yyyy"/>
+                      <Label text="Shipping Notes"/>
+                      <TextArea rows="2" width="100%" placeholder="Special handling instructions, notes for carrier..."/>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+            </VBox>
+          </content>
+        </Page>
+
+      </NavContainer>
+    </content>
+  </Page>
+
+</mvc:View>

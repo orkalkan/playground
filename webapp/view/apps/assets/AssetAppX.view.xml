@@ -1,0 +1,403 @@
+<mvc:View
+  controllerName="ui5.fira.demos.controller.apps.assets.AssetApp"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:core="sap.ui.core"
+  xmlns:f="sap.ui.layout.form"
+  xmlns:uxap="sap.uxap"
+  displayBlock="true">
+
+  <Page showHeader="false" enableScrolling="false" class="sapUiNoContentPadding">
+    <content>
+      <NavContainer id="assetNav" height="100%">
+
+        <!-- ── Page 1: Asset List ────────────────────────── -->
+        <Page id="assetListPage" title="Asset Management" class="fira-app-page"
+          showNavButton="true" navButtonPress=".onNavBackToLaunchpad">
+          <headerContent>
+            <Button text="Register Asset" type="Emphasized" icon="sap-icon://add" press=".onRegisterPress"/>
+          </headerContent>
+          <subHeader>
+            <Bar>
+              <contentLeft>
+                <SearchField width="18rem" placeholder="Search by asset number or description..." search=".onSearch"/>
+              </contentLeft>
+              <contentRight>
+                <Select change=".onCategoryFilter">
+                  <core:ListItem key="all"        text="All Categories"/>
+                  <core:ListItem key="IT"          text="IT Equipment"/>
+                  <core:ListItem key="Vehicles"    text="Vehicles"/>
+                  <core:ListItem key="Machinery"   text="Machinery"/>
+                  <core:ListItem key="Furniture"   text="Furniture"/>
+                  <core:ListItem key="Buildings"   text="Buildings"/>
+                </Select>
+              </contentRight>
+            </Bar>
+          </subHeader>
+          <content>
+            <Table id="assetTable" items="{assets>/assets}" noDataText="No assets found">
+              <columns>
+                <Column><Text text="Asset No."/></Column>
+                <Column><Text text="Description"/></Column>
+                <Column><Text text="Category"/></Column>
+                <Column><Text text="Location"/></Column>
+                <Column hAlign="End"><Text text="Acquisition Value"/></Column>
+                <Column hAlign="End"><Text text="Net Book Value"/></Column>
+                <Column><Text text="Status"/></Column>
+                <Column><Text text="Actions"/></Column>
+              </columns>
+              <items>
+                <ColumnListItem press=".onAssetPress" type="Navigation">
+                  <cells>
+                    <ObjectIdentifier title="{assets>id}" text="{assets>serialNo}"/>
+                    <Text text="{assets>description}"/>
+                    <Text text="{assets>category}"/>
+                    <Text text="{assets>location}"/>
+                    <ObjectNumber number="{assets>acquisitionValue}" unit="EUR"/>
+                    <ObjectNumber number="{assets>netBookValue}" unit="EUR" state="{path:'assets>netBookValue', formatter:'.formatBookValueState'}"/>
+                    <ObjectStatus text="{assets>status}" state="{path:'assets>status', formatter:'.formatStatusState'}"/>
+                    <HBox>
+                      <Button icon="sap-icon://edit" tooltip="Edit" type="Transparent" press=".onEditAssetPress"/>
+                      <Button icon="sap-icon://delete" tooltip="Delete" type="Transparent" press=".onDeleteAssetPress"/>
+                    </HBox>
+                  </cells>
+                </ColumnListItem>
+              </items>
+            </Table>
+          </content>
+        </Page>
+
+        <!-- ── Page 2: Asset Detail ──────────────────────── -->
+        <Page id="assetDetailPage" title="Asset Detail" class="fira-app-page"
+          showNavButton="true" navButtonPress=".onNavBack">
+          <headerContent>
+            <Button text="Edit" icon="sap-icon://edit" press=".onEditSelectedAssetPress"/>
+            <Button text="Maintenance Request" icon="sap-icon://wrench" press=".onMaintenanceRequestPress"/>
+          </headerContent>
+          <content>
+            <uxap:ObjectPageLayout showTitleInHeaderContent="false" alwaysShowContentHeader="false" headerContentPinnable="false" isChildPage="false">
+              <uxap:headerTitle>
+                <uxap:ObjectPageDynamicHeaderTitle>
+                  <uxap:heading>
+                    <Title text="{assets>/selectedAsset/description}"/>
+                  </uxap:heading>
+                  <uxap:expandedContent>
+                    <Label text="{assets>/selectedAsset/id} · {assets>/selectedAsset/serialNo}"/>
+                  </uxap:expandedContent>
+                  <uxap:actions>
+                    <ObjectStatus text="{assets>/selectedAsset/status}" state="{path:'assets>/selectedAsset/status', formatter:'.formatStatusState'}"/>
+                  </uxap:actions>
+                </uxap:ObjectPageDynamicHeaderTitle>
+              </uxap:headerTitle>
+              <uxap:sections>
+                <uxap:ObjectPageSection title="General Information" titleUppercase="false">
+                  <uxap:subSections>
+                    <uxap:ObjectPageSubSection>
+                      <uxap:blocks>
+                        <f:SimpleForm layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                          <f:content>
+                            <Label text="Asset Number"/>   <Text text="{assets>/selectedAsset/id}"/>
+                            <Label text="Serial Number"/>  <Text text="{assets>/selectedAsset/serialNo}"/>
+                            <Label text="Category"/>       <Text text="{assets>/selectedAsset/category}"/>
+                            <Label text="Location"/>       <Text text="{assets>/selectedAsset/location}"/>
+                            <Label text="Assigned To"/>    <Text text="{assets>/selectedAsset/assignedTo}"/>
+                            <Label text="Cost Center"/>    <Text text="{assets>/selectedAsset/costCenter}"/>
+                            <Label text="Vendor"/>         <Text text="{assets>/selectedAsset/vendor}"/>
+                            <Label text="Purchase Date"/>  <Text text="{path:'assets>/selectedAsset/purchaseDate', formatter:'.formatDate'}"/>
+                            <Label text="Useful Life"/>    <Text text="{assets>/selectedAsset/usefulLife} years"/>
+                          </f:content>
+                        </f:SimpleForm>
+                      </uxap:blocks>
+                    </uxap:ObjectPageSubSection>
+                  </uxap:subSections>
+                </uxap:ObjectPageSection>
+                <uxap:ObjectPageSection title="Depreciation" titleUppercase="false">
+                  <uxap:subSections>
+                    <uxap:ObjectPageSubSection>
+                      <uxap:blocks>
+                        <f:SimpleForm layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                          <f:content>
+                            <Label text="Acquisition Value"/>    <ObjectNumber number="{assets>/selectedAsset/acquisitionValue}" unit="EUR"/>
+                            <Label text="Accumulated Depr."/>   <ObjectNumber number="{assets>/selectedAsset/accumulatedDepr}" unit="EUR"/>
+                            <Label text="Net Book Value"/>       <ObjectNumber number="{assets>/selectedAsset/netBookValue}" unit="EUR"/>
+                            <Label text="Depreciation Method"/> <Text text="{assets>/selectedAsset/deprecMethod}"/>
+                            <Label text="Depreciation Rate"/>   <Text text="{assets>/selectedAsset/deprecRate}% per year"/>
+                            <Label text="Fully Depreciated"/>   <Text text="{path:'assets>/selectedAsset/fullyDepreciated', formatter:'.formatBoolean'}"/>
+                          </f:content>
+                        </f:SimpleForm>
+                      </uxap:blocks>
+                    </uxap:ObjectPageSubSection>
+                  </uxap:subSections>
+                </uxap:ObjectPageSection>
+                <uxap:ObjectPageSection title="Maintenance History" titleUppercase="false">
+                  <uxap:subSections>
+                    <uxap:ObjectPageSubSection>
+                      <uxap:blocks>
+                        <List items="{assets>/selectedAsset/maintenanceHistory}" noDataText="No maintenance records">
+                          <StandardListItem
+                            title="{assets>type}"
+                            description="{assets>description}"
+                            info="{path:'assets>date', formatter:'.formatDate'}"
+                            icon="{assets>icon}"/>
+                        </List>
+                      </uxap:blocks>
+                    </uxap:ObjectPageSubSection>
+                  </uxap:subSections>
+                </uxap:ObjectPageSection>
+              </uxap:sections>
+            </uxap:ObjectPageLayout>
+          </content>
+        </Page>
+
+        <!-- ── Page 3: Register / Edit Asset ─────────────── -->
+        <Page id="assetRegisterPage" title="Register / Edit Asset" class="fira-app-page"
+          showNavButton="true" navButtonPress=".onNavBack">
+          <footer>
+            <Bar>
+              <contentRight>
+                <Button text="Cancel" press=".onNavBack"/>
+                <Button text="Save Asset" type="Emphasized" press=".onSaveAsset" icon="sap-icon://accept"/>
+              </contentRight>
+            </Bar>
+          </footer>
+          <content>
+            <VBox class="sapUiMediumMargin">
+              <Panel headerText="Asset Information" expandable="false">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Description" required="true"/>
+                      <Input value="{assets>/editAsset/description}" placeholder="Asset description"/>
+                      <Label text="Category" required="true"/>
+                      <Select selectedKey="{assets>/editAsset/category}">
+                        <core:ListItem key="IT"        text="IT Equipment"/>
+                        <core:ListItem key="Vehicles"  text="Vehicles"/>
+                        <core:ListItem key="Machinery" text="Machinery"/>
+                        <core:ListItem key="Furniture" text="Furniture"/>
+                        <core:ListItem key="Buildings" text="Buildings"/>
+                      </Select>
+                      <Label text="Serial Number"/>
+                      <Input value="{assets>/editAsset/serialNo}" placeholder="Manufacturer serial number"/>
+                      <Label text="Vendor"/>
+                      <Input value="{assets>/editAsset/vendor}" placeholder="Supplier name"/>
+                      <Label text="Purchase Date" required="true"/>
+                      <DatePicker value="{assets>/editAsset/purchaseDate}" valueFormat="yyyy-MM-dd" displayFormat="dd.MM.yyyy"/>
+                      <Label text="Acquisition Value" required="true"/>
+                      <Input value="{assets>/editAsset/acquisitionValue}" type="Number" placeholder="EUR" textAlign="End"/>
+                      <Label text="Useful Life (years)"/>
+                      <Input value="{assets>/editAsset/usefulLife}" type="Number" width="6rem" textAlign="End"/>
+                      <Label text="Location"/>
+                      <Select selectedKey="{assets>/editAsset/locationKey}">
+                        <core:ListItem key="HQ-F1" text="HQ · Floor 1"/>
+                        <core:ListItem key="HQ-F2" text="HQ · Floor 2"/>
+                        <core:ListItem key="HQ-F3" text="HQ · Floor 3"/>
+                        <core:ListItem key="WH-01" text="Warehouse 01"/>
+                        <core:ListItem key="WH-02" text="Warehouse 02"/>
+                        <core:ListItem key="PROD-A" text="Production Hall A"/>
+                        <core:ListItem key="PROD-B" text="Production Hall B"/>
+                      </Select>
+                      <Label text="Assigned To"/>
+                      <Input value="{assets>/editAsset/assignedTo}" placeholder="Employee name or team"/>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+              <Panel headerText="Physical Details" class="sapUiSmallMarginTop" expandable="true" expanded="true">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Last Maintenance Time"/>
+                      <TimePicker valueFormat="HH:mm" displayFormat="HH:mm" placeholder="HH:mm"/>
+                      <Label text="Quantity / Units"/>
+                      <StepInput value="1" min="1" max="1000" step="1" width="8rem"/>
+                      <Label text="Manufacturer"/>
+                      <ComboBox placeholder="Select or type manufacturer...">
+                        <core:Item key="hp" text="HP"/>
+                        <core:Item key="dell" text="Dell"/>
+                        <core:Item key="lenovo" text="Lenovo"/>
+                        <core:Item key="apple" text="Apple"/>
+                        <core:Item key="siemens" text="Siemens"/>
+                        <core:Item key="bosch" text="Bosch"/>
+                        <core:Item key="other" text="Other"/>
+                      </ComboBox>
+                      <Label text="Depreciation Method"/>
+                      <RadioButtonGroup columns="3">
+                        <RadioButton text="Linear"/>
+                        <RadioButton text="Declining"/>
+                        <RadioButton text="Units of Production"/>
+                      </RadioButtonGroup>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+              <Panel headerText="Options" class="sapUiSmallMarginTop" expandable="true" expanded="true">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Under Warranty"/>
+                      <Switch customTextOn="Yes" customTextOff="No"/>
+                      <Label text="Leased Asset"/>
+                      <CheckBox text="Asset is leased (not owned)"/>
+                      <Label text="Critical Asset"/>
+                      <CheckBox text="Asset is business-critical — flag for priority maintenance"/>
+                      <Label text="Insurance Required"/>
+                      <CheckBox text="Asset must be covered by insurance policy"/>
+                      <Label text="Linked Cost Centers"/>
+                      <MultiComboBox placeholder="Select linked cost centers...">
+                        <core:Item key="CC-1001" text="CC-1001 — Sales Germany"/>
+                        <core:Item key="CC-1002" text="CC-1002 — IT Department"/>
+                        <core:Item key="CC-1003" text="CC-1003 — R&amp;D"/>
+                        <core:Item key="CC-1004" text="CC-1004 — Management"/>
+                        <core:Item key="CC-1005" text="CC-1005 — Logistics"/>
+                      </MultiComboBox>
+                      <Label text="License / Certificate Numbers"/>
+                      <MultiInput showValueHelp="false" placeholder="Add license or certificate numbers as tags..."/>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+              <Panel headerText="Assessment" class="sapUiSmallMarginTop" expandable="true" expanded="true">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Condition Score (%)"/>
+                      <Slider min="0" max="100" step="5" showAdvancedTooltip="true" enableTickmarks="true" value="80"/>
+                      <Label text="Asset Criticality"/>
+                      <RatingIndicator maxValue="5" value="3"/>
+                      <Label text="Notes"/>
+                      <TextArea rows="3" width="100%" placeholder="Additional notes about the asset condition, history, or special requirements..."/>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+            </VBox>
+          </content>
+        </Page>
+
+        <!-- ── Page 4: Maintenance Request ───────────────── -->
+        <Page id="assetMaintenancePage" title="Maintenance Request" class="fira-app-page"
+          showNavButton="true" navButtonPress=".onNavBack">
+          <footer>
+            <Bar>
+              <contentRight>
+                <Button text="Cancel" press=".onNavBack"/>
+                <Button text="Submit Request" type="Emphasized" press=".onSubmitMaintenance" icon="sap-icon://paper-plane"/>
+              </contentRight>
+            </Bar>
+          </footer>
+          <content>
+            <VBox class="sapUiMediumMargin">
+              <Panel expandable="false">
+                <content>
+                  <f:SimpleForm layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Asset"/>         <Text text="{assets>/selectedAsset/id} — {assets>/selectedAsset/description}"/>
+                      <Label text="Location"/>      <Text text="{assets>/selectedAsset/location}"/>
+                      <Label text="Current Status"/><ObjectStatus text="{assets>/selectedAsset/status}" state="{path:'assets>/selectedAsset/status', formatter:'.formatStatusState'}"/>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+              <Panel headerText="Maintenance Details" class="sapUiSmallMarginTop" expandable="false">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Maintenance Type" required="true"/>
+                      <Select selectedKey="scheduled">
+                        <core:ListItem key="scheduled"  text="Scheduled Service"/>
+                        <core:ListItem key="repair"     text="Unscheduled Repair"/>
+                        <core:ListItem key="inspection" text="Safety Inspection"/>
+                        <core:ListItem key="upgrade"    text="Upgrade / Enhancement"/>
+                        <core:ListItem key="emergency"  text="Emergency Repair"/>
+                      </Select>
+                      <Label text="Priority"/>
+                      <Select selectedKey="normal">
+                        <core:ListItem key="urgent"  text="Urgent — asset down"/>
+                        <core:ListItem key="high"    text="High — risk of failure"/>
+                        <core:ListItem key="normal"  text="Normal"/>
+                        <core:ListItem key="low"     text="Low — next scheduled slot"/>
+                      </Select>
+                      <Label text="Requested Date"/>
+                      <DatePicker valueFormat="yyyy-MM-dd" displayFormat="dd.MM.yyyy"/>
+                      <Label text="Description" required="true"/>
+                      <TextArea rows="4" width="100%" placeholder="Describe the issue or work required..."/>
+                      <Label text="Estimated Downtime"/>
+                      <Input placeholder="e.g. 4 hours, 1 day"/>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+              <Panel headerText="Scheduling &amp; Details" class="sapUiSmallMarginTop" expandable="true" expanded="true">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Last Maintenance Time"/>
+                      <TimePicker valueFormat="HH:mm" displayFormat="HH:mm" placeholder="HH:mm"/>
+                      <Label text="Quantity / Units Affected"/>
+                      <StepInput value="1" min="1" max="100" step="1" width="8rem"/>
+                      <Label text="Manufacturer"/>
+                      <ComboBox placeholder="Select or type manufacturer...">
+                        <core:Item key="hp" text="HP"/>
+                        <core:Item key="dell" text="Dell"/>
+                        <core:Item key="lenovo" text="Lenovo"/>
+                        <core:Item key="siemens" text="Siemens"/>
+                        <core:Item key="bosch" text="Bosch"/>
+                        <core:Item key="other" text="Other"/>
+                      </ComboBox>
+                      <Label text="Depreciation Method"/>
+                      <RadioButtonGroup columns="3">
+                        <RadioButton text="Linear"/>
+                        <RadioButton text="Declining"/>
+                        <RadioButton text="Units of Production"/>
+                      </RadioButtonGroup>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+              <Panel headerText="Options" class="sapUiSmallMarginTop" expandable="true" expanded="true">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Under Warranty"/>
+                      <Switch customTextOn="Yes" customTextOff="No"/>
+                      <Label text="Leased Asset"/>
+                      <CheckBox text="Asset is leased — notify leasing company"/>
+                      <Label text="Critical Asset"/>
+                      <CheckBox text="Asset is business-critical — expedite repair"/>
+                      <Label text="Insurance Required"/>
+                      <CheckBox text="Notify insurance provider about maintenance"/>
+                      <Label text="Linked Cost Centers"/>
+                      <MultiComboBox placeholder="Select cost centers to charge...">
+                        <core:Item key="CC-1001" text="CC-1001 — Sales Germany"/>
+                        <core:Item key="CC-1002" text="CC-1002 — IT Department"/>
+                        <core:Item key="CC-1003" text="CC-1003 — R&amp;D"/>
+                        <core:Item key="CC-1004" text="CC-1004 — Management"/>
+                        <core:Item key="CC-1005" text="CC-1005 — Logistics"/>
+                      </MultiComboBox>
+                      <Label text="License / Certificate Numbers"/>
+                      <MultiInput showValueHelp="false" placeholder="Add service certificate numbers as tags..."/>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+              <Panel headerText="Assessment" class="sapUiSmallMarginTop" expandable="true" expanded="true">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Condition Score (%)"/>
+                      <Slider min="0" max="100" step="5" showAdvancedTooltip="true" enableTickmarks="true" value="60"/>
+                      <Label text="Asset Criticality"/>
+                      <RatingIndicator maxValue="5" value="3"/>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+            </VBox>
+          </content>
+        </Page>
+
+      </NavContainer>
+    </content>
+  </Page>
+
+</mvc:View>

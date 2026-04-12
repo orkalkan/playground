@@ -64,7 +64,18 @@
         { "name": "stepinputtable", "pattern": "stepinputtable", "target": "stepinputtable" },
         { "name": "inputevents",    "pattern": "inputevents",    "target": "inputevents"    },
         { "name": "hrgrid",         "pattern": "hrgrid",         "target": "hrgrid"         },
-        { "name": "calendar",       "pattern": "calendar",       "target": "calendar"       }
+        { "name": "calendar",       "pattern": "calendar",       "target": "calendar"       },
+        { "name": "helpdesk-x",   "pattern": "helpdesk-x",   "target": "helpdesk-x"   },
+        { "name": "leave-x",      "pattern": "leave-x",      "target": "leave-x"      },
+        { "name": "travel-x",     "pattern": "travel-x",     "target": "travel-x"     },
+        { "name": "po-x",         "pattern": "po-x",         "target": "po-x"         },
+        { "name": "sales-x",      "pattern": "sales-x",      "target": "sales-x"      },
+        { "name": "assets-x",     "pattern": "assets-x",     "target": "assets-x"     },
+        { "name": "budget-x",     "pattern": "budget-x",     "target": "budget-x"     },
+        { "name": "quality-x",    "pattern": "quality-x",    "target": "quality-x"    },
+        { "name": "warehouse-x",  "pattern": "warehouse-x",  "target": "warehouse-x"  },
+        { "name": "onboarding-x", "pattern": "onboarding-x", "target": "onboarding-x" },
+        { "name": "kanban-x",     "pattern": "kanban-x",     "target": "kanban-x"     }
       ],
       "targets": {
         "login":      { "viewId": "login",      "viewName": "Login"                           },
@@ -86,7 +97,18 @@
         "stepinputtable": { "viewId": "stepinputtable", "viewName": "apps.stepinputtable.StepInputTableApp"    },
         "inputevents":    { "viewId": "inputevents",    "viewName": "apps.inputevents.InputEventsApp"          },
         "hrgrid":         { "viewId": "hrgrid",         "viewName": "apps.hrgrid.HRGridApp"                    },
-        "calendar":       { "viewId": "calendar",       "viewName": "apps.calendar.CalendarApp"                }
+        "calendar":       { "viewId": "calendar",       "viewName": "apps.calendar.CalendarApp"                },
+        "helpdesk-x":   { "viewId": "helpdesk-x",   "viewName": "apps.helpdesk.HelpdeskAppX"    },
+        "leave-x":      { "viewId": "leave-x",      "viewName": "apps.leave.LeaveAppX"          },
+        "travel-x":     { "viewId": "travel-x",     "viewName": "apps.travel.TravelAppX"        },
+        "po-x":         { "viewId": "po-x",         "viewName": "apps.po.POAppX"                },
+        "sales-x":      { "viewId": "sales-x",      "viewName": "apps.sales.SalesAppX"          },
+        "assets-x":     { "viewId": "assets-x",     "viewName": "apps.assets.AssetAppX"         },
+        "budget-x":     { "viewId": "budget-x",     "viewName": "apps.budget.BudgetAppX"        },
+        "quality-x":    { "viewId": "quality-x",    "viewName": "apps.quality.QualityAppX"      },
+        "warehouse-x":  { "viewId": "warehouse-x",  "viewName": "apps.warehouse.WarehouseAppX"  },
+        "onboarding-x": { "viewId": "onboarding-x", "viewName": "apps.onboarding.OnboardingAppX"},
+        "kanban-x":     { "viewId": "kanban-x",     "viewName": "apps.kanban.KanbanAppX"        }
       }
     }
   }

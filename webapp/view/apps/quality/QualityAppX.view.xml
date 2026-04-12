@@ -1,0 +1,365 @@
+<mvc:View
+  controllerName="ui5.fira.demos.controller.apps.quality.QualityApp"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:core="sap.ui.core"
+  xmlns:f="sap.ui.layout.form"
+  displayBlock="true">
+
+  <Page showHeader="false" enableScrolling="false" class="sapUiNoContentPadding">
+    <content>
+      <NavContainer id="qualityNav" height="100%">
+
+        <!-- ── Page 1: Inspection List ───────────────────── -->
+        <Page id="qualityListPage" title="Quality Inspection" class="fira-app-page"
+          showNavButton="true" navButtonPress=".onNavBackToLaunchpad">
+          <headerContent>
+            <Button text="New Inspection" type="Emphasized" icon="sap-icon://add" press=".onNewInspectionPress"/>
+          </headerContent>
+          <subHeader>
+            <Bar>
+              <contentLeft>
+                <HBox alignItems="Center">
+                  <ObjectStatus text="8 Open" state="Warning" class="sapUiSmallMarginEnd"/>
+                  <ObjectStatus text="3 Defects Logged" state="Error"/>
+                </HBox>
+              </contentLeft>
+            </Bar>
+          </subHeader>
+          <content>
+            <Table id="inspectionTable" items="{quality>/inspections}" noDataText="No open inspections">
+              <columns>
+                <Column><Text text="Insp. Lot"/></Column>
+                <Column><Text text="Material"/></Column>
+                <Column><Text text="Batch"/></Column>
+                <Column hAlign="End"><Text text="Quantity"/></Column>
+                <Column><Text text="Plant"/></Column>
+                <Column><Text text="Origin"/></Column>
+                <Column><Text text="Status"/></Column>
+                <Column><Text text="Actions"/></Column>
+              </columns>
+              <items>
+                <ColumnListItem press=".onInspectionPress" type="Navigation">
+                  <cells>
+                    <ObjectIdentifier title="{quality>id}" text="{quality>createdDate}"/>
+                    <VBox>
+                      <Text text="{quality>materialId}"/>
+                      <Text text="{quality>materialDesc}" class="sapUiTinyMarginTop"/>
+                    </VBox>
+                    <Text text="{quality>batch}"/>
+                    <ObjectNumber number="{quality>quantity}" unit="{quality>uom}"/>
+                    <Text text="{quality>plant}"/>
+                    <Text text="{quality>origin}"/>
+                    <ObjectStatus text="{quality>status}" state="{path:'quality>status', formatter:'.formatStatusState'}"/>
+                    <Button icon="sap-icon://delete" tooltip="Delete inspection" type="Transparent" press=".onDeleteInspectionPress"/>
+                  </cells>
+                </ColumnListItem>
+              </items>
+            </Table>
+          </content>
+        </Page>
+
+        <!-- ── Page 2: Record Inspection Results ─────────── -->
+        <Page id="qualityRecordPage" title="Record Inspection Results" class="fira-app-page"
+          showNavButton="true" navButtonPress=".onNavBack">
+          <footer>
+            <Bar>
+              <contentRight>
+                <Button text="Log Defect" type="Reject" icon="sap-icon://alert" press=".onLogDefectPress"/>
+                <Button text="Save Results" type="Emphasized" press=".onSaveResults" icon="sap-icon://accept"/>
+              </contentRight>
+            </Bar>
+          </footer>
+          <content>
+            <VBox class="sapUiMediumMargin">
+              <Panel expandable="false">
+                <content>
+                  <f:SimpleForm layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Inspection Lot"/>  <Text text="{quality>/selectedInspection/id}"/>
+                      <Label text="Material"/>        <Text text="{quality>/selectedInspection/materialId} — {quality>/selectedInspection/materialDesc}"/>
+                      <Label text="Batch"/>           <Text text="{quality>/selectedInspection/batch}"/>
+                      <Label text="Quantity"/>        <Text text="{quality>/selectedInspection/quantity} {quality>/selectedInspection/uom}"/>
+                      <Label text="Origin"/>          <Text text="{quality>/selectedInspection/origin}"/>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+              <Panel headerText="Inspection Characteristics" class="sapUiSmallMarginTop" expandable="false">
+                <content>
+                  <Table id="characteristicsTable" items="{quality>/selectedInspection/characteristics}" noDataText="No characteristics defined">
+                    <columns>
+                      <Column><Text text="Characteristic"/></Column>
+                      <Column><Text text="Specification"/></Column>
+                      <Column><Text text="Lower Limit"/></Column>
+                      <Column><Text text="Upper Limit"/></Column>
+                      <Column><Text text="Measured Value"/></Column>
+                      <Column><Text text="Result"/></Column>
+                    </columns>
+                    <items>
+                      <ColumnListItem>
+                        <cells>
+                          <Text text="{quality>name}"/>
+                          <Text text="{quality>spec}"/>
+                          <Text text="{quality>lowerLimit}"/>
+                          <Text text="{quality>upperLimit}"/>
+                          <Input value="{quality>measuredValue}" type="Number" width="6rem" textAlign="End"/>
+                          <ObjectStatus text="{path:'quality>result', formatter:'.formatResultText'}" state="{path:'quality>result', formatter:'.formatResultState'}"/>
+                        </cells>
+                      </ColumnListItem>
+                    </items>
+                  </Table>
+                </content>
+              </Panel>
+              <Panel headerText="Inspection Setup" class="sapUiSmallMarginTop" expandable="true" expanded="true">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Inspection Start Time"/>
+                      <TimePicker valueFormat="HH:mm" displayFormat="HH:mm" placeholder="HH:mm"/>
+                      <Label text="Sample Size"/>
+                      <StepInput value="10" min="1" max="1000" step="5" width="8rem"/>
+                      <Label text="Inspector Name"/>
+                      <ComboBox placeholder="Select or type inspector name...">
+                        <core:Item key="mvogt" text="Monika Vogt"/>
+                        <core:Item key="hsauer" text="Hans Sauer"/>
+                        <core:Item key="pkoch" text="Peter Koch"/>
+                        <core:Item key="afried" text="Anna Friedman"/>
+                      </ComboBox>
+                      <Label text="Inspection Method"/>
+                      <RadioButtonGroup columns="4">
+                        <RadioButton text="Visual"/>
+                        <RadioButton text="Measurement"/>
+                        <RadioButton text="Functional"/>
+                        <RadioButton text="Sampling"/>
+                      </RadioButtonGroup>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+              <Panel headerText="Options" class="sapUiSmallMarginTop" expandable="true" expanded="true">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Quarantine Batch"/>
+                      <Switch customTextOn="Yes" customTextOff="No"/>
+                      <Label text="Document Photo Evidence"/>
+                      <CheckBox text="Photo evidence required for this inspection"/>
+                      <Label text="Require Re-Inspection"/>
+                      <CheckBox text="Flag batch for re-inspection after rework"/>
+                      <Label text="Notify Supplier"/>
+                      <CheckBox text="Send notification to supplier"/>
+                      <Label text="Affected Characteristics"/>
+                      <MultiComboBox placeholder="Select affected quality characteristics...">
+                        <core:Item key="dim" text="Dimensional Accuracy"/>
+                        <core:Item key="surf" text="Surface Quality"/>
+                        <core:Item key="mat" text="Material Composition"/>
+                        <core:Item key="func" text="Functional Performance"/>
+                        <core:Item key="pack" text="Packaging Integrity"/>
+                        <core:Item key="label" text="Labeling &amp; Marking"/>
+                      </MultiComboBox>
+                      <Label text="Batch / Lot Numbers"/>
+                      <MultiInput showValueHelp="false" placeholder="Add batch or lot numbers as tags..."/>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+              <Panel headerText="Assessment" class="sapUiSmallMarginTop" expandable="true" expanded="true">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Defect Rate (%)"/>
+                      <Slider min="0" max="100" step="1" showAdvancedTooltip="true" enableTickmarks="true" value="0"/>
+                      <Label text="Quality Score"/>
+                      <RatingIndicator maxValue="5" value="4"/>
+                      <Label text="Inspection Notes"/>
+                      <TextArea rows="3" width="100%" placeholder="Record observations, test conditions, or additional remarks..."/>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+            </VBox>
+          </content>
+        </Page>
+
+        <!-- ── Page 3: Defect Log ────────────────────────── -->
+        <Page id="qualityDefectPage" title="Log Defect" class="fira-app-page"
+          showNavButton="true" navButtonPress=".onNavBack">
+          <footer>
+            <Bar>
+              <contentRight>
+                <Button text="Cancel" press=".onNavBack"/>
+                <Button text="Log Defect" type="Reject" press=".onSaveDefect" icon="sap-icon://alert"/>
+              </contentRight>
+            </Bar>
+          </footer>
+          <content>
+            <VBox class="sapUiMediumMargin">
+              <Panel headerText="Defect Information" expandable="false">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Defect Class" required="true"/>
+                      <Select selectedKey="B">
+                        <core:ListItem key="A" text="Class A — Critical (product unusable)"/>
+                        <core:ListItem key="B" text="Class B — Major (function impaired)"/>
+                        <core:ListItem key="C" text="Class C — Minor (cosmetic)"/>
+                      </Select>
+                      <Label text="Defect Code" required="true"/>
+                      <Select selectedKey="DC-041">
+                        <core:ListItem key="DC-010" text="DC-010 — Dimensional deviation"/>
+                        <core:ListItem key="DC-022" text="DC-022 — Surface contamination"/>
+                        <core:ListItem key="DC-041" text="DC-041 — Material defect"/>
+                        <core:ListItem key="DC-055" text="DC-055 — Assembly error"/>
+                        <core:ListItem key="DC-088" text="DC-088 — Label / marking error"/>
+                      </Select>
+                      <Label text="Affected Quantity" required="true"/>
+                      <Input type="Number" placeholder="Number of defective units" textAlign="End"/>
+                      <Label text="Defect Location"/>
+                      <Input placeholder="e.g. Batch position, component area..."/>
+                      <Label text="Description" required="true"/>
+                      <TextArea rows="4" width="100%" placeholder="Describe the defect in detail..."/>
+                      <Label text="Proposed Action"/>
+                      <Select selectedKey="rework">
+                        <core:ListItem key="rework"     text="Rework / Repair"/>
+                        <core:ListItem key="scrap"      text="Scrap"/>
+                        <core:ListItem key="return"     text="Return to Supplier"/>
+                        <core:ListItem key="concession" text="Use as-is (concession required)"/>
+                        <core:ListItem key="hold"       text="Material Hold — pending decision"/>
+                      </Select>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+              <Panel headerText="Defect Capture Details" class="sapUiSmallMarginTop" expandable="true" expanded="true">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Inspection Start Time"/>
+                      <TimePicker valueFormat="HH:mm" displayFormat="HH:mm" placeholder="HH:mm"/>
+                      <Label text="Sample Size"/>
+                      <StepInput value="10" min="1" max="1000" step="5" width="8rem"/>
+                      <Label text="Inspector Name"/>
+                      <ComboBox placeholder="Select or type inspector name...">
+                        <core:Item key="mvogt" text="Monika Vogt"/>
+                        <core:Item key="hsauer" text="Hans Sauer"/>
+                        <core:Item key="pkoch" text="Peter Koch"/>
+                        <core:Item key="afried" text="Anna Friedman"/>
+                      </ComboBox>
+                      <Label text="Inspection Method"/>
+                      <RadioButtonGroup columns="4">
+                        <RadioButton text="Visual"/>
+                        <RadioButton text="Measurement"/>
+                        <RadioButton text="Functional"/>
+                        <RadioButton text="Sampling"/>
+                      </RadioButtonGroup>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+              <Panel headerText="Options" class="sapUiSmallMarginTop" expandable="true" expanded="true">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Quarantine Batch"/>
+                      <Switch customTextOn="Yes" customTextOff="No"/>
+                      <Label text="Document Photo Evidence"/>
+                      <CheckBox text="Photo evidence attached for this defect"/>
+                      <Label text="Require Re-Inspection"/>
+                      <CheckBox text="Flag batch for re-inspection after rework"/>
+                      <Label text="Notify Supplier"/>
+                      <CheckBox text="Send defect notification to supplier"/>
+                      <Label text="Affected Characteristics"/>
+                      <MultiComboBox placeholder="Select affected quality characteristics...">
+                        <core:Item key="dim" text="Dimensional Accuracy"/>
+                        <core:Item key="surf" text="Surface Quality"/>
+                        <core:Item key="mat" text="Material Composition"/>
+                        <core:Item key="func" text="Functional Performance"/>
+                        <core:Item key="pack" text="Packaging Integrity"/>
+                        <core:Item key="label" text="Labeling &amp; Marking"/>
+                      </MultiComboBox>
+                      <Label text="Batch / Lot Numbers"/>
+                      <MultiInput showValueHelp="false" placeholder="Add batch or lot numbers as tags..."/>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+              <Panel headerText="Assessment" class="sapUiSmallMarginTop" expandable="true" expanded="true">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Defect Rate (%)"/>
+                      <Slider min="0" max="100" step="1" showAdvancedTooltip="true" enableTickmarks="true" value="0"/>
+                      <Label text="Quality Score"/>
+                      <RatingIndicator maxValue="5" value="2"/>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+            </VBox>
+          </content>
+        </Page>
+
+        <!-- ── Page 4: Usage Decision ────────────────────── -->
+        <Page id="qualityDecisionPage" title="Usage Decision" class="fira-app-page"
+          showNavButton="true" navButtonPress=".onNavBack">
+          <footer>
+            <Bar>
+              <contentRight>
+                <Button text="Cancel" press=".onNavBack"/>
+                <Button text="Post Usage Decision" type="Emphasized" press=".onPostDecision" icon="sap-icon://paper-plane"/>
+              </contentRight>
+            </Bar>
+          </footer>
+          <content>
+            <VBox class="sapUiMediumMargin">
+              <Panel headerText="Inspection Summary" expandable="false">
+                <content>
+                  <f:SimpleForm layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Inspection Lot"/>  <Text text="{quality>/selectedInspection/id}"/>
+                      <Label text="Material"/>        <Text text="{quality>/selectedInspection/materialDesc}"/>
+                      <Label text="Total Quantity"/>  <Text text="{quality>/selectedInspection/quantity} {quality>/selectedInspection/uom}"/>
+                      <Label text="Defects Found"/>   <ObjectStatus text="{quality>/selectedInspection/defectCount} defects logged" state="Error"/>
+                      <Label text="Characteristics"/> <ObjectStatus text="8 of 10 passed" state="Warning"/>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+              <Panel headerText="Decision" class="sapUiSmallMarginTop" expandable="false">
+                <content>
+                  <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
+                    <f:content>
+                      <Label text="Usage Decision" required="true"/>
+                      <Select selectedKey="A">
+                        <core:ListItem key="A" text="Accept — unrestricted use"/>
+                        <core:ListItem key="R" text="Reject — return to vendor / scrap"/>
+                        <core:ListItem key="P" text="Partial acceptance — rework required"/>
+                        <core:ListItem key="B" text="Blocked — pending further analysis"/>
+                      </Select>
+                      <Label text="Accepted Quantity"/>
+                      <Input type="Number" textAlign="End"/>
+                      <Label text="Rejected Quantity"/>
+                      <Input type="Number" textAlign="End"/>
+                      <Label text="Decision Comment" required="true"/>
+                      <TextArea rows="4" width="100%" placeholder="Provide justification for the usage decision..."/>
+                      <Label text="Notified Parties"/>
+                      <MultiInput tokens="{quality>/notifiedParties}">
+                        <tokens>
+                          <Token text="Procurement" key="procurement"/>
+                          <Token text="Production Planning" key="pp"/>
+                        </tokens>
+                      </MultiInput>
+                    </f:content>
+                  </f:SimpleForm>
+                </content>
+              </Panel>
+            </VBox>
+          </content>
+        </Page>
+
+      </NavContainer>
+    </content>
+  </Page>
+
+</mvc:View>
