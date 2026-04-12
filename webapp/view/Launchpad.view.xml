@@ -220,6 +220,110 @@
 
         </FlexBox>
 
+        <Text text="ID-FREE VARIANTS — SELECTOR ENGINE TEST" class="fira-section-title"/>
+        <FlexBox wrap="Wrap" class="fira-tile-grid">
+
+          <GenericTile header="Purchase Orders X" subheader="No IDs · CSS selectors only" press=".onTilePress" class="fira-tile">
+            <customData><core:CustomData key="route" value="po-x"/></customData>
+            <tileContent>
+              <TileContent footer="Fallback selector test variant">
+                <content><NumericContent value="0" indicator="None" valueColor="Neutral" withMargin="false"/></content>
+              </TileContent>
+            </tileContent>
+          </GenericTile>
+
+          <GenericTile header="Travel &amp; Expenses X" subheader="No IDs · CSS selectors only" press=".onTilePress" class="fira-tile">
+            <customData><core:CustomData key="route" value="travel-x"/></customData>
+            <tileContent>
+              <TileContent footer="Fallback selector test variant">
+                <content><NumericContent value="0" indicator="None" valueColor="Neutral" withMargin="false"/></content>
+              </TileContent>
+            </tileContent>
+          </GenericTile>
+
+          <GenericTile header="Budget Planning X" subheader="No IDs · CSS selectors only" press=".onTilePress" class="fira-tile">
+            <customData><core:CustomData key="route" value="budget-x"/></customData>
+            <tileContent>
+              <TileContent footer="Fallback selector test variant">
+                <content><NumericContent value="0" indicator="None" valueColor="Neutral" withMargin="false"/></content>
+              </TileContent>
+            </tileContent>
+          </GenericTile>
+
+          <GenericTile header="Sales Orders X" subheader="No IDs · CSS selectors only" press=".onTilePress" class="fira-tile">
+            <customData><core:CustomData key="route" value="sales-x"/></customData>
+            <tileContent>
+              <TileContent footer="Fallback selector test variant">
+                <content><NumericContent value="0" indicator="None" valueColor="Neutral" withMargin="false"/></content>
+              </TileContent>
+            </tileContent>
+          </GenericTile>
+
+          <GenericTile header="Warehouse Ops X" subheader="No IDs · CSS selectors only" press=".onTilePress" class="fira-tile">
+            <customData><core:CustomData key="route" value="warehouse-x"/></customData>
+            <tileContent>
+              <TileContent footer="Fallback selector test variant">
+                <content><NumericContent value="0" indicator="None" valueColor="Neutral" withMargin="false"/></content>
+              </TileContent>
+            </tileContent>
+          </GenericTile>
+
+          <GenericTile header="Quality Inspection X" subheader="No IDs · CSS selectors only" press=".onTilePress" class="fira-tile">
+            <customData><core:CustomData key="route" value="quality-x"/></customData>
+            <tileContent>
+              <TileContent footer="Fallback selector test variant">
+                <content><NumericContent value="0" indicator="None" valueColor="Neutral" withMargin="false"/></content>
+              </TileContent>
+            </tileContent>
+          </GenericTile>
+
+          <GenericTile header="Leave Management X" subheader="No IDs · CSS selectors only" press=".onTilePress" class="fira-tile">
+            <customData><core:CustomData key="route" value="leave-x"/></customData>
+            <tileContent>
+              <TileContent footer="Fallback selector test variant">
+                <content><NumericContent value="0" indicator="None" valueColor="Neutral" withMargin="false"/></content>
+              </TileContent>
+            </tileContent>
+          </GenericTile>
+
+          <GenericTile header="Employee Onboarding X" subheader="No IDs · CSS selectors only" press=".onTilePress" class="fira-tile">
+            <customData><core:CustomData key="route" value="onboarding-x"/></customData>
+            <tileContent>
+              <TileContent footer="Fallback selector test variant">
+                <content><NumericContent value="0" indicator="None" valueColor="Neutral" withMargin="false"/></content>
+              </TileContent>
+            </tileContent>
+          </GenericTile>
+
+          <GenericTile header="IT Helpdesk X" subheader="No IDs · CSS selectors only" press=".onTilePress" class="fira-tile">
+            <customData><core:CustomData key="route" value="helpdesk-x"/></customData>
+            <tileContent>
+              <TileContent footer="Fallback selector test variant">
+                <content><NumericContent value="0" indicator="None" valueColor="Neutral" withMargin="false"/></content>
+              </TileContent>
+            </tileContent>
+          </GenericTile>
+
+          <GenericTile header="Asset Management X" subheader="No IDs · CSS selectors only" press=".onTilePress" class="fira-tile">
+            <customData><core:CustomData key="route" value="assets-x"/></customData>
+            <tileContent>
+              <TileContent footer="Fallback selector test variant">
+                <content><NumericContent value="0" indicator="None" valueColor="Neutral" withMargin="false"/></content>
+              </TileContent>
+            </tileContent>
+          </GenericTile>
+
+          <GenericTile header="Kanban Board X" subheader="No IDs · CSS selectors only" press=".onTilePress" class="fira-tile">
+            <customData><core:CustomData key="route" value="kanban-x"/></customData>
+            <tileContent>
+              <TileContent footer="Drag &amp; Drop · Fallback selector test variant">
+                <content><NumericContent value="0" indicator="None" valueColor="Neutral" withMargin="false"/></content>
+              </TileContent>
+            </tileContent>
+          </GenericTile>
+
+        </FlexBox>
+
       </VBox>
     </content>
   </Page>
