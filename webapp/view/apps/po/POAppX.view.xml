@@ -269,7 +269,7 @@
                         <core:ListItem key="003" text="003 — Facilities"/>
                       </Select>
                       <Label text="Delivery Date" required="true"/>
-                      <DatePicker value="{po>/newPO/deliveryDate}" valueFormat="yyyy-MM-dd" displayFormat="dd.MM.yyyy"/>
+                      <DatePicker value="{po>/newPO/deliveryDate}" valueFormat="yyyy-MM-dd" displayFormat="dd.MM.yyyy" placeholder="Delivery date"/>
                       <Label text="Payment Terms"/>
                       <Select selectedKey="N030">
                         <core:ListItem key="N014" text="Net 14 days"/>

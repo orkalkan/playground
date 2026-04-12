@@ -96,9 +96,9 @@
                         <core:ListItem key="JP" text="Japan"/>
                       </Select>
                       <Label text="Departure Date" required="true"/>
-                      <DatePicker valueFormat="yyyy-MM-dd" displayFormat="dd.MM.yyyy"/>
+                      <DatePicker valueFormat="yyyy-MM-dd" displayFormat="dd.MM.yyyy" placeholder="Departure date"/>
                       <Label text="Return Date" required="true"/>
-                      <DatePicker valueFormat="yyyy-MM-dd" displayFormat="dd.MM.yyyy"/>
+                      <DatePicker valueFormat="yyyy-MM-dd" displayFormat="dd.MM.yyyy" placeholder="Return date"/>
                       <Label text="Cost Center"/>
                       <Select selectedKey="CC-1001">
                         <core:ListItem key="CC-1001" text="CC-1001 — Sales Germany"/>

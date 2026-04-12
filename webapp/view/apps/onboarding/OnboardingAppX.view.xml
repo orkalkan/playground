@@ -312,7 +312,7 @@
                         <core:ListItem key="Management"   text="Management"/>
                       </Select>
                       <Label text="Start Date" required="true"/>
-                      <DatePicker valueFormat="yyyy-MM-dd" displayFormat="dd.MM.yyyy"/>
+                      <DatePicker valueFormat="yyyy-MM-dd" displayFormat="dd.MM.yyyy" placeholder="Start date"/>
                       <Label text="Hiring Manager"/>
                       <Input placeholder="Manager name"/>
                       <Label text="Personal Email" required="true"/>

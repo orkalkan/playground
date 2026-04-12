@@ -290,7 +290,7 @@
                       <Label text="Carrier Reference"/>
                       <Input placeholder="Carrier booking / tracking number"/>
                       <Label text="Actual Ship Date"/>
-                      <DatePicker valueFormat="yyyy-MM-dd" displayFormat="dd.MM.yyyy"/>
+                      <DatePicker valueFormat="yyyy-MM-dd" displayFormat="dd.MM.yyyy" placeholder="Actual ship date"/>
                       <Label text="Shipping Notes"/>
                       <TextArea rows="2" width="100%" placeholder="Special handling instructions, notes for carrier..."/>
                     </f:content>

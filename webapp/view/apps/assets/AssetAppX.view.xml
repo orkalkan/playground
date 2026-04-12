@@ -181,7 +181,7 @@
                       <Label text="Vendor"/>
                       <Input value="{assets>/editAsset/vendor}" placeholder="Supplier name"/>
                       <Label text="Purchase Date" required="true"/>
-                      <DatePicker value="{assets>/editAsset/purchaseDate}" valueFormat="yyyy-MM-dd" displayFormat="dd.MM.yyyy"/>
+                      <DatePicker value="{assets>/editAsset/purchaseDate}" valueFormat="yyyy-MM-dd" displayFormat="dd.MM.yyyy" placeholder="Purchase date"/>
                       <Label text="Acquisition Value" required="true"/>
                       <Input value="{assets>/editAsset/acquisitionValue}" type="Number" placeholder="EUR" textAlign="End"/>
                       <Label text="Useful Life (years)"/>
@@ -318,7 +318,7 @@
                         <core:ListItem key="low"     text="Low — next scheduled slot"/>
                       </Select>
                       <Label text="Requested Date"/>
-                      <DatePicker valueFormat="yyyy-MM-dd" displayFormat="dd.MM.yyyy"/>
+                      <DatePicker valueFormat="yyyy-MM-dd" displayFormat="dd.MM.yyyy" placeholder="Requested date"/>
                       <Label text="Description" required="true"/>
                       <TextArea rows="4" width="100%" placeholder="Describe the issue or work required..."/>
                       <Label text="Estimated Downtime"/>

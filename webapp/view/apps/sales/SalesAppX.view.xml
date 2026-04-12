@@ -95,7 +95,7 @@
                         <core:ListItem key="CR" text="CR — Credit Memo Request"/>
                       </Select>
                       <Label text="Requested Delivery" required="true"/>
-                      <DatePicker valueFormat="yyyy-MM-dd" displayFormat="dd.MM.yyyy"/>
+                      <DatePicker valueFormat="yyyy-MM-dd" displayFormat="dd.MM.yyyy" placeholder="Requested delivery date"/>
                       <Label text="Sales Organization"/>
                       <Select selectedKey="1000">
                         <core:ListItem key="1000" text="1000 — Germany South"/>
