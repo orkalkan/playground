@@ -156,7 +156,8 @@
             <Bar>
               <contentRight>
                 <Button text="Cancel" press=".onNavBack"/>
-                <Button text="Save Asset" type="Emphasized" press=".onSaveAsset" icon="sap-icon://accept"/>
+                <Button text="Save Asset" type="Emphasized" press=".onSaveAsset" icon="sap-icon://accept"
+                  enabled="{= !!${assets>/editAsset/description} &amp;&amp; !!${assets>/editAsset/purchaseDate} &amp;&amp; !!${assets>/editAsset/acquisitionValue} }"/>
               </contentRight>
             </Bar>
           </footer>

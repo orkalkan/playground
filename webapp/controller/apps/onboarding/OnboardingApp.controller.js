@@ -98,7 +98,8 @@ sap.ui.define([
         checklist,
         documents,
         equipment,
-        selectedHire: null
+        selectedHire: null,
+        newHireX: { firstName: "", lastName: "", startDate: "", personalEmail: "" }
       };
 
       this.getView().setModel(new JSONModel(data), "onboarding");
@@ -108,6 +109,7 @@ sap.ui.define([
     onNavBackToLaunchpad() { this.navBackToLaunchpad(); },
 
     onAddNewHirePress() {
+      this.getView().getModel("onboarding").setProperty("/newHireX", { firstName: "", lastName: "", startDate: "", personalEmail: "" });
       this.byId("onboardingNav").to(this.byId("onboardingNewHirePage"));
     },
 
@@ -173,21 +175,23 @@ sap.ui.define([
     },
 
     onSaveNewHire() {
-      const firstName = this.byId("newHireFirstName").getValue().trim();
-      const lastName = this.byId("newHireLastName").getValue().trim();
-      const role = this.byId("newHireRole").getValue().trim();
-      const dept = this.byId("newHireDept").getSelectedKey();
-      const deptText = this.byId("newHireDept").getSelectedItem().getText();
-      const startDate = this.byId("newHireStartDate").getValue();
-      const manager = this.byId("newHireManager").getValue().trim();
-      const email = this.byId("newHireEmail").getValue().trim();
+      const model = this.getView().getModel("onboarding");
+      // Prefer byId (regular app) — fall back to model values (X variant, ID-free)
+      const newHireX = model.getProperty("/newHireX") ?? {};
+      const firstName = (this.byId("newHireFirstName")?.getValue().trim()) || newHireX.firstName || "";
+      const lastName = (this.byId("newHireLastName")?.getValue().trim()) || newHireX.lastName || "";
+      const role = (this.byId("newHireRole")?.getValue().trim()) || "";
+      const dept = this.byId("newHireDept")?.getSelectedKey() || "IT";
+      const deptText = this.byId("newHireDept")?.getSelectedItem()?.getText() || dept;
+      const startDate = (this.byId("newHireStartDate")?.getValue()) || newHireX.startDate || "";
+      const manager = (this.byId("newHireManager")?.getValue().trim()) || "";
+      const email = (this.byId("newHireEmail")?.getValue().trim()) || newHireX.personalEmail || "";
 
-      if (!firstName || !lastName || !role || !startDate || !email) {
+      if (!firstName || !lastName || !startDate || !email) {
         this.toast("Please fill in all required fields");
         return;
       }
 
-      const model = this.getView().getModel("onboarding");
       const hires = model.getProperty("/newHires");
       const newEmpId = `EMP-2025-${String(hires.length + 48).padStart(4, "0")}`;
       const initials = (firstName.charAt(0) + lastName.charAt(0)).toUpperCase();

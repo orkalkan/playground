@@ -130,7 +130,8 @@
             <Bar>
               <contentRight>
                 <Button text="Cancel" press=".onNavBack"/>
-                <Button text="Submit Request" type="Emphasized" press=".onSubmitRequest" icon="sap-icon://paper-plane"/>
+                <Button text="Submit Request" type="Emphasized" press=".onSubmitRequest" icon="sap-icon://paper-plane"
+                  enabled="{= !!${budget>/newRequestX/amount} &amp;&amp; !!${budget>/newRequestX/justification} }"/>
               </contentRight>
             </Bar>
           </footer>
@@ -158,7 +159,7 @@
                         <core:ListItem key="reserve"      text="Unblock Reserve Budget"/>
                       </Select>
                       <Label text="Amount Requested" required="true"/>
-                      <Input type="Number" placeholder="EUR" textAlign="End"/>
+                      <Input value="{budget>/newRequestX/amount}" type="Number" placeholder="EUR" textAlign="End"/>
                       <Label text="Period"/>
                       <Select selectedKey="Q1">
                         <core:ListItem key="Q1" text="Q1 2025 (Jan — Mar)"/>
@@ -167,7 +168,7 @@
                         <core:ListItem key="Q4" text="Q4 2025 (Oct — Dec)"/>
                       </Select>
                       <Label text="Business Justification" required="true"/>
-                      <TextArea rows="5" width="100%" placeholder="Explain why additional budget is needed..."/>
+                      <TextArea value="{budget>/newRequestX/justification}" rows="5" width="100%" placeholder="Explain why additional budget is needed..."/>
                       <Label text="Supporting Documents"/>
                       <Input placeholder="Attach file name(s), e.g. cost_estimate_Q1.pdf"/>
                     </f:content>

@@ -40,7 +40,8 @@ sap.ui.define([
           ]
         },
         selectedOrder: null,
-        confirmedOrderId: ""
+        confirmedOrderId: "",
+        newOrderX: { customerId: "", deliveryDate: "" }
       };
       this.getView().setModel(new JSONModel(data), "sales");
     },
@@ -48,7 +49,10 @@ sap.ui.define([
     onNavBack() { this.byId("salesNav").back(); },
     onNavBackToLaunchpad() { this.navBackToLaunchpad(); },
 
-    onNewOrderPress() { this.byId("salesNav").to(this.byId("salesCreatePage")); },
+    onNewOrderPress() {
+      this.getView().getModel("sales").setProperty("/newOrderX", { customerId: "", deliveryDate: "" });
+      this.byId("salesNav").to(this.byId("salesCreatePage"));
+    },
 
     onOrderPress(event) {
       const ctx = event.getSource().getBindingContext("sales");

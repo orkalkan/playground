@@ -70,7 +70,8 @@
             <Bar>
               <contentRight>
                 <Button text="Cancel" press=".onNavBack"/>
-                <Button text="Submit Request" type="Emphasized" press=".onSubmitTripRequest" icon="sap-icon://paper-plane"/>
+                <Button text="Submit Request" type="Emphasized" press=".onSubmitTripRequest" icon="sap-icon://paper-plane"
+                  enabled="{= !!${travel>/newTripX/purpose} &amp;&amp; !!${travel>/newTripX/destination} &amp;&amp; !!${travel>/newTripX/departureDate} &amp;&amp; !!${travel>/newTripX/returnDate} }"/>
               </contentRight>
             </Bar>
           </footer>
@@ -81,9 +82,9 @@
                   <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
                     <f:content>
                       <Label text="Trip Purpose" required="true"/>
-                      <Input placeholder="e.g. Customer meeting, Trade fair, Training..."/>
+                      <Input value="{travel>/newTripX/purpose}" placeholder="e.g. Customer meeting, Trade fair, Training..."/>
                       <Label text="Destination City" required="true"/>
-                      <Input placeholder="e.g. Frankfurt, Amsterdam, London..."/>
+                      <Input value="{travel>/newTripX/destination}" placeholder="e.g. Frankfurt, Amsterdam, London..."/>
                       <Label text="Country" required="true"/>
                       <Select selectedKey="DE">
                         <core:ListItem key="DE" text="Germany"/>
@@ -96,9 +97,9 @@
                         <core:ListItem key="JP" text="Japan"/>
                       </Select>
                       <Label text="Departure Date" required="true"/>
-                      <DatePicker valueFormat="yyyy-MM-dd" displayFormat="dd.MM.yyyy" placeholder="Departure date"/>
+                      <DatePicker value="{travel>/newTripX/departureDate}" valueFormat="yyyy-MM-dd" displayFormat="dd.MM.yyyy" placeholder="Departure date"/>
                       <Label text="Return Date" required="true"/>
-                      <DatePicker valueFormat="yyyy-MM-dd" displayFormat="dd.MM.yyyy" placeholder="Return date"/>
+                      <DatePicker value="{travel>/newTripX/returnDate}" valueFormat="yyyy-MM-dd" displayFormat="dd.MM.yyyy" placeholder="Return date"/>
                       <Label text="Cost Center"/>
                       <Select selectedKey="CC-1001">
                         <core:ListItem key="CC-1001" text="CC-1001 — Sales Germany"/>

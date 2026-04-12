@@ -25,7 +25,8 @@ sap.ui.define([
           { id: "SUP-2025-0039", department: "Management", amount: 30000, type: "Reallocation", submittedAt: "2025-03-05", status: "Rejected" },
           { id: "SUP-2025-0038", department: "Sales Germany", amount: 15000, type: "Supplement", submittedAt: "2025-03-01", status: "Approved" }
         ],
-        selectedDept: null
+        selectedDept: null,
+        newRequestX: { amount: "", justification: "" }
       };
       this.getView().setModel(new JSONModel(data), "budget");
     },
@@ -33,7 +34,10 @@ sap.ui.define([
     onNavBack() { this.byId("budgetNav").back(); },
     onNavBackToLaunchpad() { this.navBackToLaunchpad(); },
 
-    onRequestSupplementPress() { this.byId("budgetNav").to(this.byId("budgetRequestPage")); },
+    onRequestSupplementPress() {
+      this.getView().getModel("budget").setProperty("/newRequestX", { amount: "", justification: "" });
+      this.byId("budgetNav").to(this.byId("budgetRequestPage"));
+    },
     onViewSupplementRequestsPress() { this.byId("budgetNav").to(this.byId("budgetRequestsListPage")); },
 
     onDepartmentPress(event) {
@@ -97,9 +101,11 @@ sap.ui.define([
     onSubmitRequest() {
       const model = this.getView().getModel("budget");
       const requests = model.getProperty("/supplementRequests");
-      const amount = parseFloat(this.byId("requestAmount").getValue()) || 0;
-      const deptKey = this.byId("requestDept").getSelectedKey();
-      const typeKey = this.byId("requestType").getSelectedKey();
+      // Prefer byId (regular app) — fall back to model values (X variant, ID-free)
+      const newRequestX = model.getProperty("/newRequestX") ?? {};
+      const amount = parseFloat(this.byId("requestAmount")?.getValue() ?? newRequestX.amount ?? "0") || 0;
+      const deptKey = this.byId("requestDept")?.getSelectedKey() || "CC-1001";
+      const typeKey = this.byId("requestType")?.getSelectedKey() || "supplement";
       const typeMap = { supplement: "Supplement", reallocation: "Reallocation", reserve: "Reserve Unblock" };
       const newId = `SUP-2025-${String(requests.length + 42).padStart(4, "0")}`;
       requests.unshift({

@@ -23,7 +23,8 @@ sap.ui.define([
         ],
         selectedTrip: null,
         editTrip: null,
-        currentExpenses: []
+        currentExpenses: [],
+        newTripX: { purpose: "", destination: "", departureDate: "", returnDate: "" }
       };
       this.getView().setModel(new JSONModel(data), "travel");
     },
@@ -31,7 +32,10 @@ sap.ui.define([
     onNavBack() { this.byId("travelNav").back(); },
     onNavBackToLaunchpad() { this.navBackToLaunchpad(); },
 
-    onNewTripPress() { this.byId("travelNav").to(this.byId("travelRequestPage")); },
+    onNewTripPress() {
+      this.getView().getModel("travel").setProperty("/newTripX", { purpose: "", destination: "", departureDate: "", returnDate: "" });
+      this.byId("travelNav").to(this.byId("travelRequestPage"));
+    },
 
     onTripPress(event) {
       const ctx = event.getSource().getBindingContext("travel");
@@ -93,17 +97,21 @@ sap.ui.define([
       const model = this.getView().getModel("travel");
       const trips = model.getProperty("/trips");
       const newId = `TR-2025-${String(trips.length + 50).padStart(4, "0")}`;
-      const purpose = this.byId("newTripPurpose").getValue() || "New Trip";
-      const city = this.byId("newTripCity").getValue() || "Unknown";
+      // Prefer byId (regular app) — fall back to model values (X variant, ID-free)
+      const newTripX = model.getProperty("/newTripX") ?? {};
+      const purpose = this.byId("newTripPurpose")?.getValue() || newTripX.purpose || "New Trip";
+      const city = this.byId("newTripCity")?.getValue() || newTripX.destination || "Unknown";
+      const departureDate = this.byId("newTripDepartureDate")?.getValue() || newTripX.departureDate || "";
+      const returnDate = this.byId("newTripReturnDate")?.getValue() || newTripX.returnDate || "";
       trips.unshift({
         id: newId,
         purpose,
         destination: city,
         country: "Germany",
         countryKey: "DE",
-        departureDate: "",
-        returnDate: "",
-        estimatedCost: parseFloat(this.byId("newTripEstimatedCost").getValue()) || 0,
+        departureDate,
+        returnDate,
+        estimatedCost: parseFloat(this.byId("newTripEstimatedCost")?.getValue() ?? "0") || 0,
         actualCost: 0,
         currency: "EUR",
         costCenter: "CC-1001",

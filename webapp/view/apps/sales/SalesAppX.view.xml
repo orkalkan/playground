@@ -74,7 +74,8 @@
             <Bar>
               <contentRight>
                 <Button text="Cancel" press=".onNavBack"/>
-                <Button text="Review Order" type="Emphasized" press=".onReviewPress" icon="sap-icon://arrow-right"/>
+                <Button text="Review Order" type="Emphasized" press=".onReviewPress" icon="sap-icon://arrow-right"
+                  enabled="{= !!${sales>/newOrderX/customerId} &amp;&amp; !!${sales>/newOrderX/deliveryDate} }"/>
               </contentRight>
             </Bar>
           </footer>
@@ -85,7 +86,7 @@
                   <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
                     <f:content>
                       <Label text="Customer" required="true"/>
-                      <Select items="{sales>/customers}">
+                      <Select items="{sales>/customers}" selectedKey="{sales>/newOrderX/customerId}">
                         <core:ListItem key="{sales>id}" text="{sales>name}"/>
                       </Select>
                       <Label text="Order Type"/>
@@ -95,7 +96,7 @@
                         <core:ListItem key="CR" text="CR — Credit Memo Request"/>
                       </Select>
                       <Label text="Requested Delivery" required="true"/>
-                      <DatePicker valueFormat="yyyy-MM-dd" displayFormat="dd.MM.yyyy" placeholder="Requested delivery date"/>
+                      <DatePicker value="{sales>/newOrderX/deliveryDate}" valueFormat="yyyy-MM-dd" displayFormat="dd.MM.yyyy" placeholder="Requested delivery date"/>
                       <Label text="Sales Organization"/>
                       <Select selectedKey="1000">
                         <core:ListItem key="1000" text="1000 — Germany South"/>

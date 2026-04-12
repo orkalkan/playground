@@ -284,7 +284,8 @@
             <Bar>
               <contentRight>
                 <Button text="Cancel" press=".onNavBack"/>
-                <Button text="Create Onboarding Case" type="Emphasized" press=".onSaveNewHire" icon="sap-icon://accept"/>
+                <Button text="Create Onboarding Case" type="Emphasized" press=".onSaveNewHire" icon="sap-icon://accept"
+                  enabled="{= !!${onboarding>/newHireX/firstName} &amp;&amp; !!${onboarding>/newHireX/lastName} &amp;&amp; !!${onboarding>/newHireX/startDate} &amp;&amp; !!${onboarding>/newHireX/personalEmail} }"/>
               </contentRight>
             </Bar>
           </footer>
@@ -295,9 +296,9 @@
                   <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4">
                     <f:content>
                       <Label text="First Name" required="true"/>
-                      <Input placeholder="First name"/>
+                      <Input value="{onboarding>/newHireX/firstName}" placeholder="First name"/>
                       <Label text="Last Name" required="true"/>
-                      <Input placeholder="Last name"/>
+                      <Input value="{onboarding>/newHireX/lastName}" placeholder="Last name"/>
                       <Label text="Role / Position" required="true"/>
                       <Input placeholder="e.g. Software Engineer, Sales Manager..."/>
                       <Label text="Department" required="true"/>
@@ -312,11 +313,11 @@
                         <core:ListItem key="Management"   text="Management"/>
                       </Select>
                       <Label text="Start Date" required="true"/>
-                      <DatePicker valueFormat="yyyy-MM-dd" displayFormat="dd.MM.yyyy" placeholder="Start date"/>
+                      <DatePicker value="{onboarding>/newHireX/startDate}" valueFormat="yyyy-MM-dd" displayFormat="dd.MM.yyyy" placeholder="Start date"/>
                       <Label text="Hiring Manager"/>
                       <Input placeholder="Manager name"/>
                       <Label text="Personal Email" required="true"/>
-                      <Input type="Email" placeholder="personal@email.com"/>
+                      <Input value="{onboarding>/newHireX/personalEmail}" type="Email" placeholder="personal@email.com"/>
                     </f:content>
                   </f:SimpleForm>
                 </content>

@@ -243,7 +243,8 @@
             <Bar>
               <contentRight>
                 <Button text="Cancel" press=".onNavBack"/>
-                <Button text="Submit for Approval" type="Emphasized" press=".onSubmitPO" icon="sap-icon://paper-plane"/>
+                <Button text="Submit for Approval" type="Emphasized" press=".onSubmitPO" icon="sap-icon://paper-plane"
+                  enabled="{= !!${po>/newPO/vendorId} &amp;&amp; !!${po>/newPO/deliveryDate} }"/>
               </contentRight>
             </Bar>
           </footer>
